@@ -1,0 +1,52 @@
+
+body {
+  background-image: url("/static/assets/img/flat background.jpg");
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh; 
+  background-repeat: no-repeat;
+  background-attachment: fixed; 
+}
+
+
+.form-input {
+  color: white;
+  background: transparent;
+  border: 1px solid #414141;
+  border-radius: 5px;
+  padding: 8px;
+  outline: none;
+}
+
+.form-input:focus {
+  border: 1px solid #b9a848;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #e0dbdb;
+  position: relative;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.form-group label {
+  position: absolute;
+  top: 0.5rem;
+  left: 0;
+  padding: 5px;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.form-group input:focus ~ label,
+.form-group input:valid ~ label {
+  top: -16px;
+  left: 0;
+  background: transparent padding-box;
+  padding: 10px 0 0 0;
+  color: #e0dbdb;
+  font-size: 12px;
+}

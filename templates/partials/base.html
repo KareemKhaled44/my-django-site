@@ -1,0 +1,289 @@
+{% load static %}
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>home</title>
+    <!-- tailwind -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tw-elements/css/tw-elements.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com/3.3.0"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          fontFamily: {
+            montserrat: ["Montserrat", "serif"],
+          },
+        },
+        corePlugins: {
+          preflight: false,
+        },
+      };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/header.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/index.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+</head>
+<body>
+    <!--header start-->
+      <header class="flex bg-[#28282B] p-4">
+        <a href="{% url 'core:index' %}" class="logo">Peak Health</a>
+        
+        <ul>
+          
+          <li>
+            <!-- Search Icon Button -->
+            <button id="openSearch" class="search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <form action="{% url 'core:search' %}" method="GET">
+
+              <!-- Search Box (Appears Inside Navbar) -->
+              <div
+                id="searchOverlay"
+                class=" fixed inset-0 h-full top-0 left-0 w-full bg-[#28282B] bg-opacity-70 p-4 hidden z-50"
+              >
+                <div class="relative w-full max-w-2xl mx-auto">
+                  <!-- Search Input -->
+                  <input
+                    name="q"
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search..."
+                    class="w-full pl-14 py-2 text-black bg-white rounded-md border-2 border-[#b9a848] outline-none"
+                  />
+
+                  <!-- Close Button -->                  
+                  <button
+                    type="button"
+                    id="closeSearch"
+                    class="absolute right-12 top-1/2 transform -translate-y-1/2 text-[#28282B] text-2xl"
+                  >
+                    ✖
+                  </button>
+
+                  <!-- Submit Button on the left inside input -->
+                  <button
+                    type="submit"
+                    class="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#28282B] text-xl"
+                    title="Search"
+                  >
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>                 
+                </div>
+              </div>
+            </form>
+          </li>        
+         
+          <li>
+            <a href="{% url 'core:product-list'%}" class="products-link">
+              <i class="fa-solid fa-dumbbell"></i> Products
+            </a>
+          </li>
+         
+          <li>
+            <button class="sign_in-register">
+              <a href="{% url 'userauths:sign-in' %}" class="sign-in">
+                <i class="fa-solid fa-user"></i>
+                Sign In
+              </a>
+              <span>/</span>
+              <a href="{% url 'userauths:sign-up' %}" class="register"
+                ><i class="fa-solid fa-user-plus"></i> Register</a
+              >
+            </button>
+          </li>
+          <li>
+            <a href="cart-page.html" class="cart">
+              <i class="fa-solid fa-cart-shopping">
+                <span id="cart-items-count" class="cart-number">{{request.session.cart_data_obj|length}}</span>
+              </i></a
+            > 
+          </li>
+
+          <li>
+            <a href="{% url 'userauths:sign-out' %}" class="log-out"
+              ><i class="fa-solid fa-right-from-bracket"></i
+            ></a>
+          </li>
+
+          <li>
+            <!-- Hamburger Button (mobile only) -->
+            <button id="menuToggle" class=" text-white text-2xl p-2">
+              <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <!-- Toggle Menu (Hidden by default) -->
+            <div id="mobileMenu" class=" flex-col bg-[#28282B] text-white w-full absolute top-full left-0 p-4 z-50">
+              <a href="{% url 'core:product-list'%}" class="py-2"><i class="fa-solid fa-dumbbell"></i> Products</a>
+              <a href="{% url 'userauths:sign-in' %}" class="py-2"><i class="fa-solid fa-user"></i>Sign In</a>
+              <a href="{% url 'userauths:sign-up' %}" class="py-2"><i class="fa-solid fa-user-plus"></i>Register</a>
+            </div>
+          </li>
+        </ul>
+      </header>
+      
+      {% if messages %}
+      <div class="fixed top-10 left-1/2 transform -translate-x-1/2 z-50 space-y-3 mt-20">
+        {% for message in messages %}
+          <div class="alert px-5 py-3 rounded-xl shadow-lg min-w-[300px] max-w-md text-center transition-opacity duration-300
+                      {% if 'success' in message.tags %}
+                        bg-[#28282B] border-l-4 border-green-500
+                      {% elif 'error' in message.tags %}
+                        bg-[#28282B] border-l-4 border-red-500
+                      {% elif 'warning' in message.tags %}
+                        bg-[#28282B] border-l-4 border-[#b9a848]
+                      {% else %}
+                        bg-[#28282B] border-l-4 border-blue-500
+                      {% endif %}">
+            <p class="text-[#ebebeb] text-sm font-medium">{{ message }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+      <script>
+        setTimeout(() => {
+          document.querySelectorAll('.alert').forEach(el => {
+            el.style.transition = "opacity 0.5s ease";
+            el.style.opacity = "0";
+            setTimeout(() => el.style.display = 'none', 500);
+          });
+        }, 3000);
+      </script>
+
+      <!--header end-->
+      {% block content %}
+      {% endblock %}
+
+      
+      <!--Footer container-->
+    <footer class="bg-[#28282B] text-gray-300 py-10 px-6">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        
+        <!-- Logo & Description -->
+        <div>
+          <h2 class="text-2xl font-bold text-[#b9a848]">Peak Health</h2>
+          <p class="mt-4 text-sm">Your trusted source for premium supplements and fitness products.</p>
+        </div>
+    
+        <!-- Products -->
+        <div class="flex flex-col ">
+          <h3 class="text-xl text-[#b9a848] font-semibold  border-b-2 border-gray-700 mb-4">Products</h3>
+          <ul class="flex flex-col space-y-2 text-sm">
+
+            {% for c in categories %}
+            <li><a href="{% url 'core:category-product-list' c.cid %}" class="hover:text-[#b9a848]"> {{c.title}}</a></li>
+            {% endfor %}
+
+          </ul>
+        </div>
+    
+        <!-- Support -->
+        <div class="flex flex-col">
+          <h3 class="text-xl text-[#b9a848] font-semibold  border-b-2 border-gray-700 mb-4">Support</h3>
+          <ul class="flex flex-col space-y-2 text-sm">
+            <li><a href="#" class="hover:text-[#b9a848]">Contact Us</a></li>
+            <li><a href="#" class="hover:text-[#b9a848]">Shipping Policy</a></li>
+            <li><a href="#" class="hover:text-[#b9a848]">Return Policy</a></li>
+          </ul>
+        </div>
+    
+        <!-- Company -->
+        <div class="flex flex-col">
+          <h3 class="text-xl text-[#b9a848] font-semibold  border-b-2 border-gray-700 mb-4">Company</h3>
+          <ul class="flex flex-col space-y-2 text-sm">
+            <li><a href="#" class="hover:text-[#b9a848]">About Us</a></li>
+            <li><a href="#" class="hover:text-[#b9a848]">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-[#b9a848]">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+    
+      <!-- Divider -->
+      <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col
+        items-center text-sm">
+        <!-- Social media icons container -->
+        <div class="mb-6 flex  space-x-2">
+          <a href="#!" class="rounded-full bg-transparent p-3 text-white hover:bg-[#b9a848] transition">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#!" class="rounded-full bg-transparent p-3 text-white hover:bg-[#b9a848] transition">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#!" class="rounded-full bg-transparent p-3 text-white hover:bg-[#b9a848] transition">
+            <i class="fab fa-google"></i>
+          </a>
+          <a href="#!" class="rounded-full bg-transparent p-3 text-white hover:bg-[#b9a848] transition">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#!" class="rounded-full bg-transparent p-3 text-white hover:bg-[#b9a848] transition">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="#!" class="rounded-full bg-transparent p-3 text-white hover:bg-[#b9a848] transition">
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
+        <p>&copy; 2025 Peak Health. All rights reserved.</p>
+      </div>
+    </footer>
+      
+    <!-- tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/tw-elements/js/tw-elements.umd.min.js"></script>
+
+    <!-- Hamburger Menu Toggle -->
+     <script>
+      const menuToggle = document.getElementById('menuToggle');
+      const mobileMenu = document.getElementById('mobileMenu');
+
+      menuToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('active');
+      });
+    </script>
+
+     <script>
+    const input = document.getElementById("searchInput");
+    const resultsBox = document.createElement("div");
+    resultsBox.className = "absolute bg-white w-full z-50 rounded shadow-md";
+    input.parentNode.appendChild(resultsBox);
+
+    input.addEventListener("input", async () => {
+      const q = input.value;
+      if (!q) {
+        resultsBox.innerHTML = "";
+        return;
+      }
+
+      const res = await fetch(`/api/search-products/?q=${encodeURIComponent(q)}`);
+      const data = await res.json();
+
+      resultsBox.innerHTML = data.map(p => `
+        <div class="flex items-center gap-3 p-2 hover:bg-gray-100 cursor-pointer z-90"
+          onclick="window.location.href='/product/${p.id}/'">
+          <img src="${p.image}" alt="${p.name}" class="w-12 h-12 object-cover rounded" />
+          <div>
+            <div class="font-semibold">${p.name}</div>
+            <div class="text-sm text-gray-500">${p.price} EGP</div>
+          </div>
+        </div>
+      `).join("");
+    });
+  </script>
+    
+</body>
+</html>

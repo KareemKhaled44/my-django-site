@@ -1,0 +1,8 @@
+/* Adjust logo size on login page */
+img {
+    width: 200px !important;   /* Set your desired width */
+    height: auto !important;   /* Adjust height proportionally */
+    object-fit: contain;
+}
+
+

@@ -1,0 +1,118 @@
+main {
+    
+    margin-bottom: 20px;
+    width: 100%;
+    display: flex;
+    gap: 20px; 
+    flex-wrap: wrap;
+    
+}
+
+@media (min-width: 1536px) {
+    main {
+        max-width: 1536px;
+    }
+}
+
+/* products */
+.item-a {
+    flex: 3; /* Takes 3 parts of the space */
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 2.5rem; 
+    gap: 15px; 
+    border-right: 1px solid #ffffff55;
+}
+@media (max-width: 1023px) {
+    .item-a {
+        display: flex;
+        flex: 3; 
+        border-right: none; 
+    }
+}    
+
+  
+
+/* filter */
+.item-b {
+       /* Takes 1 part of the space (sidebar) */
+      background-color:#0000001A;
+      backdrop-filter: blur(2px);
+      color: #ebebeb;
+      border: 2px solid #ffffff55;
+      border-radius: 20px;
+      padding: 1rem;
+      border: 2px solid #ffffff55;
+      box-shadow: 0 2px 5px rgba(231, 231, 231, 0.753);
+      height: 150px;
+      width: 100%;
+      flex-wrap: wrap;
+      text-align: center;
+           
+}
+@media (max-width: 1024px) {
+    .item-b {
+        height: 175px;
+    }
+}
+/* categories */
+.item-c {
+       /* Takes 1 part of the space (sidebar) */
+      background-color:#0000001A;
+      backdrop-filter: blur(2px);
+      color: #ebebeb;
+      border: 2px solid #ffffff55;
+      border-radius: 20px;
+      padding: 1rem;
+      margin-top: 20px;
+      border: 2px solid #ffffff55;
+      box-shadow: 0 2px 5px rgba(231, 231, 231, 0.753);
+      width: 100%;
+      flex-wrap: wrap;
+      text-align: center; 
+        
+}
+
+@media (min-width: 1024px) {
+  #sidebar {
+    transform: none !important;
+    display: flex !important;
+    position: relative !important;
+  }
+}
+
+.Buttons-Container{
+    display: flex;
+    flex-direction: row;
+    padding-inline: 15%;
+    margin-top: 2.5rem;
+}
+
+@media (max-width: 640px) {
+    .Buttons-Container{
+        display: flex;
+        flex-direction: column;
+        padding-inline: 4%;
+        margin-top: 1.5rem;
+    }
+
+    main{
+        gap: 0px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

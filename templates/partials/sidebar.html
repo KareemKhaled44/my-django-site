@@ -1,0 +1,141 @@
+{% load static %}
+
+<div class="flex flex-col gap-4 mt-[2.5rem] ">
+      <!-- Sidebar -->
+      <div id="sidebar" class="fixed left-0 top-0 w-72 h-full lg:w-full
+        bg-[#28282B] lg:bg-[transparent] text-white transform overflow-y-auto
+       -translate-x-full transition-transform duration-300 lg:flex lg:flex-col p-4 z-40">
+      <button id="closeSidebar" class="lg:hidden text-gray-400 hover:text-white text-2xl">✖ Close</button>
+
+      <!-- Filter Section -->
+      <section class="item-b my-4">
+        <article class="card">
+          <div>
+            <h3 class="text-xl font-semibold mb-2 ">Filter by Range:</h3>
+            <div id="price-slider"
+            data-min="{{ min_max_price.price__min}}"
+            data-max="{{ min_max_price.price__max}}"></div>
+         
+
+              <div class="flex justify-between mt-2">
+                <p id="min-value" >min: {{min_max_price.price__min}}EGP</p>
+                <p id="max-value">max: {{min_max_price.price__max}}EGP</p>
+              </div>
+        
+              <a  id="filter-button"
+                  data-cid="{{category.cid}}"
+               class=" bg-[#b9a848] text-[#1E1E1E] text-sm 
+              font-semibold text-center w-12  py-2 px-4
+              rounded-md shadow-md  hover:bg-[#1E1E1E] hover:text-[#b9a848]
+              transition duration-300">Filter</a>
+          </div>
+          
+        </article>
+      </section>
+      <hr>
+      <section>
+        <article class="card">
+          <div class="flex flex-col gap-2 my-4">
+
+              <h3 class="text-xl font-semibold my-2 border-b-2 border-[#b9a848] inline-block ">
+                Filter By Brand :</h3>
+            
+            <ul class="pr-2 flex-col pt-2 gap-2 overflow-y-auto max-h-[200px]">
+              {% for b in brands %}
+                <li class="flex gap-2 items-center">
+                  <div class="flex items gap-2">
+                    <input type="checkbox" id="brand-{{ b.bid }}" value="{{b.bid}}" class="brand-filter checkbox hidden">
+                    <label for="brand-{{ b.bid }}" class="check flex items-center cursor-pointer">
+                      <svg width="18px" height="18px" viewBox="0 0 18 18" class="mr-2">
+                        <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
+                        <polyline points="1 9 7 14 15 4"></polyline>
+                      </svg>
+                      {% if b.image %}
+                      <img src="{{ b.image.url }}" alt="" class="check w-[50px] h-[40px] pr-2">
+                      {% endif %}
+                      <span class="text-sm">{{ b.name }}</span>
+                    </label>
+                  </div>
+                </li>
+              {% endfor %}
+
+            </ul>
+             
+          </div>
+        </article>
+      </section>
+      <hr>
+      <section>
+        <article class="card">
+          <div class="flex flex-col gap-2 my-4">
+          
+              <h3 class="text-xl font-semibold my-2 border-b-2 border-[#b9a848] inline-block ">
+                Stock Status:</h3>
+           
+            <ul class="pr-2 flex-col pt-2 gap-2">
+              <li class="flex gap-2">
+                <div class="flex items-center gap-2">
+                  <input type="checkbox" id="in-stock" class="checkbox hidden">
+                  <label for="in-stock" class="check flex items-center cursor-pointer">
+                    <svg width="18px" height="18px" viewBox="0 0 18 18" class="mr-2">
+                      <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
+                      <polyline points="1 9 7 14 15 4"></polyline>
+                    </svg>
+                    <span class="text-sm ">in stock</span>
+                  </label>
+                </div>
+                
+              </li>
+              
+              <li class="flex">
+                <div class="flex items-center gap-2">
+                  <input type="checkbox" id="on-sale" class="checkbox hidden">
+                  <label for="on-sale" class="check flex items-center  cursor-pointer">
+                    <svg width="18px" height="18px" viewBox="0 0 18 18" class="mr-2">
+                      <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
+                      <polyline points="1 9 7 14 15 4"></polyline>
+                    </svg>
+                    <span class="text-sm">on sale</span>
+                  </label>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </article>
+      </section>
+      <hr>
+      <!-- category Section -->
+      <section class="item-c">
+        <article class="overflow-y-auto scrollbar-thin">
+          <div class="h-[250px] ">
+
+            <p class="text-xl font-semibold my-2 border-b-2 border-[#b9a848] inline-block ">
+              Categories</p>
+            
+            <ul class="pr-2 flex-col pt-2">
+              {% for c in categories %}
+              <li class="">
+                <div class="border border-[#414141] hover:border-[#b9a848]
+                  p-2 rounded flex justify-between items-center duration-150">
+                  <a 
+                  class="flex gap-2 items-center" href="{% url 'core:category-product-list' c.cid %}">
+                  <img class="w-[30px] " src="{{c.image.url}}" >
+                  <h6 class="text-[15px] text-white font-medium">{{c.title}}</h6></a>
+                  <div class="flex items-center gap-2">
+                    <span class="bg-[#b9a848] text-white text-xs rounded-full 
+                    px-2 py-[3px] block text-center align-middle">{{c.category.count}}</span>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          
+        </article>
+      </section>
+      </div>
+     </div>
+
+
+      <script src="{% static 'assets/js/function.js' %}"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

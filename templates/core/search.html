@@ -1,0 +1,171 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- slider range script -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.js"></script>
+
+    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/header.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/index.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/product-details.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/products.css' %}" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- tailwind -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tw-elements/css/tw-elements.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com/3.3.0"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          screen:{
+            'xs': '430px', //mobile
+            // => @media (min-width: 375px) { ... }
+
+            'sm': '640px',  //tablet
+            // => @media (min-width: 640px) { ... }
+
+            'lg': '1024px', //laptop
+            // => @media (min-width: 1024px) { ... }
+
+            'xl': '1280px', //desktop
+            // => @media (min-width: 1280px) { ... }
+          },
+          fontFamily: {
+            montserrat: ["Montserrat", "serif"],
+          },
+        },
+        corePlugins: {
+          preflight: false,
+        },
+      };
+    </script>
+    <title>products</title>
+  </head>
+  <body style="display: grid; grid-template-rows: auto 1fr auto;">
+    <section style="display: grid; grid-template-rows: auto  1fr auto">
+    
+    <!-- Buttons Container -->
+    <div class="flex Buttons-Container  items-center justify-between   gap-4 ">
+        
+        <!-- Sidebar Toggle Button (Hidden on Large Screens) -->
+        <button id="openSidebar" class="lg:hidden p-3 bg-[#1E1E1E] text-white rounded-full shadow-md z-50 self-start xs:self-auto">
+            ☰
+        </button>
+
+        <!-- Page Title (Home / Supplements) -->
+        <div class="text-center lg:text-left flex  items-center sm:items-center gap-2 lg:gap-4">
+            <a href="{% url 'core:index' %}" class="text-[#b9a848] no-underline font-medium flex gap-1">
+            <i class="fa-solid fa-home text-sm"></i> 
+            <span class="text-lg">Home</span>
+            </a>
+            <span class="text-white ">/</span>
+            
+            {% if query %}
+            <span class="text-white">{{query}}</span>
+            {% else %}
+            <span class="text-white">No Searched Item</span>
+            {% endif %}          
+        </div>
+
+        <!-- Sort By  -->
+        <form class="rounded-lg  bg-[#b9a848] w-[180px] h-[40px] p-2">
+          <select id="sort-by" class="w-full h-full bg-transparent text-[#28282B]">
+              <option value="best_selling" class="text-semibold text-[#b9a848] bg-[#28282B]">Sort by popularity</option>
+              <option value="latest" class="text-semibold text-[#b9a848] bg-[#28282B]">Sort by latest</option>
+              <option value="price_asc" class="text-semibold text-[#b9a848] bg-[#28282B]">Sort by price: low to high</option>
+              <option value="price_desc" class="text-semibold text-[#b9a848] bg-[#28282B]">Sort by price: high to low</option>
+          </select>
+      </form>
+
+    </div>
+
+    <main class=" xs:min-w-[430px] sm:min-w-[640px] lg:min-w-[1024px] xl:min-w-[1280px] mx-auto">
+      <!-- Product Cards Section -->
+      <section id="product-container" class="products item-a ">
+        {% include "core/async/product_card.html" with products=products %}
+      </section> 
+       <!-- sidbar Section -->
+       {% include "partials/sidebar.html" %}
+
+    </main>
+    {% include 'partials/pagination.html' %}
+
+
+    <!-- tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/tw-elements/js/tw-elements.umd.min.js"></script>
+
+    <!-- JavaScript for Sidebar Toggle -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+      const openSidebar = document.getElementById("openSidebar");
+      const closeSidebar = document.getElementById("closeSidebar");
+      const sidebar = document.getElementById("sidebar");
+
+      // Function to open sidebar
+      function openMenu() {
+          sidebar.classList.remove("-translate-x-full");
+          openSidebar.classList.add("hidden"); // Hide the ☰ button
+      }
+
+      // Function to close sidebar
+      function closeMenu() {
+          sidebar.classList.add("-translate-x-full");
+          openSidebar.classList.remove("hidden"); // Show the ☰ button again
+      }
+
+      // Open Sidebar
+      openSidebar.addEventListener("click", (e) => {
+          e.stopPropagation(); // Prevent event from bubbling up
+          openMenu();
+      });
+
+      // Close Sidebar (only if closeSidebar exists)
+      if (closeSidebar) {
+          closeSidebar.addEventListener("click", (e) => {
+              e.stopPropagation();
+              closeMenu();
+          });
+      }
+
+      // Close Sidebar When Clicking Outside
+      document.addEventListener("click", (event) => {
+          if (!sidebar.contains(event.target) && !openSidebar.contains(event.target)) {
+              closeMenu();
+          }
+      });
+
+      // Prevent sidebar from closing when clicking inside
+      sidebar.addEventListener("click", (e) => e.stopPropagation());
+    });
+
+    </script>
+
+  <!--search button -->
+  <script src="{% static 'assets/js/search.js' %}"></script>
+
+  <script src="{% static 'assets/js/range-slider.js' %}"></script>
+  <script src="{% static 'assets/js/function.js' %}"></script>
+  <script src="{% static 'assets/js/filters.js' %}"></script>
+  </body>
+  
+</html>
+{% endblock %} 
+

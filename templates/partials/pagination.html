@@ -1,0 +1,10 @@
+{% load static %}
+
+<!--pagination-->
+<div class="" id="pagination-container">
+      {% include "core/async/pagination.html" with page_obj=page_obj category=category  query_string=query_string %}
+      
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- fuction.js-->
+<script src="{% static 'assets/js/function.js' %}"></script>

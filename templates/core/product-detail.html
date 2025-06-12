@@ -66,7 +66,7 @@
         <div class="flex flex-col items-center md:w-1/3">
           <img
             id="mainImage"
-            class="w-full max-h-80 rounded-2xl bg-[#28282B] object-cover border-2 border-[#b9a848]"
+            class="product-image w-full max-h-80 rounded-2xl bg-[#28282B] object-cover border-2 border-[#b9a848]"
             src="{{p.image.url}}"
             alt="Product Image"
           />
@@ -181,6 +181,7 @@
 
           <div class="mt-4 flex items-center md:justify-start justify-center md:mr-[10px]">
             <input type="hidden" value="{{p.pid}}"  class="product-id">
+            {% if p.in_stock %}
             <button
              class="add-to-cart-btn w-[140px] h-[40px] rounded-[12px] border-none bg-[#b9a848] flex items-center justify-center
                transition-all duration-500 overflow-hidden shadow-lg relative">
@@ -188,6 +189,9 @@
                md:text-lg md:pr-2 lg:text-xl lg:pr-3"></i>
               <span class="text-[#28282B] font-semibold text-base">Add to Cart</span>
             </button>
+            {% else %}
+            <h3 class="text-red-500">This product is currently out of stock!</h3>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -227,22 +231,28 @@
             <span>by:{{p.supplier}}</span>
             
             <div class="flex flex-col md:flex-row  items-center justify-between gap-4 mt-3">
-            <!-- السعر -->
-            <p class="price">
-              {{p.price}} EGP <br>
-              {% if p.old_price %}
-              <span class="old-price"> {{p.old_price}} EGP</span>
-              {% endif %}
-            </p>
-            
+              <!-- السعر -->
+              <p class="price">
+                {{p.price}} EGP <br>
+                {% if p.old_price %}
+                <span class="old-price"> {{p.old_price}} EGP</span>
+                {% endif %}
+              </p>
+              
 
-            <!-- الزرار -->
-            <button class="add-to-cart">
-              <i class="fa-solid fa-cart-shopping"></i>
-              <span class="text">add to cart</span>
-            </button>
+              {% if p.in_stock %}
+                <!-- الزرار -->
+                <a href="{% url 'core:product-detail' p.pid %}"class="add-to-cart">
+                  <i class="fa-solid fa-cart-shopping"></i>
+                  <span class="text">add to cart</span>
+                </a>
+                {% else %}
+                <button disabled class=" w-[140px] h-[40px] rounded-[12px]
+               border-none bg-gray-600 flex items-center justify-center">
+                  Out of Stock
+                </button>
+              {% endif %}
             </div>
-          </div>
           </div>
         </article>
         <!-- end card -->  

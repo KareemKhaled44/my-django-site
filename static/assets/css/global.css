@@ -26,6 +26,12 @@ html{
 *:after {
       box-sizing: inherit;
 }
+
+::selection {
+      background: #b9a84888; 
+      color: #fff;
+    }
+    
 /* ============
 button and link style
  ==============*/
@@ -176,4 +182,88 @@ stroke-dashoffset: 42;
 transition: all 0.2s linear;
 transition-delay: 0.15s;
 }
+    
+
+
+/* ============
+  radio buttons
+ ==============*/
+.radio-input input {
+display: none;
+}
+    
+.radio-input label {
+--border-color: #FFFFFF4D;
+border: 1px solid var(--border-color);
+border-radius: 6px;
+min-width: 5rem;
+margin: 1rem;
+padding: 1rem;
+display: flex;
+justify-content: space-between;
+position: relative;
+align-items: center;
+}
+
+.radio-input input:checked + label {
+--border-color: #b9a848;
+border-color: var(--border-color);
+border-width: 2px;
+}
+.radio-input label:hover {
+--border-color: #b9a848;
+border-color: var(--border-color);
+}
+
+.radio-input {
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-direction: column;
+}
+
+.circle {
+display: inline-block;
+width: 20px;
+height: 20px;
+border-radius: 50%;
+background-color: rgb(189, 187, 207);
+margin-right: 0.5rem;
+position: relative;
+}
+
+.radio-input input:checked + label span.circle::before {
+content: "";
+display: inline;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: #b9a848;
+width: 15px;
+height: 15px;
+border-radius: 50%;
+}
+.text {
+display: flex;
+align-items: center;
+}
+
+.small {
+font-size: 10px;
+color: rgb(136, 138, 139);
+font-weight: 100;
+}
+
+/* responsive */
+
+@media (max-width: 768px) {
+
+.radio-input label {
+      width: 100%;
+      text-align: center;
+}
+}
+    
+    
     

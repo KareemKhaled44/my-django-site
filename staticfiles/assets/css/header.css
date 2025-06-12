@@ -273,6 +273,7 @@ media queries
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
+    z-index: 100;
   }
 
   #mobileMenu a {

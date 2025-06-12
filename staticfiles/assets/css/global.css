@@ -82,27 +82,98 @@ Scrollbar  style
 
 
 /* ============
-  slider
+  range slider
  ==============*/
  /* لون المسار */
 .noUi-connect {
-      background: #b9a848;
-    }
+background: #b9a848;
+}
     
-    /* شكل مقبض السحب */
-    .noUi-handle {
-      border: none;
-      height: 18px;
-      width: 18px;
-      border-radius: 50%;
-      background: #b9a848;
-      box-shadow: 0 0 4px rgba(0,0,0,0.2);
-    }
+/* شكل مقبض السحب */
+.noUi-handle {
+border: none;
+background: #b9a848;
+width: 20px;
+height: 20px;
+
+box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
     
-    /* لون الخلفية */
-    .noUi-target {
-      background: #e5e5e5;
-      border-radius: 10px;
-      height: 8px;
-    }
+/* لون الخلفية */
+.noUi-target {
+background: #e5e5e5;
+
+}
+
+/* ============
+  checkboxes
+ ==============*/
+.check {
+cursor: pointer;
+position: relative;
+-webkit-tap-highlight-color: transparent;
+transform: translate3d(0, 0, 0);
+}
+    
+.check:before {
+content: "";
+position: absolute;
+top: -15px;
+left: -15px;
+width: 48px;
+height: 48px;
+border-radius: 50%;
+background: rgba(34,50,84,0.03);
+opacity: 0;
+transition: opacity 0.2s ease;
+}
+
+.check svg {
+position: relative;
+z-index: 1;
+fill: none;
+stroke-linecap: round;
+stroke-linejoin: round;
+stroke: #c8ccd4;
+stroke-width: 1.5;
+transform: translate3d(0, 0, 0);
+transition: all 0.2s ease;
+}
+
+.check svg path {
+stroke-dasharray: 60;
+stroke-dashoffset: 0;
+}
+
+.check svg polyline {
+stroke-dasharray: 22;
+stroke-dashoffset: 66;
+}
+
+.check:hover:before {
+opacity: 1;
+}
+
+.check:hover svg {
+stroke: #b9a848;
+}
+
+.check:hover span {
+color: #b9a848;
+transition: all 0.3s linear;
+}
+.checkbox:checked + .check svg {
+stroke: #b9a848;
+}
+
+.checkbox:checked + .check svg path {
+stroke-dashoffset: 60;
+transition: all 0.3s linear;
+}
+
+.checkbox:checked + .check svg polyline {
+stroke-dashoffset: 42;
+transition: all 0.2s linear;
+transition-delay: 0.15s;
+}
     

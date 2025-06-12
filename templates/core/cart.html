@@ -21,14 +21,19 @@
     />
     <title>cart page</title>
   </head>
-  <body class="min-h-screen text-white bg-[#28282B]">
+  <body class="min-h-screen text-white bg-[#28282B]  sm:grid grid-rows-[auto_1fr_auto] "
+        >
     <!-- Main container -->
-     <main>
+     <main id="cart-list">
       <div class=" w-full mx-auto px-4 py-8">
         <!-- Page title -->
-        <h1 class="text-3xl sm:text-4xl font-bold mb-6 text-left  text-[#b9a848]">
+        <h1 class="text-3xl sm:text-4xl font-bold mb-6 text-center  text-[#b9a848]">
           Shopping Cart
         </h1>
+
+        <div class="mb-4">
+          there are <span class="text-[#b9a848]">{{cart_total_items}}</span> products in your cart.
+        </div>
         
         <!-- Main layout - column on mobile, row on desktop -->
         <div class="flex flex-col gap-6 lg:flex-row">
@@ -41,84 +46,76 @@
                     <th class="text-left pb-4 font-semibold text-[#b9a848]">Product</th>
                     <th class="text-right pb-4 font-semibold text-[#b9a848]">Price</th>
                     <th class="text-right pb-4 font-semibold text-[#b9a848]">Quantity</th>
-                    <th class="text-right pb-4 font-semibold text-[#b9a848]">Total</th>
+                    <th class="text-right pb-4 font-semibold text-[#b9a848]">Subtotal</th>
+                    <th class="text-right pb-4 font-semibold text-[#b9a848]">Remove</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <!-- Product row 1 -->
+                <tbody class="cart-items">
+                  {% for pid, item in cart_data.items %}
                   <tr class="border-b border-white/30">
                     <td class="py-4">
                       <div class="flex items-center">
-                        <img class="h-16 w-16 rounded mr-4" src="{% static '/assets/img/Big-Mass-Strawberry.webp' %}" alt="Product">
-                        <span class="font-medium">Big Mass Strawberry</span>
+                        <img class="h-16 w-16 rounded mr-4" src="{{ item.image }}" alt="Product">
+                        <span class="font-medium hover:text-[#b9a848] transition duration-150">
+                          <a href="{% url 'core:product-detail' pid %}">{{ item.title }}</a>
+                        </span>
                       </div>
                     </td>
-                    <td class="py-4 text-right">100 EGP</td>
+                
+                    <td class="py-4 text-right">EGP {{ item.price }}</td>
+                
                     <td class="py-4">
                       <div class="flex justify-end items-center">
-                        <button class="border border-[#b9a848] rounded-l px-3 py-1 bg-transparent text-white hover:bg-[#b9a848] hover:text-gray-900 transition">
-                          -
-                        </button>
-                        <span class="border-t border-b border-[#b9a848] px-3 py-1">1</span>
-                        <button class="border border-[#b9a848] rounded-r px-3 py-1 bg-transparent text-white hover:bg-[#b9a848] hover:text-gray-900 transition">
-                          +
-                        </button>
+                        <button data-pid="{{ pid }}"
+                        onclick="decreaseQuantity('{{ pid }}')" 
+                        class="update-cart rounded-l px-3 py-1 bg-transparent text-white hover:bg-[#b9a848] 
+                        hover:text-gray-900 transition">-</button>
+                    
+                        <input
+                          type="text"
+                          id="qty-{{ pid }}"
+                          value="{{ item.qty }}"
+                          readonly
+                          class="cart-item-quantity w-12 text-center bg-transparent  text-white"
+                        />
+                    
+                        <button data-pid="{{ pid }}"
+                        onclick="increaseQuantity('{{ pid }}')" 
+                        class="update-cart rounded-r px-3 py-1 bg-transparent text-white hover:bg-[#b9a848] 
+                        hover:text-gray-900 transition">+</button>
                       </div>
                     </td>
-                    <td class="py-4 text-right">100 EGP</td>
+                    <script>
+                      function increaseQuantity(pid) {
+                        const input = document.getElementById(`qty-${pid}`);
+                        let currentValue = parseInt(input.value);
+                        input.value = currentValue + 1;
+                      }
+                    
+                      function decreaseQuantity(pid) {
+                        const input = document.getElementById(`qty-${pid}`);
+                        let currentValue = parseInt(input.value);
+                        if (currentValue > 1) {
+                          input.value = currentValue - 1;
+                        }
+                      }
+                    </script>
+                
+                    <td class="py-4 text-right">EGP {% widthratio item.price 1 item.qty %}</td>
+                
+                    <td class="py-4 text-right">
+                      <button class="delete-product pr-4 text-red-500 hover:text-red-700 transition" data-pid="{{ pid }}">
+                        <i class="fa-solid fa-trash"></i>                        
+                      </button>
+                    </td>
                   </tr>
-                  
-                  <!-- Product row 2 -->
-                  <tr class="border-b border-white/30">
-                    <td class="py-4">
-                      <div class="flex items-center">
-                        <img class="h-16 w-16 rounded mr-4" src="{% static '/assets/img/Big-Mass-Strawberry.webp' %}" alt="Product">
-                        <span class="font-medium">Big Mass Strawberry</span>
-                      </div>
-                    </td>
-                    <td class="py-4 text-right">100 EGP</td>
-                    <td class="py-4">
-                      <div class="flex justify-end items-center">
-                        <button class="border border-[#b9a848] rounded-l px-3 py-1 bg-transparent text-white hover:bg-[#b9a848] hover:text-gray-900 transition">
-                          -
-                        </button>
-                        <span class="border-t border-b border-[#b9a848] px-3 py-1">1</span>
-                        <button class="border border-[#b9a848] rounded-r px-3 py-1 bg-transparent text-white hover:bg-[#b9a848] hover:text-gray-900 transition">
-                          +
-                        </button>
-                      </div>
-                    </td>
-                    <td class="py-4 text-right">100 EGP</td>
-                  </tr>
-                  
-                  <!-- Product row 3 -->
-                  <tr>
-                    <td class="py-4">
-                      <div class="flex items-center">
-                        <img class="h-16 w-16 rounded mr-4" src="{% static '/assets/img/Big-Mass-Strawberry.webp' %}" alt="Product">
-                        <span class="font-medium">Big Mass Strawberry</span>
-                      </div>
-                    </td>
-                    <td class="py-4 text-right">100 EGP</td>
-                    <td class="py-4">
-                      <div class="flex justify-end items-center">
-                        <button class="border border-[#b9a848] rounded-l px-3 py-1 bg-transparent text-white hover:bg-[#b9a848] hover:text-gray-900 transition">
-                          -
-                        </button>
-                        <span class="border-t border-b border-[#b9a848] px-3 py-1">1</span>
-                        <button class="border border-[#b9a848] rounded-r px-3 py-1 bg-transparent text-white hover:bg-[#b9a848] hover:text-gray-900 transition">
-                          +
-                        </button>
-                      </div>
-                    </td>
-                    <td class="py-4 text-right">100 EGP</td>
-                  </tr>
+                  {% endfor %}
                 </tbody>
+                
               </table>
             </div>
           </div>
           
-          <!-- Summary section - full width on mobile, 1/4 on desktop -->
           <!-- Summary section (full width on small screens, 1/4 on larger screens) -->
           <div class="w-full lg:w-1/4">
             <div class="bg-transparent border-2 border-white/30 rounded-lg shadow-md p-6">
@@ -126,31 +123,33 @@
                 Summary
               </h2>
               <div class="flex justify-between mb-2 text-white">
-                <span>Subtotal</span>
-                <span>$19.99</span>
+                <span class="font-semibold">Items in Cart</span>
+                <span class="font-semibold">{{cart_total_items}}</span>
               </div>
-              <div class="flex justify-between mb-2 text-white">
-                <span>Taxes</span>
-                <span>$1.99</span>
-              </div>
+              
               <div class="flex justify-between mb-2 text-white">
                 <span>Shipping</span>
-                <span>$0.00</span>
+                <span>0.00</span>
               </div>
               <hr class="my-4 border-white/30" />
               <div class="flex justify-between mb-2 text-white">
                 <span class="font-semibold">Total</span>
-                <span class="font-semibold">$21.98</span>
+                <span class="font-semibold"> EGP {{cart_total_amount}}</span>
+                
+
               </div>
               <!-- Checkout button -->
+               {% if cart_total_amount %}
               <div class="flex justify-center mt-4">
-                <button
-                  type="submit"
-                  class="bg-[#1E1E1E] w-1/2 text-center text-[#b9a848] font-bold border-2 border-white/20 shadow-md px-4 py-2 rounded-md hover:bg-[#b9a848] hover:text-[#28282B] transition-colors duration-150 cursor-pointer"
+                <a
+                  href="{% url 'core:checkout' %}"
+                  class="bg-[#1E1E1E] w-1/2 text-center text-[#b9a848] font-bold border-2 border-white/20 shadow-md px-4 py-2 rounded-md 
+                  hover:bg-[#b9a848] hover:text-[#28282B] transition-colors duration-150 cursor-pointer"
                 >
                   Checkout
-                </button>
+                </a>
               </div>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -158,6 +157,15 @@
      </main>
     
   </div>
+  <!--search button -->
+  <script src="{% static 'assets/js/search.js' %}"></script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script src="{% static 'assets/js/function.js' %}"></script>
+  <script src="{% static 'assets/js/range-slider.js' %}"></script>
+  <script src="{% static 'assets/js/filters.js' %}"></script>
+
   </body>
 </html>
 {% endblock content %}

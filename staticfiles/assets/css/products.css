@@ -48,8 +48,12 @@ main {
       width: 100%;
       flex-wrap: wrap;
       text-align: center;
-
            
+}
+@media (max-width: 1024px) {
+    .item-b {
+        height: 175px;
+    }
 }
 /* categories */
 .item-c {
@@ -96,6 +100,8 @@ main {
         gap: 0px;
     }
 }
+
+
 
 
 

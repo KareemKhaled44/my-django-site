@@ -288,12 +288,6 @@ media queries
       & img {
         max-height: 150px;
       }
-
-      & .add-to-cart {
-        width: 110px;
-        height: 32px;
-        font-size: 0.75rem;
-      }
     }
   }
 }

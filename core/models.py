@@ -3,6 +3,7 @@ from shortuuidfield import ShortUUIDField
 import shortuuid
 from django.utils.html import mark_safe 
 from userauths.models import User
+from decimal import Decimal
 
 
 STATUS_CHOICES = (
@@ -18,7 +19,18 @@ ORDER_STATUS_CHOICES = (
     ('canceled', 'Canceled'),
 )
 
-
+CITIES = [
+    ("Cairo", "Cairo"),
+    ("Alexandria", "Alexandria"),
+    ("Giza", "Giza"),
+    ("Mansoura", "Mansoura"),
+    ("Tanta", "Tanta"),
+    ("Aswan", "Aswan"),
+    ("Assiut", "Assiut"),
+    ("Zagazig", "Zagazig"),
+    ("Ismailia", "Ismailia"),
+    ("Fayoum", "Fayoum"),
+]
 
 # Create your models here.
 class Category(models.Model):
@@ -40,7 +52,7 @@ class Category(models.Model):
       #function to show image in admin panel
       def category_image(self):
             if self.image:
-                return mark_safe(f'<img src="{self.image.url}" height="50" width="50" />')
+                return mark_safe(f'<img src="{self.image.url}" height="70" width="70" />')
             return "No Image"
       
       def __str__(self):
@@ -84,7 +96,7 @@ class Brand(models.Model):
 
     def brand_image(self):
         if self.image:
-            return mark_safe(f'<img src="{self.image.url}" height="30" width="30" />')
+            return mark_safe(f'<img src="{self.image.url}" height="70" width="70" />')
         return "No Image"
 
     def __str__(self):
@@ -144,7 +156,7 @@ class Product(models.Model):
     
     def product_image(self):
         if self.image:
-            return mark_safe(f'<img src="{self.image.url}" height="50" width="50" />')
+            return mark_safe(f'<img src="{self.image.url}" height="70" width="70" />')
         return "No Image"
     
     #function to show the discount percentage
@@ -167,12 +179,35 @@ class ProductImages(models.Model):
     def __str__(self):
         return self.product.title if self.product else "No Product"
 
+############################# address model ###############################
+class Address(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) #to show user who created the address
+    first_name=models.CharField(max_length=100, blank=True, null=True)
+    last_name=models.CharField(max_length=100, blank=True, null=True)
+    email = models.EmailField(unique=True, blank=True, null=True)  # Email field for the address
+    phone=models.CharField(max_length=20, blank=True, null=True)
 
+    street_address = models.CharField(max_length=255, blank=True, null=True)
+    apartment = models.CharField(max_length=50, blank=True, null=True) 
+
+    status=models.BooleanField(default=False) #to show if the address is default or not
+
+    postal_code = models.CharField(max_length=10, blank=True, null=True)
+    city = models.CharField(max_length=100, choices=CITIES, default='Cairo', blank=True, null=True)  # Default city is Cairo
+
+    class Meta:
+        verbose_name_plural='addresses'
 
 ############################ cart, order, orderitem models ###############################
 class CartOrder(models.Model):
+    oid = ShortUUIDField(primary_key=True)
     user=models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) #to show user who created the cart order
-    total_price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
+
+    price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
+    coupons=models.ManyToManyField("core.Coupon", blank=True) #to show coupon of the order
+    saved = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) #to show saved amount of the order
+    total_price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) #to show total price of the order
     order_date=models.DateTimeField(auto_now_add=True)
     order_status=models.CharField(max_length=10, choices=ORDER_STATUS_CHOICES, default='pending')
     paid_status=models.BooleanField(default=False) #to show if the order is paid or not
@@ -181,10 +216,15 @@ class CartOrder(models.Model):
     class Meta:
         verbose_name_plural='cart orders'
 
-    def update_total_price(self):
-        total = self.cartorderitem_set.aggregate(total=models.Sum('total_price'))['total'] or 0
-        self.total_price = total
-        self.save()
+
+    
+
+    def save(self, *args, **kwargs):
+        if not self.oid:
+            self.oid = shortuuid.ShortUUID().random(length=8).upper()
+            prefix = "ORD-"
+            self.oid = f"{prefix}{self.oid}"
+        super().save(*args, **kwargs) 
 
 
     def __str__(self):
@@ -193,7 +233,7 @@ class CartOrder(models.Model):
 class CartOrderItem(models.Model):
     order=models.ForeignKey(CartOrder, on_delete=models.CASCADE, null=True, blank=True) #to show cart order of the item
     product=models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True) #to show product of the item
-    image=models.CharField(max_length=100, blank=True, null=True) #to show image of the item
+    image=models.ImageField(max_length=100, blank=True, null=True) #to show image of the item
     quantity=models.PositiveIntegerField(default=1) 
     price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     total_price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
@@ -203,44 +243,27 @@ class CartOrderItem(models.Model):
     class Meta:
         verbose_name_plural='cart order items'
     
-    def save(self, *args, **kwargs):
-        # Calculate the total price of the item
-        self.total_price = self.quantity * self.price
-        
-        # Save the cart order item
-        super().save(*args, **kwargs)
-        
-        # After saving, update the total price of the order
-        if self.order:
-            self.order.update_total_price()
-
-    def delete(self, *args, **kwargs):
-        order = self.order
-        super().delete(*args, **kwargs)
-        
-        # After deleting, update the total price of the order
-        if order:
-            order.update_total_price()
+    
 
 
     def order_image(self):
         if self.product and self.product.image:
-            return mark_safe(f'<img src="{self.product.image.url}" height="50" width="50" />') 
+            return mark_safe(f'<img src="{self.product.image.url}" height="70" width="70" />')
         return "No Image"
     
     def __str__(self):
         return f"{self.product.title} x {self.quantity}"
     
-############################# address model ###############################
-class Address(models.Model):
-    user=models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) #to show user who created the address
-    name=models.CharField(max_length=100)
-    phone=models.CharField(max_length=15, blank=True, null=True)
-    address=models.TextField(blank=True, null=True)
-    status=models.BooleanField(default=False) #to show if the address is default or not
-    city=models.CharField(max_length=100, blank=True, null=True)
+
+
+############################# coupon model ###############################
+class Coupon(models.Model):
+    code = models.CharField(max_length=20, unique=True)
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    active = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name_plural='addresses'
+        verbose_name_plural='coupons'
 
-    
+    def __str__(self):
+        return self.code

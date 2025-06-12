@@ -109,7 +109,7 @@
             </button>
           </li>
           <li>
-            <a href="cart-page.html" class="cart">
+            <a href="{% url 'core:cart' %}" class="cart">
               <i class="fa-solid fa-cart-shopping">
                 <span id="cart-items-count" class="cart-number">{{request.session.cart_data_obj|length}}</span>
               </i></a
@@ -138,8 +138,8 @@
         </ul>
       </header>
       
-      {% if messages %}
-      <div class="fixed top-10 left-1/2 transform -translate-x-1/2 z-50 space-y-3 mt-20">
+      <div id="messages-container"
+       class="fixed top-10 left-1/2 transform -translate-x-1/2 z-50 space-y-3 mt-20">
         {% for message in messages %}
           <div class="alert px-5 py-3 rounded-xl shadow-lg min-w-[300px] max-w-md text-center transition-opacity duration-300
                       {% if 'success' in message.tags %}
@@ -155,8 +155,8 @@
           </div>
         {% endfor %}
       </div>
-    {% endif %}
-
+      
+    
       <script>
         setTimeout(() => {
           document.querySelectorAll('.alert').forEach(el => {
@@ -173,7 +173,7 @@
 
       
       <!--Footer container-->
-    <footer class="bg-[#28282B] text-gray-300 py-10 px-6">
+    <footer class="bg-[#28282B] text-gray-300 py-6 px-6">
       <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         
         <!-- Logo & Description -->
@@ -183,34 +183,51 @@
         </div>
     
         <!-- Products -->
-        <div class="flex flex-col ">
-          <h3 class="text-xl text-[#b9a848] font-semibold  border-b-2 border-gray-700 mb-4">Products</h3>
-          <ul class="flex flex-col space-y-2 text-sm">
-
+        <div class="flex flex-col items-start sm:items-center ">
+          <h3 class="text-xl text-[#b9a848] font-semibold border-b-2 border-gray-700 mb-4">Categories</h3>
+          <ul class="flex flex-col space-y-2 text-sm  items-start sm:items-center">
             {% for c in categories %}
-            <li><a href="{% url 'core:category-product-list' c.cid %}" class="hover:text-[#b9a848]"> {{c.title}}</a></li>
+            <li class="flex items-center">
+              <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              <a href="{% url 'core:category-product-list' c.cid %}" class="hover:text-[#b9a848] text-white">
+                {{ c.title }}
+              </a>
+            </li>
             {% endfor %}
-
           </ul>
         </div>
+        
+
     
         <!-- Support -->
-        <div class="flex flex-col">
+        <div class="flex flex-col  items-start sm:items-center">
           <h3 class="text-xl text-[#b9a848] font-semibold  border-b-2 border-gray-700 mb-4">Support</h3>
-          <ul class="flex flex-col space-y-2 text-sm">
-            <li><a href="#" class="hover:text-[#b9a848]">Contact Us</a></li>
-            <li><a href="#" class="hover:text-[#b9a848]">Shipping Policy</a></li>
-            <li><a href="#" class="hover:text-[#b9a848]">Return Policy</a></li>
+          <ul class="flex flex-col space-y-2 text-sm  items-start sm:items-center">
+            <li><a href="#" class="hover:text-[#b9a848]">
+              <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              Contact Us</a></li>
+            <li><a href="#" class="hover:text-[#b9a848]"> 
+            <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              Shipping Policy</a></li>
+            <li><a href="#" class="hover:text-[#b9a848]"> 
+            <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              Return Policy</a></li>
           </ul>
         </div>
     
         <!-- Company -->
-        <div class="flex flex-col">
+        <div class="flex flex-col  items-start sm:items-center">
           <h3 class="text-xl text-[#b9a848] font-semibold  border-b-2 border-gray-700 mb-4">Company</h3>
-          <ul class="flex flex-col space-y-2 text-sm">
-            <li><a href="#" class="hover:text-[#b9a848]">About Us</a></li>
-            <li><a href="#" class="hover:text-[#b9a848]">Terms of Service</a></li>
-            <li><a href="#" class="hover:text-[#b9a848]">Privacy Policy</a></li>
+          <ul class="flex flex-col space-y-2 text-sm  items-start sm:items-center">
+            <li><a href="#" class="hover:text-[#b9a848]">
+            <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              About Us</a></li>
+            <li><a href="#" class="hover:text-[#b9a848]"> 
+            <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              Terms of Service</a></li>
+            <li><a href="#" class="hover:text-[#b9a848]">
+            <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              Privacy Policy</a></li>
           </ul>
         </div>
       </div>
@@ -247,7 +264,7 @@
     <script src="https://cdn.jsdelivr.net/npm/tw-elements/js/tw-elements.umd.min.js"></script>
 
     <!-- Hamburger Menu Toggle -->
-     <script>
+    <script>
       const menuToggle = document.getElementById('menuToggle');
       const mobileMenu = document.getElementById('mobileMenu');
 
@@ -256,7 +273,7 @@
       });
     </script>
 
-     <script>
+    <script>
     const input = document.getElementById("searchInput");
     const resultsBox = document.createElement("div");
     resultsBox.className = "absolute bg-white w-full z-50 rounded shadow-md";
@@ -283,7 +300,8 @@
         </div>
       `).join("");
     });
-  </script>
+    </script>
+    <script src="{% static 'assets/js/messages.js' %}"></script>
     
 </body>
 </html>

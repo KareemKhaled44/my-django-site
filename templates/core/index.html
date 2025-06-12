@@ -191,6 +191,7 @@
           <a href="{% url 'core:category-product-list' c.cid %}"
             >
           <img
+            class="product-image"
             src="{{ c.image.url }}"
           /></a>
           <div style="text-align: center">
@@ -239,9 +240,9 @@
             <div class="flex flex-col md:flex-row items-center justify-between mt-3">
             <!-- السعر -->
             <p class="price">
-              <span class="current-product-price">{{p.price}}</span>EGP <br>
+              EGP <span class="current-product-price">{{p.price}}</span> <br>
               {% if p.old_price %}
-              <span class="old-price"> {{p.old_price}} EGP</span>
+              <span class="old-price">EGP {{p.old_price}} </span>
               {% endif %}
             </p>
             
@@ -252,7 +253,8 @@
               <span class="text">add to cart</span>
             </a>
             {% else %}
-            <button disabled class="bg-gray-600 text-white px-4 py-1.5 rounded-md text-sm w-full sm:w-auto">
+            <button disabled class=" w-[140px] h-[40px] rounded-[12px]
+               border-none bg-gray-600 flex items-center justify-center">
               Out of Stock
             </button>
             {% endif %}
@@ -287,14 +289,6 @@
           </div>
           {% endif %}
 
-          {% if p.in_stock == False %}
-          <div class=" absolute top-2 left-2  
-          bg-gray-700 text-white text-xs sm:text-[0.65rem]
-           xs:text-[0.55rem] font-semibold px-1.5 py-0.5 sm:px-2 sm:py-1  rounded  shadow-lg z-10">
-            Sold Out
-          </div>
-          {% endif %}
-
           <img src="{{p.image.url}}" alt="">
 
           <div class=" mt-3 ">
@@ -308,21 +302,28 @@
             <div class="flex flex-col md:flex-row items-center gap-4 mt-3">
               <!-- السعر -->
               <p class="price">
-                {{p.price}} EGP <br>
+                EGP {{p.price}} <br>
                 {% if p.old_price %}
-                <span class="old-price"> {{p.old_price}} EGP</span>
+                <span class="old-price">EGP {{p.old_price}}</span>
                 {% endif %}
               </p>
               
 
+              {% if p.in_stock %}
               <!-- الزرار -->
               <a href="{% url 'core:product-detail' p.pid %}"class="add-to-cart">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span class="text">add to cart</span>
               </a>
+              {% else %}
+              <button disabled class=" w-[140px] h-[40px] rounded-[12px]
+               border-none bg-gray-600 flex items-center justify-center">
+                Out of Stock
+              </button>
+              {% endif %}
             </div>
           </div>
-          </div>
+        
         </article>
         <!-- end card -->  
         {% endfor %}     
@@ -330,7 +331,7 @@
     </main>
 
     <!--Footer container-->
-    <footer class="bg-[#28282B] text-gray-300 py-10 px-6">
+    <footer class="bg-[#28282B] text-gray-300 py-6 px-6">
       <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         
         <!-- Logo & Description -->
@@ -340,34 +341,51 @@
         </div>
     
         <!-- Products -->
-        <div class="flex flex-col ">
-          <h3 class="text-xl text-[#b9a848] font-semibold  border-b-2 border-gray-700 mb-4">Products</h3>
-          <ul class="flex flex-col space-y-2 text-sm">
-
+        <div class="flex flex-col items-start sm:items-center ">
+          <h3 class="text-xl text-[#b9a848] font-semibold border-b-2 border-gray-700 mb-4">Products</h3>
+          <ul class="flex flex-col space-y-2 text-sm  items-start sm:items-center">
             {% for c in categories %}
-            <li><a href="{% url 'core:category-product-list' c.cid %}" class="hover:text-[#b9a848]"> {{c.title}}</a></li>
+            <li class="flex items-center">
+              <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              <a href="{% url 'core:category-product-list' c.cid %}" class="hover:text-[#b9a848] text-white">
+                {{ c.title }}
+              </a>
+            </li>
             {% endfor %}
-
           </ul>
         </div>
+        
+
     
         <!-- Support -->
-        <div class="flex flex-col">
+        <div class="flex flex-col  items-start sm:items-center">
           <h3 class="text-xl text-[#b9a848] font-semibold  border-b-2 border-gray-700 mb-4">Support</h3>
-          <ul class="flex flex-col space-y-2 text-sm">
-            <li><a href="#" class="hover:text-[#b9a848]">Contact Us</a></li>
-            <li><a href="#" class="hover:text-[#b9a848]">Shipping Policy</a></li>
-            <li><a href="#" class="hover:text-[#b9a848]">Return Policy</a></li>
+          <ul class="flex flex-col space-y-2 text-sm  items-start sm:items-center">
+            <li><a href="#" class="hover:text-[#b9a848]">
+              <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              Contact Us</a></li>
+            <li><a href="#" class="hover:text-[#b9a848]"> 
+            <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              Shipping Policy</a></li>
+            <li><a href="#" class="hover:text-[#b9a848]"> 
+            <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              Return Policy</a></li>
           </ul>
         </div>
     
         <!-- Company -->
-        <div class="flex flex-col">
+        <div class="flex flex-col  items-start sm:items-center">
           <h3 class="text-xl text-[#b9a848] font-semibold  border-b-2 border-gray-700 mb-4">Company</h3>
-          <ul class="flex flex-col space-y-2 text-sm">
-            <li><a href="#" class="hover:text-[#b9a848]">About Us</a></li>
-            <li><a href="#" class="hover:text-[#b9a848]">Terms of Service</a></li>
-            <li><a href="#" class="hover:text-[#b9a848]">Privacy Policy</a></li>
+          <ul class="flex flex-col space-y-2 text-sm  items-start sm:items-center">
+            <li><a href="#" class="hover:text-[#b9a848]">
+            <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              About Us</a></li>
+            <li><a href="#" class="hover:text-[#b9a848]"> 
+            <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              Terms of Service</a></li>
+            <li><a href="#" class="hover:text-[#b9a848]">
+            <span class="text-[#b9a848] mr-2 text-bold">›</span> 
+              Privacy Policy</a></li>
           </ul>
         </div>
       </div>

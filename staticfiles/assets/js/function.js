@@ -1,38 +1,5 @@
 $(document).ready(function () {
-  $(".filter-category").click(function (e) {
-    e.preventDefault(); // تمنع التحويل للرابط
-
-    let cid = $(this).data("cid");
-
-    console.log("Clicked category URL:", cid);
-
-  
-    $.ajax({
-      url: "/async/category-product-list/" + cid + "/",
-      method: "GET",
-      headers: {
-        "X-Requested-With": "XMLHttpRequest",
-      },
-      beforesend: function () {
-        console.log("Loading...");
-      },
-      success: function (data) {
-        // هنا تحط الكود اللي يعرض المنتجات بدون ما تعمل reload
-        $("#product-container").html(data.html);
-        console.log("Products loaded successfully");
-        console.log("Products HTML:", data.html);
-        $("#pagination-container").html(data.pagination);
-        console.log("Pagination loaded successfully");
-        console.log("Pagination HTML:", data.pagination);
-
-      },
-      error: function () {
-        console.log("Something went wrong");
-      },
-     
-    });
-  });
-
+  // Function to apply filters and update product list
   $(document).on("click", ".pagination-link", function (e) {
     e.preventDefault();
 
@@ -53,6 +20,74 @@ $(document).ready(function () {
       },
     });
   });
+
+  $("#filter-button").click(function (e) {
+    e.preventDefault();
+    applyFilters(); 
+  });
+
+  $("#in-stock").change(function (e) {
+    e.preventDefault();
+    applyFilters();
+  });
+
+  $("#on-sale").change(function (e) {
+    e.preventDefault();
+    applyFilters();
+  });
+
+  $("#sort-by").change(function (e) {
+    e.preventDefault();
+    applyFilters();
+  });
+  
+  $(".brand-filter").change(function (e) {
+    e.preventDefault();
+    applyFilters();
+  });
+
+  // add to cart functionality
+
+  $(".add-to-cart-btn").on("click", function() {
+    let this_val = $(this);
+
+    // Use .closest to scope within the card
+    let product_card = this_val.closest(".card");
+
+    let productId = product_card.find(".product-id").val();
+    let quantity = product_card.find(".product-quantity").val();
+    let product_title = product_card.find(".product-title").text();
+    let product_price = product_card.find(".current-product-price").text();
+    let product_image = product_card.find(".product-image").val();
+
+    console.log("quantity:",quantity,
+      "productId:", productId,
+       "product_title:", product_title,
+       "product_price:",  product_price,
+       "product_image:", product_image);
+
+
+    $.ajax({
+      url: "/add-to-cart/",
+      data: {
+        pid: productId,
+        quantity: quantity,
+        product_title: product_title,
+        product_price: product_price,
+        product_image: product_image
+      },
+      beforesend: function() {
+        console.log("Adding to cart...");
+      },
+      success: function(response){
+        console.log("Product added to cart successfully");
+        this_val.html("<span style='color:#28282B'>✔</span>");
+
+        $("#cart-items-count").text(response.cart_total_items);
+      }
+    });
+  });
+
 });
 
 

@@ -15,13 +15,6 @@
     </div>
     {% endif %}
 
-    {% if p.in_stock == False %}
-    <div class=" absolute top-2 left-2  
-    bg-gray-700 text-white text-[0.65rem] sm:text-xs
-     xs:text-[0.55rem] font-semibold px-1.5 py-0.5 sm:px-2 sm:py-1  rounded  shadow-lg z-10">
-      Sold Out
-    </div>
-    {% endif %}
 
     <!-- Product Image -->
      <img src="{{p.image.url}}" alt="">
@@ -40,11 +33,18 @@
         <span class="old-price"> {{p.old_price}} EGP</span>
       </p>
 
+      {% if p.in_stock %}
       <!-- الزرار -->
-       <button class="add-to-cart">
+      <a href="{% url 'core:product-detail' p.pid %}"class="add-to-cart">
         <i class="fa-solid fa-cart-shopping"></i>
         <span class="text">add to cart</span>
+      </a>
+      {% else %}
+      <button disabled class=" w-[140px] h-[40px] rounded-[12px]
+          border-none bg-gray-600 flex items-center justify-center">
+        Out of Stock
       </button>
+      {% endif %}
       </div>
     </div>
     </div>

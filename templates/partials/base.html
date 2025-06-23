@@ -190,12 +190,15 @@
               {% include "partials/cart_preview.html" %}
           </div>
         </li>
+        {% if request.user.is_authenticated %}
         <!-- logout Icon -->
         <li>
           <a href="{% url 'userauths:sign-out' %}" class="log-out"
             ><i class="fa-solid fa-right-from-bracket"></i
           ></a>
         </li>
+        {% endif %}
+
 
         <li>
           <!-- Hamburger Button (mobile only) -->

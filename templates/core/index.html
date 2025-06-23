@@ -46,7 +46,7 @@
   <body>
     <div class="top-img">
     <!--header start-->
-    <header class="flex">
+    <header class="flex ">
       <a href="{% url 'core:index' %}" class="logo">Peak Health</a>
       
       <ul>         
@@ -122,7 +122,7 @@
             transition-all duration-200 transform group-hover:translate-y-0 translate-y-1">
             <a href="{% url 'core:dashboard' %}" 
             class="block px-4 py-2 text-white text-base hover:bg-[#b9a848] ">
-            Dashboard</a>
+            My Account</a>
             {% if request.user.is_superuser %}
             <a href="{% url 'useradmin:dashboard' %}" 
             class="block px-4 py-2 text-white text-base hover:bg-[#b9a848] ">
@@ -171,36 +171,23 @@
             </i>
           </a>
           
-          <div class="absolute right-0 mt-2 w-48 bg-[#28282B] border border-white/30 rounded-md
-                      shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible 
-                      transition-all duration-200 transform group-hover:translate-y-0 translate-y-1">
+          <div id="cart-preview-container"
+           class="absolute right-0 mt-2 w-48 bg-[#28282B] border border-white/30 rounded-md
+                shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible 
+                transition-all duration-200 transform group-hover:translate-y-0 translate-y-1">
                       
-            {% if cart_data %}
-              {% for pid, item in cart_data.items %}
-                <div class="flex px-4 py-2 border-b border-white/20 text-white text-sm">                 
-                    <img src="{{ item.image }}" alt="" class="w-10 h-10 inline-block mr-2">
-                    <a href="{% url 'core:product-detail' pid %}" class="hover:text-[#b9a848]">
-                      {{ item.title|truncatechars:20 }}
-                    </a>
-                </div>
-              {% endfor %}
-              <div class="flex justify-between">
-                <a href="{% url 'core:cart' %}"
-                  class="block px-4 py-2 text-white text-base hover:text-[#b9a848]">View</a>
-              <a href="{% url 'core:checkout' %}" 
-                  class="block px-4 py-2 text-white text-base hover:text-[#b9a848]">Checkout</a>
-              </div>
-            {% else %}
-              <span class="block px-4 py-2 text-white text-sm">Cart is empty</span>
-            {% endif %}
+              {% include "partials/cart_preview.html" %}
           </div>
         </li>
+        {% if request.user.is_authenticated %}
         <!-- logout Icon -->
         <li>
           <a href="{% url 'userauths:sign-out' %}" class="log-out"
             ><i class="fa-solid fa-right-from-bracket"></i
           ></a>
         </li>
+        {% endif %}
+
 
         <li>
           <!-- Hamburger Button (mobile only) -->
@@ -235,6 +222,9 @@
             <div class="accountSubmenu transition-all duration-300 
                 ease-in-out">
               <a href="{% url 'core:dashboard' %}?section=dashboard">Dashboard</a>
+              {% if request.user.is_superuser %}
+              <a href="{% url 'useradmin:dashboard' %}">Admin Dashboard</a>
+              {% endif %}
               <a href="{% url 'core:dashboard' %}?section=orders">My Orders</a>
               <a href="{% url 'core:dashboard' %}?section=wishlist">Wishlist</a>
               <a href="{% url 'userauths:sign-out' %}">Logout</a>

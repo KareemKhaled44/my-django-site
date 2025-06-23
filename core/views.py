@@ -495,10 +495,12 @@ def delete_address(request):
     except Address.DoesNotExist:
         messages.error(request, "Address not found.")
         return JsonResponse({'success': False, 'message': 'Address not found.'})
-
+    
 def add_to_wishlist(request):
     pid= request.GET.get('pid')
     product = get_object_or_404(Product, pid=pid)
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'message': 'You need to be logged in to add items to your wishlist.'})
     if Wishlist.objects.filter(user=request.user, product=product).exists():
         return JsonResponse({'success': False, 'message': 'Product already in wishlist.'})
     elif Wishlist.objects.filter(user=request.user).count() >= 10:

@@ -47,10 +47,10 @@
         <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-semibold text-light">Top Products</h2>
-                <span class="text-sm text-light/70">Coming soon</span>
+                <span class="text-sm text-light/70">By Revenue</span>
             </div>
-            <div class="w-full h-80 bg-dark/50 rounded flex items-center justify-center">
-                <p class="text-light/50">New chart will be placed here</p>
+            <div class="w-full h-80">
+                <canvas id="topProductsChart"></canvas>
             </div>
         </div>
     </div>
@@ -59,22 +59,22 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
         <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
             <h3 class="text-sm font-medium text-light/80 mb-1">Total Revenue</h3>
-            <p class="text-2xl font-bold text-gold">$12,345</p>
+            <p class="text-2xl font-bold text-gold">EGP {{total_revenue}}</p>
             <p class="text-xs text-green-400 mt-1">↑ 12% from last month</p>
         </div>
         <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
             <h3 class="text-sm font-medium text-light/80 mb-1">Total Orders</h3>
-            <p class="text-2xl font-bold text-light">156</p>
+            <p class="text-2xl font-bold text-light">{{total_orders_count}}</p>
             <p class="text-xs text-green-400 mt-1">↑ 8% from last month</p>
         </div>
         <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
             <h3 class="text-sm font-medium text-light/80 mb-1">Products in Stock</h3>
-            <p class="text-2xl font-bold text-light">87</p>
+            <p class="text-2xl font-bold text-light">{{in_stock_products}}</p>
             <p class="text-xs text-red-400 mt-1">↓ 5% from last month</p>
         </div>
         <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
             <h3 class="text-sm font-medium text-light/80 mb-1">Avg. Order Value</h3>
-            <p class="text-2xl font-bold text-gold">$79.13</p>
+            <p class="text-2xl font-bold text-gold">EGP {{avg_order_value|floatformat:2}}</p>
             <p class="text-xs text-green-400 mt-1">↑ 3% from last month</p>
         </div>
     </div>
@@ -227,6 +227,62 @@
             }
       }
       });
+
+    // Top Products Chart
+    const topProductsCtx = document.getElementById('topProductsChart');
+    new Chart(topProductsCtx, {
+        type: 'bar',
+        data: {
+            labels: JSON.parse('{{ top_product_names|escapejs }}'),
+            datasets: [{
+                label: 'Revenue (EGP)',
+                data: JSON.parse('{{ top_product_revenue|escapejs }}'),
+                backgroundColor: 'rgba(185, 168, 72, 0.6)',
+                borderColor: 'rgba(185, 168, 72, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#F9FAFB'
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `EGP ${context.raw.toFixed(2)}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                    },
+                    ticks: {
+                        color: '#F9FAFB',
+                        callback: function(value) {
+                            return 'EGP ' + value.toLocaleString();
+                        }
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                    },
+                    ticks: {
+                        color: '#F9FAFB'
+                    }
+                }
+            }
+        }
+    });
 
 </script>
 

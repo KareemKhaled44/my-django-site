@@ -222,7 +222,7 @@ class CartOrder(models.Model):
     price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     saved = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) #to show saved amount of the order
     total_price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) #to show total price of the order
-    order_date=models.DateTimeField(auto_now_add=False)
+    order_date=models.DateTimeField(auto_now_add=True)
     order_status=models.CharField(max_length=10, choices=ORDER_STATUS_CHOICES, default='pending')
     paid_status=models.BooleanField(default=False) #to show if the order is paid or not
 

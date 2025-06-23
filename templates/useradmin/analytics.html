@@ -1,0 +1,234 @@
+{% extends "useradmin/base-sidebar.html" %}
+{% load static %}
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <!-- Dashboard Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gold">Analytics Dashboard</h1>
+        <p class="text-light/80">Key metrics and performance indicators</p>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Sales Performance Card -->
+        <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-light">Monthly Orders</h2>
+                <span class="text-sm text-light/70">Last 3 months</span>
+            </div>
+            <div class="w-full h-80">
+                <canvas id="barChart" class="w-full h-full"></canvas>
+            </div>
+        </div>
+
+        <!-- Stock Status Card -->
+        <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-light">Stock Status</h2>
+                <span class="text-sm text-light/70">Inventory overview</span>
+            </div>
+            <div class="w-full h-80">
+                <canvas id="pieChart" class="w-full h-full"></canvas>
+            </div>
+        </div>
+
+        <!-- Revenue Trend -->
+        <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-light">Revenue Trend</h2>
+                <span class="text-sm text-light/70">Last {{ month|length }} months</span>
+            </div>
+            <div class="w-full h-80">
+                  <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Empty Slot for New Chart 2 -->
+        <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-light">Top Products</h2>
+                <span class="text-sm text-light/70">Coming soon</span>
+            </div>
+            <div class="w-full h-80 bg-dark/50 rounded flex items-center justify-center">
+                <p class="text-light/50">New chart will be placed here</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards Row -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
+        <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
+            <h3 class="text-sm font-medium text-light/80 mb-1">Total Revenue</h3>
+            <p class="text-2xl font-bold text-gold">$12,345</p>
+            <p class="text-xs text-green-400 mt-1">↑ 12% from last month</p>
+        </div>
+        <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
+            <h3 class="text-sm font-medium text-light/80 mb-1">Total Orders</h3>
+            <p class="text-2xl font-bold text-light">156</p>
+            <p class="text-xs text-green-400 mt-1">↑ 8% from last month</p>
+        </div>
+        <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
+            <h3 class="text-sm font-medium text-light/80 mb-1">Products in Stock</h3>
+            <p class="text-2xl font-bold text-light">87</p>
+            <p class="text-xs text-red-400 mt-1">↓ 5% from last month</p>
+        </div>
+        <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
+            <h3 class="text-sm font-medium text-light/80 mb-1">Avg. Order Value</h3>
+            <p class="text-2xl font-bold text-gold">$79.13</p>
+            <p class="text-xs text-green-400 mt-1">↑ 3% from last month</p>
+        </div>
+    </div>
+</div>
+<script>
+      
+    // Bar Chart - Monthly Orders
+    const labels = JSON.parse('{{ month|escapejs }}');
+    const data = JSON.parse('{{ orders_count|escapejs }}');
+
+    const barctx = document.getElementById("barChart");
+    new Chart(barctx, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Orders",
+                data: data,
+                backgroundColor: 'rgba(185, 168, 72, 0.2)',
+                borderColor: 'rgba(185, 168, 72, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#F9FAFB'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                    },
+                    ticks: {
+                        color: '#F9FAFB'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                    },
+                    ticks: {
+                        color: '#F9FAFB'
+                    }
+                }
+            }
+        }
+    });
+    
+    // Pie Chart - Stock Status
+    const pieCtx = document.getElementById("pieChart");
+    const pieData = JSON.parse('{{ in_out_stock_data|escapejs }}');
+    const pieLabels = JSON.parse('{{ in_out_stock_labels|escapejs }}');
+    new Chart(pieCtx, {
+        type: "pie",
+        data: {
+            labels: pieLabels,
+            datasets: [{
+                label: "Stock Status",
+                data: pieData,
+                backgroundColor: [
+                    'rgba(14, 175, 119, 0.9)',  
+                    'rgba(220, 38, 38, 0.9)'    
+                ],
+                borderColor: [
+                    'rgba(5, 150, 105, 1)',     
+                    'rgba(185, 28, 28, 1)'
+                ],
+                borderWidth: 1,
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#F9FAFB'
+                    }
+                }
+            }
+        },
+    });
+
+    // Revenue Trend Chart
+      const revenueCtx = document.getElementById('revenueChart');
+      const revenueData = JSON.parse('{{ revenue_data|escapejs }}');
+
+      new Chart(revenueCtx, {
+      type: 'line',
+      data: {
+            labels: JSON.parse('{{ month|escapejs }}'),
+            datasets: [{
+                  label: 'Revenue (EGP)',
+                  data: revenueData,
+                  backgroundColor: 'rgba(185, 168, 72, 0.1)',
+                  borderColor: 'rgba(185, 168, 72, 0.8)',
+                  borderWidth: 2,
+                  tension: 0.3,
+                  fill: true,
+                  pointBackgroundColor: 'rgba(185, 168, 72, 1)',
+                  pointBorderColor: '#fff',
+                  pointHoverRadius: 5
+            }]
+      },
+      options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                  legend: {
+                  labels: {
+                        color: '#F9FAFB'
+                  }
+                  },
+                  tooltip: {
+                  callbacks: {
+                        label: function(context) {
+                              return 'EGP ' + context.raw.toFixed(2);
+                        }
+                  }
+                  }
+            },
+            scales: {
+                  y: {
+                  beginAtZero: true,
+                  grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                  },
+                  ticks: {
+                        color: '#F9FAFB',
+                        callback: function(value) {
+                              return 'EGP ' + value.toFixed(2);
+                        }
+                  }
+                  },
+                  x: {
+                  grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                  },
+                  ticks: {
+                        color: '#F9FAFB'
+                  }
+                  }
+            }
+      }
+      });
+
+</script>
+
+
+{% endblock %}

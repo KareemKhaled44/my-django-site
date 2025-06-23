@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peak Health - Admin Dashboard</title>
     <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-dark text-light">
       <!-- Main Content -->
@@ -207,8 +206,8 @@
                 label: "Stock Status",
                 data: pieData,
                 backgroundColor: [
-                'rgba(0, 200, 100, 1)',
-                'rgba(255, 99, 132, 1)',
+                'rgba(14, 175, 119, 0.9)',  
+                'rgba(220, 38, 38, 0.9)'
                 ],
                 borderColor: [
                 'rgba(0, 200, 100, 1)',
@@ -222,6 +221,7 @@
             maintainAspectRatio: false,
             },
         });
+        
     </script>
   </body>
 </html>

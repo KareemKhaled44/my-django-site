@@ -21,6 +21,7 @@
         }
     </script>
     <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <body class="bg-dark text-light">
@@ -64,7 +65,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                        <a href="{% url 'useradmin:analytics' %}" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
                             <i class="fas fa-chart-line mr-3"></i> Analytics
                         </a>
                     </li>

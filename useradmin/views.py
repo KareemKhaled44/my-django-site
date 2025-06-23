@@ -33,6 +33,8 @@ def dashboard(request):
     for order in orders:
         month.append(calendar.month_name[order['month']])
         total_orders.append(order['count'])
+
+
     in_stock = Product.objects.filter(in_stock=True).count()
     out_stock = Product.objects.filter(in_stock=False).count()  
         
@@ -118,3 +120,31 @@ def delete_product_view(request, pid):
     product = Product.objects.get(pid=pid)
     product.delete()
     return redirect('useradmin:products')
+
+def analytics_view(request):
+    orders = CartOrder.objects.annotate(
+        month=ExtractMonth('order_date')
+    ).values('month').annotate(
+        count=Count('oid'),
+        total=Sum('total_price')
+    ).order_by('month')    
+    month=[]
+    total_orders = []
+    revenue = []
+    for order in orders:
+        month.append(calendar.month_name[order['month']])
+        total_orders.append(order['count'])
+        revenue.append(float(order['total']) if order['total'] else 0.0)
+
+
+        
+    in_stock = Product.objects.filter(in_stock=True).count()
+    out_stock = Product.objects.filter(in_stock=False).count()  
+    context = {
+        'month': json.dumps(month),
+        'orders_count': json.dumps(total_orders),
+        'in_out_stock_data': json.dumps([in_stock, out_stock]),
+        'in_out_stock_labels': json.dumps(["instock", "outstock"]),
+        'revenue_data': json.dumps(revenue),
+    }
+    return render(request, 'useradmin/analytics.html', context)

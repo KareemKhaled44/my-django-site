@@ -330,7 +330,7 @@ def checkout_view(request):
         'default_address': default_address,
     })
 
-
+@login_required
 def invoice_view(request):
     categories = Category.objects.all()
     

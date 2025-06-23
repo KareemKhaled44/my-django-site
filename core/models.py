@@ -178,13 +178,23 @@ class ProductImages(models.Model):
 
     def __str__(self):
         return self.product.title if self.product else "No Product"
+    
+############################# wishlist model ###############################
+class Wishlist(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) 
+    product=models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True) #to show product of the wishlist
+    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        verbose_name_plural='wishlists' #to show plural name in admin panel
+    def __str__(self):
+        return f"{self.user.username} - {self.product.title}" if self.user and self.product else "Wishlist Item"
 
 ############################# address model ###############################
 class Address(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) #to show user who created the address
     first_name=models.CharField(max_length=100, blank=True, null=True)
     last_name=models.CharField(max_length=100, blank=True, null=True)
-    email = models.EmailField(unique=True, blank=True, null=True)  # Email field for the address
+    email = models.EmailField(blank=True, null=True)  # Email field for the address
     phone=models.CharField(max_length=20, blank=True, null=True)
 
     street_address = models.CharField(max_length=255, blank=True, null=True)
@@ -197,20 +207,25 @@ class Address(models.Model):
 
     class Meta:
         verbose_name_plural='addresses'
+    
 
 ############################ cart, order, orderitem models ###############################
 class CartOrder(models.Model):
     oid = ShortUUIDField(primary_key=True)
+    invoice_number=ShortUUIDField(max_length=100, blank=True, null=True) #to show invoice number of the item
+
     user=models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) #to show user who created the cart order
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
 
-    price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     coupons=models.ManyToManyField("core.Coupon", blank=True) #to show coupon of the order
+
+    price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     saved = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) #to show saved amount of the order
     total_price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) #to show total price of the order
-    order_date=models.DateTimeField(auto_now_add=True)
+    order_date=models.DateTimeField(auto_now_add=False)
     order_status=models.CharField(max_length=10, choices=ORDER_STATUS_CHOICES, default='pending')
     paid_status=models.BooleanField(default=False) #to show if the order is paid or not
+
     shipping_price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) #to show shipping price of the item
 
     class Meta:
@@ -224,6 +239,10 @@ class CartOrder(models.Model):
             self.oid = shortuuid.ShortUUID().random(length=8).upper()
             prefix = "ORD-"
             self.oid = f"{prefix}{self.oid}"
+        if not self.invoice_number:
+            self.invoice_number = shortuuid.ShortUUID().random(length=8).upper()
+            prefix = "INV-"
+            self.invoice_number = f"{prefix}{self.invoice_number}"
         super().save(*args, **kwargs) 
 
 
@@ -238,7 +257,6 @@ class CartOrderItem(models.Model):
     price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     total_price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     created_at = models.DateTimeField(auto_now_add=True)
-    invoice_number=models.CharField(max_length=100, blank=True, null=True) #to show invoice number of the item
     
     class Meta:
         verbose_name_plural='cart order items'

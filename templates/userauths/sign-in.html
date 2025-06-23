@@ -64,8 +64,10 @@
             </div>
 
             <div class="form-group">
-              <input class="form-input" required="" type="password" name="password" />
+              <input class="form-input" id="password" required="" type="password" name="password" />
               <label>Password</label>
+              <i class="fa-solid fa-eye toggle-password absolute right-3 top-6 cursor-pointer"
+               data-target="password"></i>
             </div>
 
             <div class="flex items-center justify-between flex-wrap">
@@ -85,7 +87,7 @@
               <!-- Checkbox for "Remember me" with a label -->
 
               <a
-                href="#"
+                href="{% url 'password_reset' %}"
                 class="text-base text-[#b9a848] font-bold hover:underline mb-0.5"
                 >Forgot password?</a
               >

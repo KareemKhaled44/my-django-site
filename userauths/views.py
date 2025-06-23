@@ -1,13 +1,21 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from userauths.forms import UserRegistrationForm
+from django.contrib.auth.views import PasswordResetCompleteView
+from django.urls import reverse_lazy
+from django.contrib import messages
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.conf import settings
 from userauths.models import User
-
+from core.models import Category
+from django.contrib.auth.hashers import check_password
 # Create your views here.
 def register_view(request):
+    categories = Category.objects.all()
+
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST or None)
         # Check if the form is valid
@@ -27,10 +35,12 @@ def register_view(request):
 
     context = {
         'form': form,
+        'categories': categories,
         }  
     return render(request, 'userauths/sign-up.html', context)
 
 def login_view(request):
+
     if request.user.is_authenticated:
         messages.warning(request, 'You are already logged in')
         return redirect('core:index')
@@ -60,3 +70,13 @@ def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out successfully')
     return redirect('userauths:sign-in')
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    def get_success_url(self):
+        return reverse_lazy('userauths:sign-in')  
+
+    def dispatch(self, request, *args, **kwargs):
+        messages.success(request, "Your password has been reset. You can now log in.")
+        return super().dispatch(request, *args, **kwargs)
+    
+

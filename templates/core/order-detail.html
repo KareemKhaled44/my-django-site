@@ -1,0 +1,106 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>home</title>
+    <!-- tailwind -->
+    
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/header.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/index.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/login.css' %}" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+<body>
+
+  <div class=" w-full  max-w-screen-xl mx-auto px-4 my-20">
+    <!-- Breadcrumb -->
+    <div class="p-4">
+      <nav class=" text-sm flex items-center gap-2  text-dark">
+        <span class="text-gold"><i class="fas fa-home"></i> Home</span>
+        <span class="text-light">/</span>
+        <span class="font-medium text-light">Order Details</span>
+      </nav>
+    </div>
+    <!-- Responsive layout -->
+    <div class="flex flex-col  lg:flex-row p-4 gap-8 items-start justify-center w-full">
+      <!-- Sidebar - buttons -->
+      <div class="w-full lg:w-2/4  space-y-4 pr-0 lg:pr-4">
+        <a href="{% url 'core:dashboard' %}"
+          class="flex items-center gap-2 rounded-lg py-4 px-2 border border-white/30 text-gold font-medium 
+                  w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200 
+                  box-border text-start">
+            <i class="fas fa-sliders-h"></i> Dashboard
+         </a>
+
+        <button onclick="showSection('orders')"
+          class="flex items-center gap-2 rounded-lg py-4 px-2 border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200 ">
+          <i class="fas fa-box"></i> Order Details
+        </button>
+
+        <a href="{% url 'userauths:sign-out' %}"
+         class="flex items-center gap-2 rounded-lg py-4 px-2 bg-transparent border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
+          <i class="fas fa-sign-out-alt"></i> Sign out
+        </a>
+      </div>
+      <!-- sections -->
+      <div class="w-full lg:w-3/4 p-4 border-t lg:border-t-0 lg:border-l border-white/30"> 
+        <!-- order section -->
+        <div id="orders" class="section  flex-1 overflow-hidden">
+          <h2 class="text-2xl font-semibold mb-4 text-gold">Your Orders</h2>
+          <div class="overflow-x-auto  rounded-lg border border-white/30 bg-transparent">
+            <table class="min-w-full text-sm text-dark">
+              <thead class="bg-transparent border-b border-white/30">
+                <tr class="text-left text-gold">
+                  <th class="p-4 font-medium whitespace-nowrap">Order INV</th>
+                  <th class="p-4 font-medium whitespace-nowrap">Title</th>
+                  <th class="p-4 font-medium whitespace-nowrap">Image</th>
+                  <th class="p-4 font-medium whitespace-nowrap">Qty</th>
+                  <th class="p-4 font-medium whitespace-nowrap">Price</th>
+                  <th class="p-4 font-medium whitespace-nowrap">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for o in order_items %}
+                <tr class="border-b border-white/30 hover:bg-gold/10">
+                  <td class="p-4 text-gold whitespace-nowrap">#{{order.invoice_number}}</td>
+                  <td class="p-4 whitespace-nowrap text-light">{{o.product.title}}</td>
+                  <td class="p-4"><img src="{{o.image}}" class="w-16 h-16"></td>
+                  <td class="p-4">
+                    <span class=" text-light">{{o.quantity}}</span> </td>
+                  <td class="p-4 whitespace-nowrap text-light">EGP {{o.price}}</td>
+                  <td class="p-4 whitespace-nowrap text-light">EGP {{o.total_price}}</td>
+                  
+                </tr>
+                {% endfor %}
+               
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+     
+
+
+    </div>
+  </div>
+
+  
+</body>
+</html>
+{% endblock content %}

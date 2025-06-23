@@ -6,13 +6,15 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+from userauths.forms import UserRegistrationForm, PasswordChangeForm, ProfileEditForm
 from userauths.models import User, Contact
 from core.forms import AddressForm
 from .services import apply_filters, apply_sorting, paginate_products
 from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_GET
-from core.models import Coupon, Product, ProductImages, Category, Address, Supplier, CartOrder, CartOrderItem, Brand
+from core.models import Coupon, Product, ProductImages, Category, Address, Supplier, CartOrder, CartOrderItem, Brand, Wishlist
 # Create your views here.
 def index(request):
     products= Product.objects.filter(is_active=True).order_by('-created_at')[:4]
@@ -92,6 +94,7 @@ def search_products(request):
     ]
     return JsonResponse(data, safe=False)
 
+#======================= cart view =========================
 
 def add_to_cart(request):
     
@@ -130,6 +133,10 @@ def add_to_cart(request):
             return JsonResponse({'error': str(e)}, status=500)
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+def update_cart_preview(request):
+    cart_data = request.session.get('cart_data_obj', {})
+    html = render_to_string("partials/cart_preview.html", {'cart_data': cart_data}, request=request)
+    return JsonResponse({'cart_preview_html': html})
 
 def cart_view(request):
     categories = Category.objects.all()
@@ -166,7 +173,7 @@ def delete_cart_item(request):
         for pid, item in request.session['cart_data_obj'].items():
             cart_total_amount += int(item['qty']) * float(item['price'])
 
-    context = render_to_string('core/async/cart_list.html', {
+    context = render_to_string('core/cart.html', {
         'cart_data': request.session['cart_data_obj'],
         'cart_total_amount': cart_total_amount,
         'cart_total_items': len(request.session['cart_data_obj']),
@@ -184,17 +191,19 @@ def update_cart_item(request):
         request.session['cart_data_obj'] = cart
 
     cart_total_amount = 0
+    item_subtotal = 0
     if 'cart_data_obj' in request.session:
         for pid, item in request.session['cart_data_obj'].items():
-            cart_total_amount += int(item['qty']) * float(item['price'])
+            item_total = int(item['qty']) * float(item['price'])
+            cart_total_amount += item_total
+            if pid == product_id:
+                item_subtotal = item_total
 
-    context = render_to_string('core/async/cart_list.html', {
-        'cart_data': request.session['cart_data_obj'],
-        'cart_total_amount': cart_total_amount,
+    return JsonResponse({
         'cart_total_items': len(request.session['cart_data_obj']),
+        'item_subtotal': item_subtotal,
+        'cart_total_amount': cart_total_amount
     })
-
-    return JsonResponse({'data': context, 'cart_total_items': len(request.session['cart_data_obj'])})
 
 def apply_coupon(request):
     if request.method == 'GET':
@@ -226,6 +235,7 @@ def apply_coupon(request):
 
 @login_required
 def checkout_view(request):
+    user = request.user
     categories = Category.objects.all()
     payment_method = request.POST.get('payment_method')
 
@@ -234,7 +244,7 @@ def checkout_view(request):
     for pid, item in cart_data.items():
         cart_total_amount += int(item['qty']) * Decimal(item['price'])
 
-    # نحسب الخصم
+    # حساب الخصم
     applied_coupon_code = request.session.get('applied_coupon')
     discount = Decimal('0.00')
     coupon = None 
@@ -245,60 +255,70 @@ def checkout_view(request):
         else:
             del request.session['applied_coupon']
 
-
+    default_address = Address.objects.filter(user=user, status=True).first()
     address_form = AddressForm()
+
     if request.method == 'POST':
-        address_form = AddressForm(request.POST)
+        use_default = request.POST.get('use_default_address', 'false') == 'true'
 
-        if address_form.is_valid():
-            messages.success(request, "Address form is valid ✅")
-
-            address = address_form.save(commit=False)
-            address.user = request.user
-            address.save()
-
-            # إنشاء الأوردر بعد نجاح الفورم
-            order = CartOrder.objects.create(
-                user=request.user,
-                price=cart_total_amount,
-                saved=discount,
-                total_price=cart_total_amount - discount,
-                order_status='Pending',
-                address=address,
-                paid_status=False
-            )
-            messages.success(request, f"Order created successfully with ID: {order.oid}")
-
-            for pid, item in cart_data.items():
-                CartOrderItem.objects.create(
-                    order=order,
-                    product_id=item['pid'],
-                    image=item['image'],
-                    quantity=item['qty'],
-                    price=item['price'],
-                    total_price=Decimal(item['qty']) * Decimal(item['price']),
-                    invoice_number=f"INV_NO-{order.oid}-{pid}"
-                )
-
-            if applied_coupon_code and coupon:
-                order.coupons.add(coupon)
-                messages.success(request, "Coupon applied to order.")
-
-            # تفريغ السلة
-            del request.session['cart_data_obj']
-            if 'applied_coupon' in request.session:
-                del request.session['applied_coupon']
-
-            if payment_method == "COD":
-                messages.success(request, "Order placed successfully. Cash on Delivery.")
-                return redirect('core:invoice')
+        if use_default and default_address:
+        # No need for validation when using default address
+            address = default_address
+        else:
+            address_form = AddressForm(request.POST)
+            if address_form.is_valid():
+                address = address_form.save(commit=False)
+                address.user = user
+                address.save()
             else:
-                messages.error(request, "please choose payment method.")
+                # Add this to see what's wrong with the form
+                print(address_form.errors)
                 return redirect('core:checkout')
 
+        # إنشاء الأوردر بعد نجاح العنوان
+        order = CartOrder.objects.create(
+            user=user,
+            price=cart_total_amount,
+            saved=discount,
+            total_price=cart_total_amount - discount,
+            order_status='Pending',
+            address=address,
+            paid_status=False,
+        )
+        messages.success(request, f"Order created successfully with ID: {order.oid}")
+
+        # حفظ المنتجات داخل الأوردر
+        for pid, item in cart_data.items():
+            CartOrderItem.objects.create(
+                order=order,
+                product_id=item['pid'],
+                image=item['image'],
+                quantity=item['qty'],
+                price=item['price'],
+                total_price=Decimal(item['qty']) * Decimal(item['price']),
+            )
+
+        if applied_coupon_code and coupon:
+            order.coupons.add(coupon)
+            messages.success(request, "Coupon applied to order.")
+
+        # تفريغ السلة
+        request.session.pop('cart_data_obj', None)
+        request.session.pop('applied_coupon', None)
+
+        if payment_method == "COD":
+            messages.success(request, "Order placed successfully. Cash on Delivery.")
+            return redirect('core:invoice')
         else:
-            # لو الفورم مش valid نعرض الأخطاء
-            messages.error(request, f"Address form is invalid: {address_form.errors}")
+            messages.error(request, "Please choose a payment method.")
+            return redirect('core:checkout')
+
+    else:
+        if default_address:
+            address_form = AddressForm(instance=default_address)
+        else:
+            messages.warning(request, "No default address found. Please add an address.")
+            address_form = AddressForm()
 
     return render(request, 'core/checkout.html', {
         'cart_data': cart_data,
@@ -307,6 +327,7 @@ def checkout_view(request):
         'discount': round(discount, 2),
         'categories': categories,
         'address_form': address_form,
+        'default_address': default_address,
     })
 
 
@@ -318,12 +339,19 @@ def invoice_view(request):
         order = CartOrder.objects.filter(user=request.user).order_by('-order_date').first()
     except CartOrder.DoesNotExist:
         order = None
-    order_items = CartOrderItem.objects.filter(order__user=request.user).order_by('-id')
+    
+    # Only get items for this specific order
+    if order:
+        order_items = CartOrderItem.objects.filter(order=order)
+    else:
+        order_items = []
+        
     context = {
         'order': order,
         'order_items': order_items,
         'categories': categories,
     }
+    return render(request, 'core/invoice.html', context)
     
 
     return render(request, 'core/invoice.html', context)
@@ -358,3 +386,169 @@ def Ajax_contact_form(request):
         return JsonResponse(data)
     
     return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+
+#======================customer dashboard==========================
+def customer_dashboard(request):
+    categories = Category.objects.all()
+    orders = CartOrder.objects.filter(user=request.user).order_by('-order_date')
+    addresses = Address.objects.filter(user=request.user)
+    wishlist = Wishlist.objects.filter(user=request.user).order_by('-id')
+
+    profile_form = ProfileEditForm(instance=request.user)
+    password_form = PasswordChangeForm(request.user)
+
+    if request.method == 'POST':
+        if 'profile_submit' in request.POST:
+            profile_form = ProfileEditForm(request.POST, instance=request.user)
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, "Profile updated successfully!")
+                return redirect('core:dashboard')
+            else:
+                messages.error(request, "Error updating profile. Please check the form.")
+                
+        elif 'password_submit' in request.POST:
+            password_form = PasswordChangeForm(request.user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                # Keep the user logged in after password change
+                update_session_auth_hash(request, user)
+                messages.success(request, "Password changed successfully!")
+                return redirect('core:dashboard')
+            else:
+                messages.error(request, "Error changing password. Please check the form.")
+    context = {
+        'categories': categories,
+        'orders': orders,
+        'addresses': addresses,
+        'profile_form': profile_form,
+        'password_form': password_form,
+        'wishlist': wishlist,
+    }
+    return render(request, 'core/dashboard.html', context)
+
+def order_detail(request, oid):
+    categories = Category.objects.all()
+    order = get_object_or_404(CartOrder, oid=oid, user=request.user)
+    order_items = CartOrderItem.objects.filter(order=order).order_by('-id')
+    context = {
+        'categories': categories,
+        'order': order,
+        'order_items': order_items,
+    }
+    return render(request, 'core/order-detail.html', context)
+
+def make_default_address(request):
+    if request.method == 'GET':
+        id = request.GET.get('id')
+        # تطفي كل العناوين السابقة
+        Address.objects.filter(user=request.user).update(status=False)
+
+        # تفعّل العنوان المطلوب
+        Address.objects.filter(id=id, user=request.user).update(status=True)
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+
+def add_address(request):
+    categories = Category.objects.all()
+    address_form = AddressForm(request.POST)
+    if request.method == 'POST':
+        if address_form.is_valid():
+            address = address_form.save(commit=False)
+            address.user = request.user
+            address.save()
+            messages.success(request, "Address added successfully!")
+            return redirect('core:dashboard')
+    context = {
+        'categories': categories,
+        'address_form': address_form,
+    }        
+    return render(request, 'core/add-address.html', context)
+
+def edit_address(request, id):
+    categories = Category.objects.all()
+    address_instance = get_object_or_404(Address, id=id, user=request.user)
+
+    if request.method == 'POST':
+        edit_address_form = AddressForm(request.POST, instance=address_instance)
+        if edit_address_form.is_valid():
+            address = edit_address_form.save(commit=False)
+            address.user = request.user  
+            address.save()
+            messages.success(request, "Address updated successfully!")
+            return redirect('core:dashboard')
+    else:
+        edit_address_form = AddressForm(instance=address_instance)
+
+    context = {
+        'categories': categories,
+        'edit_address_form': edit_address_form,
+    }
+    return render(request, 'core/edit-address.html', context)
+
+def delete_address(request):
+    aid = request.GET.get('aid')
+    try:
+        address = Address.objects.get(id=aid, user=request.user)
+        address.delete()
+        return JsonResponse({'success': True, 'message': 'Address deleted successfully.'})
+    except Address.DoesNotExist:
+        messages.error(request, "Address not found.")
+        return JsonResponse({'success': False, 'message': 'Address not found.'})
+
+def add_to_wishlist(request):
+    pid= request.GET.get('pid')
+    product = get_object_or_404(Product, pid=pid)
+    if Wishlist.objects.filter(user=request.user, product=product).exists():
+        return JsonResponse({'success': False, 'message': 'Product already in wishlist.'})
+    elif Wishlist.objects.filter(user=request.user).count() >= 10:
+        return JsonResponse({'success': False, 'message': 'You can only have 10 items in your wishlist.'})
+    else:
+        Wishlist.objects.create(
+            user=request.user,
+            product=product)
+    return JsonResponse({'success': True, 'message': 'Product added to wishlist successfully.'})
+
+def delete_from_wishlist(request):
+    pid= request.GET.get('pid')
+    product= get_object_or_404(Product, pid=pid)
+    
+    try:
+        wishlist_item = Wishlist.objects.get(user=request.user, product=product)
+        wishlist_item.delete()
+        return JsonResponse({'success': True, 'message': 'Product removed from wishlist successfully.'})
+    except Wishlist.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Product not found in wishlist.'})
+
+    
+    
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def about_us(request):
+    categories = Category.objects.all()
+    return render(request, 'core/about-us.html', {'categories': categories,})
+
+def privacy_policy(request):
+    categories = Category.objects.all()
+    return render(request, 'core/privacy-policy.html', {'categories': categories,})
+
+def shipping_policy(request):
+    categories = Category.objects.all()
+    return render(request, 'core/shipping-policy.html', {'categories': categories,})
+
+def return_policy(request):
+    categories = Category.objects.all()
+    return render(request, 'core/return-policy.html', {'categories': categories,})

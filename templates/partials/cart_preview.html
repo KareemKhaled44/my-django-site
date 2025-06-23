@@ -1,0 +1,16 @@
+{% if cart_data %}
+  {% for pid, item in cart_data.items %}
+    <div class="flex px-4 py-2 border-b border-white/20 text-white text-sm">                 
+      <img src="{{ item.image }}" alt="" class="w-10 h-10 inline-block mr-2">
+      <a href="{% url 'core:product-detail' pid %}" class="hover:text-[#b9a848]">
+        {{ item.title|truncatechars:20 }}
+      </a>
+    </div>
+  {% endfor %}
+  <div class="flex justify-between">
+    <a href="{% url 'core:cart' %}" class="block px-4 py-2 text-white text-base hover:text-[#b9a848]">View</a>
+    <a href="{% url 'core:checkout' %}" class="block px-4 py-2 text-white text-base hover:text-[#b9a848]">Checkout</a>
+  </div>
+{% else %}
+  <span class="block px-4 py-2 text-white text-sm">Cart is empty</span>
+{% endif %}

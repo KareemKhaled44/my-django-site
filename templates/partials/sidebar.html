@@ -5,7 +5,8 @@
       <div id="sidebar" class="fixed left-0 top-0 w-72 h-full lg:w-full
         bg-[#28282B] lg:bg-[transparent] text-white transform overflow-y-auto
        -translate-x-full transition-transform duration-300 lg:flex lg:flex-col p-4 z-40">
-      <button id="closeSidebar" class="lg:hidden text-gray-400 hover:text-white text-2xl">✖ Close</button>
+      <button id="closeSidebar" 
+      class="lg:hidden text-[#b9a848] text-2xl">✖ Close</button>
 
       <!-- Filter Section -->
       <section class="item-b my-4">
@@ -22,12 +23,13 @@
                 <p id="max-value">max: {{min_max_price.price__max}}EGP</p>
               </div>
         
-              <a  id="filter-button"
-                  data-cid="{{category.cid}}"
-               class=" bg-[#b9a848] text-[#1E1E1E] text-sm 
-              font-semibold text-center w-12  py-2 px-4
-              rounded-md shadow-md  hover:bg-[#1E1E1E] hover:text-[#b9a848]
-              transition duration-300">Filter</a>
+              <button
+              id="filter-button"
+              data-cid="{{category.cid}}"
+              class="btn w-20
+              hover:bg-[#1E1E1E] hover:text-[#b9a848]
+              transition duration-300">Filter</button
+              >
           </div>
           
         </article>

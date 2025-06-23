@@ -45,109 +45,213 @@
   </head>
   <body>
     <div class="top-img">
-      <!--header start-->
-      <header class="flex">
-        <a href="{% url 'core:index' %}" class="logo">Peak Health</a>
-        
-        <ul>
-          
-          <li>
-            <!-- Search Icon Button -->
-            <button id="openSearch" class="search">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-            <form action="{% url 'core:search' %}" method="GET">
+    <!--header start-->
+    <header class="flex">
+      <a href="{% url 'core:index' %}" class="logo">Peak Health</a>
+      
+      <ul>         
+        <li>
+          <!-- Search Icon Button -->
+          <button id="openSearch" class="search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <form action="{% url 'core:search' %}" method="GET">
 
-              <!-- Search Box (Appears Inside Navbar) -->
-              <div
-                id="searchOverlay"
-                class=" fixed inset-0 h-full top-0 left-0 w-full bg-[#28282B] bg-opacity-70 p-4 hidden z-40"
-              >
-                <div class="relative w-full max-w-2xl mx-auto">
-                  <!-- Search Input -->
-                  <input
-                    name="q"
-                    type="text"
-                    id="searchInput"
-                    placeholder="Search..."
-                    class="w-full pl-14 py-2 text-black bg-white rounded-md border-2 border-[#b9a848] outline-none"
-                  />
+            <!-- Search Box (Appears Inside Navbar) -->
+            <div
+              id="searchOverlay"
+              class=" fixed inset-0 h-full top-0 left-0 w-full bg-[#28282B] bg-opacity-70 p-4 z-40">
+              <div class="relative w-full max-w-2xl mx-auto">
+                <!-- Search Input -->
+                <input
+                  name="q"
+                  type="text"
+                  id="searchInput"
+                  placeholder="Search..."
+                  class="w-full pl-14 py-2 text-black bg-white rounded-md border-2 
+                  border-[#b9a848] outline-none"/>
 
-                  <!-- Close Button -->                  
-                  <button
-                    type="button"
-                    id="closeSearch"
-                    class="absolute right-12 top-1/2 transform -translate-y-1/2 text-[#28282B] text-2xl"
-                  >
-                    ✖
-                  </button>
+                <!-- Close Button -->                  
+                <button
+                  type="button"
+                  id="closeSearch"
+                  class="absolute right-12 top-1/2 transform -translate-y-1/2 text-[#28282B] text-2xl">
+                  ✖
+                </button>
 
-                  <!-- Submit Button on the left inside input -->
-                  <button
-                    type="submit"
-                    class="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#28282B] text-xl"
-                    title="Search"
-                  >
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                  </button>                 
-                </div>
+                <!-- Submit Button on the left inside input -->
+                <button
+                  type="submit"
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#28282B] text-xl"
+                  title="Search">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </button>                 
               </div>
-            </form>
-          </li>
-         
-          <li>
-            <a href="{% url 'core:product-list'%}" class="products-link">
-              <i class="fa-solid fa-dumbbell"></i> Products
-            </a>
-          </li>
-         
-          <li>
-            <button class="sign_in-register">
-              <a href="{% url 'userauths:sign-in' %}" class="sign-in">
-                <i class="fa-solid fa-user"></i>
-                Sign In
-              </a>
-              <span>/</span>
-              <a href="{% url 'userauths:sign-up' %}" class="register"
-                ><i class="fa-solid fa-user-plus"></i> Register</a
-              >
-            </button>
-          </li>
-          <li>
-            <a href="{% url 'core:cart' %}" class="cart">
-              <i class="fa-solid fa-cart-shopping">
-                <span id="cart-items-count" class="cart-number">{{request.session.cart_data_obj|length}}</span>
-              </i></a
-            >
-          </li>
-
-          <li>
-            <a href="{% url 'userauths:sign-out' %}" class="log-out"
-              ><i class="fa-solid fa-right-from-bracket"></i
-            ></a>
-          </li>
-
-          <li>
-            <!-- Hamburger Button (mobile only) -->
-            <button id="menuToggle" class=" text-white text-2xl p-2">
-              <i class="fa-solid fa-bars"></i>
-            </button>
-
-            <!-- Toggle Menu (Hidden by default) -->
-            <div id="mobileMenu" class=" flex-col bg-[#28282B] text-white w-full absolute top-full left-0 p-4 z-50">
-              <a href="{% url 'core:product-list'%}" class="py-2"><i class="fa-solid fa-dumbbell"></i> Products</a>
-              <a href="{% url 'userauths:sign-in' %}" class="py-2"><i class="fa-solid fa-user"></i> Sign In</a>
-              <a href="{% url 'userauths:sign-up' %}" class="py-2"><i class="fa-solid fa-user-plus"></i> Register</a>
             </div>
-          </li>
-        </ul>
-      </header>
+          </form>
+        </li>
+       <!-- Products Link -->
+        <li class="relative group">  
+          <a href="{% url 'core:product-list'%}" class="products-link">
+            <i class="fa-solid fa-dumbbell"></i> Products
+          </a>
+          <!-- Dropdown Menu - Now inside the li element -->
+          <div class="absolute right-0 mt-2 w-48 bg-[#28282B] border border-white/30 rounded-md
+           shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible 
+           transition-all duration-200 transform group-hover:translate-y-0 translate-y-1">
+            <a href="{% url 'core:product-list' %}" 
+            class="block px-4 py-2 text-white text-base hover:bg-[#b9a848] ">
+            all products</a>
+            {% for c in categories %}
+            <a href="{% url 'core:category-product-list' c.cid %}" 
+            class="block px-4 py-2 text-white text-base hover:bg-[#b9a848] ">
+            {{c.title}}</a>
+            {% endfor %}
+          </div>
+        </li>
+        {% if request.user.is_authenticated %}
+        <!-- Dashboard Link -->
+        <li class="relative group">  
+          <a href="{% url 'core:dashboard' %}" class="account">
+            <i class="fa-solid fa-user"></i>
+          </a>
+          
+          <!-- Dropdown Menu - Now inside the li element -->
+          <div class="absolute right-0 mt-2 w-48 bg-[#28282B]  border border-white/30 rounded-md
+           shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible
+            transition-all duration-200 transform group-hover:translate-y-0 translate-y-1">
+            <a href="{% url 'core:dashboard' %}" 
+            class="block px-4 py-2 text-white text-base hover:bg-[#b9a848] ">
+            Dashboard</a>
+            {% if request.user.is_superuser %}
+            <a href="{% url 'useradmin:dashboard' %}" 
+            class="block px-4 py-2 text-white text-base hover:bg-[#b9a848] ">
+            Admin Account</a>
+            {% endif %}
+            <a href="{% url 'core:dashboard' %}?section=orders" 
+            class="block px-4 py-2 text-white text-base hover:bg-[#b9a848] ">
+            Orders</a>
+            <a href="{% url 'core:dashboard' %}?section=wishlist" 
+            class="block px-4 py-2 text-white text-base hover:bg-[#b9a848] ">
+            My Wishlist</a>
+            <a href="{% url 'core:dashboard' %}?section=address" 
+            class="block px-4 py-2 text-white text-base hover:bg-[#b9a848] ">
+            Addresses</a>
+            <a href="{% url 'core:dashboard' %}" 
+            class="block px-4 py-2 text-white text-base hover:bg-[#b9a848] ">
+            Paymob Saved Cards</a>
+            <a href="{% url 'core:dashboard' %}?section=account-details" 
+            class="block px-4 py-2 text-white text-base hover:bg-[#b9a848] ">
+            Account details</a>
+            <a href="{% url 'userauths:sign-out' %}" 
+            class="block px-4 py-2 text-white text-base hover:bg-[#b9a848] ">
+            Logout</a>
+          </div>
+        </li>
+        {% else %}
+        <!-- Sign In/Register Button -->
+        <li>
+          <button class="sign_in-register">
+            <a href="{% url 'userauths:sign-in' %}" class="sign-in">
+              <i class="fa-solid fa-user"></i>
+              Sign In
+            </a>
+            <span>/</span>
+            <a href="{% url 'userauths:sign-up' %}" class="register"
+              ><i class="fa-solid fa-user-plus"></i> Register</a
+            >
+          </button>
+        </li>
+        {% endif %}
+        <!-- Cart Icon  -->
+        <li class="relative group">
+          <a href="{% url 'core:cart' %}" class="cart">
+            <i class="fa-solid fa-cart-shopping cart-icon">
+              <span id="cart-items-count" class="cart-number">{{ request.session.cart_data_obj|length }}</span>
+            </i>
+          </a>
+          
+          <div class="absolute right-0 mt-2 w-48 bg-[#28282B] border border-white/30 rounded-md
+                      shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible 
+                      transition-all duration-200 transform group-hover:translate-y-0 translate-y-1">
+                      
+            {% if cart_data %}
+              {% for pid, item in cart_data.items %}
+                <div class="flex px-4 py-2 border-b border-white/20 text-white text-sm">                 
+                    <img src="{{ item.image }}" alt="" class="w-10 h-10 inline-block mr-2">
+                    <a href="{% url 'core:product-detail' pid %}" class="hover:text-[#b9a848]">
+                      {{ item.title|truncatechars:20 }}
+                    </a>
+                </div>
+              {% endfor %}
+              <div class="flex justify-between">
+                <a href="{% url 'core:cart' %}"
+                  class="block px-4 py-2 text-white text-base hover:text-[#b9a848]">View</a>
+              <a href="{% url 'core:checkout' %}" 
+                  class="block px-4 py-2 text-white text-base hover:text-[#b9a848]">Checkout</a>
+              </div>
+            {% else %}
+              <span class="block px-4 py-2 text-white text-sm">Cart is empty</span>
+            {% endif %}
+          </div>
+        </li>
+        <!-- logout Icon -->
+        <li>
+          <a href="{% url 'userauths:sign-out' %}" class="log-out"
+            ><i class="fa-solid fa-right-from-bracket"></i
+          ></a>
+        </li>
 
-      <!--header end-->
+        <li>
+          <!-- Hamburger Button (mobile only) -->
+          <button id="menuToggle" class=" text-white text-2xl p-2">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+
+          <!-- Toggle Menu (Hidden by default) -->
+          <div id="mobileMenu" class=" flex-col bg-[#28282B] text-[#b9a848] w-full absolute top-full left-0 p-4 z-50">
+            <div class="flex justify-between">
+              <a href="{% url 'core:product-list'%}" class="py-2 w-full">
+                <i class="fa-solid fa-dumbbell"></i> Products</a>
+              <button class="submenu-toggle py-2">
+                <i class="fa-solid fa-chevron-right transition-transform duration-300"></i>
+              </button>
+            </div>
+            <div  class="accountSubmenu  transition-all duration-300 
+                ease-in-out">
+              <a href="{% url 'core:product-list' %}">All Products</a>
+              {% for c in categories %}
+              <a href="{% url 'core:category-product-list' c.cid %}">{{c.title}}</a>
+              {% endfor %}
+            </div>
+            {% if request.user.is_authenticated %}
+            <div class="flex justify-between w-full">
+              <a href="{% url 'core:dashboard' %}" class="py-2 w-full">
+                <i class="fa-solid fa-user "></i> My Account</a>
+              <button class="submenu-toggle py-2">
+                <i class="fa-solid fa-chevron-right transition-transform duration-300"></i>
+              </button>
+            </div>
+            <div class="accountSubmenu transition-all duration-300 
+                ease-in-out">
+              <a href="{% url 'core:dashboard' %}?section=dashboard">Dashboard</a>
+              <a href="{% url 'core:dashboard' %}?section=orders">My Orders</a>
+              <a href="{% url 'core:dashboard' %}?section=wishlist">Wishlist</a>
+              <a href="{% url 'userauths:sign-out' %}">Logout</a>
+            </div>
+            {% else %}
+            <a href="{% url 'userauths:sign-in' %}" class="py-2"><i class="fa-solid fa-user"></i> Sign In</a>
+            <a href="{% url 'userauths:sign-up' %}" class="py-2"><i class="fa-solid fa-user-plus"></i> Register</a>
+            {% endif %}
+          </div>
+        </li>
+      </ul>
+    </header>
+    <!--header end-->
 
       <!-- messages alert -->
-      {% if messages %}
-      <div class="fixed top-15 left-1/2 transform -translate-x-1/2 z-50 space-y-3">
+      <div id="messages-container"
+      class="fixed top-15 left-1/2 transform -translate-x-1/2 z-50 space-y-3">
         {% for message in messages %}
           <div class="alert px-5 py-3 rounded-xl shadow-lg w-full max-w-xl text-center transition-opacity duration-300
                       {% if 'success' in message.tags %}
@@ -163,7 +267,10 @@
           </div>
         {% endfor %}
       </div>
-      {% endif %}
+
+      <div id="spinner-container">
+        
+      </div>
     <!-- JavaScript to remove alerts after 3 seconds -->
     <script>
       setTimeout(() => {
@@ -230,7 +337,13 @@
           </a>
 
           <div class=" mt-3 ">
-            <p>{{p.category}}</p>
+            <div class="flex items-center justify-between">
+              <p>{{p.category}}</p>
+              <button data-pid="{{p.pid}}"
+              class="add-to-wishlist">
+              <i class="fa-regular fa-heart text-[#b9a848] text-lg transition-all duration-200"></i>
+              </button>
+            </div>
             <a href="{% url 'core:product-detail' p.pid %}"><span class="product-title title">{{p.title}}</span></a>
             <p class="description">
               {{p.description}}<br /> 
@@ -249,7 +362,7 @@
             {% if p.in_stock %}
             <!-- الزرار -->
             <a href="{% url 'core:product-detail' p.pid %}"class="add-to-cart">
-              <i class="fa-solid fa-cart-shopping"></i>
+              <i class="fa-solid fa-cart-shopping cart-icon"></i>
               <span class="text">add to cart</span>
             </a>
             {% else %}
@@ -268,7 +381,7 @@
 
         <div class="flex justify-center">
           <a href="{% url 'core:product-list' %}" class="mt-8 text-[#b9a848] text-lg
-           font-semibold text-center w-48  py-2 px-4 bg-[#28282B] 
+           font-semibold text-center w-52  py-2 px-4 bg-[#28282B] 
            rounded-md shadow-md hover:bg-[#b9a848] hover:text-[#28282B] transition duration-300">
             View All Products
           </a>
@@ -292,7 +405,14 @@
           <img src="{{p.image.url}}" alt="">
 
           <div class=" mt-3 ">
-            <p>{{p.category}}</p>
+            <div class="flex items-center justify-between">
+              <p>{{p.category}}</p>
+              <button data-pid="{{p.pid}}"
+              class="add-to-wishlist">
+              <i class="fa-regular fa-heart text-[#b9a848] text-lg transition-all duration-200"></i>
+              </button>
+            </div>
+            
             <a href="{% url 'core:product-detail' p.pid %}"><span class="title">{{p.title}}</span></a>
             <p class="description">
               {{p.description}}<br /> 
@@ -312,7 +432,7 @@
               {% if p.in_stock %}
               <!-- الزرار -->
               <a href="{% url 'core:product-detail' p.pid %}"class="add-to-cart">
-                <i class="fa-solid fa-cart-shopping"></i>
+                <i class="fa-solid fa-cart-shopping cart-icon"></i>
                 <span class="text">add to cart</span>
               </a>
               {% else %}
@@ -342,7 +462,7 @@
     
         <!-- Products -->
         <div class="flex flex-col items-start sm:items-center ">
-          <h3 class="text-xl text-[#b9a848] font-semibold border-b-2 border-gray-700 mb-4">Products</h3>
+          <h3 class="text-xl text-[#b9a848] font-semibold border-b-2 border-gray-700 mb-4">Categories</h3>
           <ul class="flex flex-col space-y-2 text-sm  items-start sm:items-center">
             {% for c in categories %}
             <li class="flex items-center">
@@ -361,29 +481,26 @@
         <div class="flex flex-col  items-start sm:items-center">
           <h3 class="text-xl text-[#b9a848] font-semibold  border-b-2 border-gray-700 mb-4">Support</h3>
           <ul class="flex flex-col space-y-2 text-sm  items-start sm:items-center">
-            <li><a href="#" class="hover:text-[#b9a848]">
+            <li><a href="{% url 'core:contact_us' %}" class="hover:text-[#b9a848]">
               <span class="text-[#b9a848] mr-2 text-bold">›</span> 
               Contact Us</a></li>
-            <li><a href="#" class="hover:text-[#b9a848]"> 
+            <li><a href="{% url 'core:shipping-policy' %}" class="hover:text-[#b9a848]"> 
             <span class="text-[#b9a848] mr-2 text-bold">›</span> 
               Shipping Policy</a></li>
-            <li><a href="#" class="hover:text-[#b9a848]"> 
+            <li><a href="{% url 'core:return-policy' %}" class="hover:text-[#b9a848]"> 
             <span class="text-[#b9a848] mr-2 text-bold">›</span> 
               Return Policy</a></li>
           </ul>
         </div>
     
-        <!-- Company -->
+        <!-- Terms and Conditions -->
         <div class="flex flex-col  items-start sm:items-center">
-          <h3 class="text-xl text-[#b9a848] font-semibold  border-b-2 border-gray-700 mb-4">Company</h3>
+          <h3 class="text-xl text-[#b9a848] font-semibold  border-b-2 border-gray-700 mb-4">Terms and Conditions</h3>
           <ul class="flex flex-col space-y-2 text-sm  items-start sm:items-center">
-            <li><a href="#" class="hover:text-[#b9a848]">
+            <li><a href="{% url 'core:about-us' %}" class="hover:text-[#b9a848]">
             <span class="text-[#b9a848] mr-2 text-bold">›</span> 
               About Us</a></li>
-            <li><a href="#" class="hover:text-[#b9a848]"> 
-            <span class="text-[#b9a848] mr-2 text-bold">›</span> 
-              Terms of Service</a></li>
-            <li><a href="#" class="hover:text-[#b9a848]">
+            <li><a href="{% url 'core:privacy-policy' %}" class="hover:text-[#b9a848]">
             <span class="text-[#b9a848] mr-2 text-bold">›</span> 
               Privacy Policy</a></li>
           </ul>
@@ -399,20 +516,16 @@
             <i class="fab fa-facebook-f"></i>
           </a>
           <a href="#!" class="rounded-full bg-transparent p-3 text-white hover:bg-[#b9a848] transition">
-            <i class="fab fa-twitter"></i>
+            <i class="fa-brands fa-youtube"></i>
           </a>
-          <a href="#!" class="rounded-full bg-transparent p-3 text-white hover:bg-[#b9a848] transition">
-            <i class="fab fa-google"></i>
-          </a>
+
           <a href="#!" class="rounded-full bg-transparent p-3 text-white hover:bg-[#b9a848] transition">
             <i class="fab fa-instagram"></i>
           </a>
           <a href="#!" class="rounded-full bg-transparent p-3 text-white hover:bg-[#b9a848] transition">
-            <i class="fab fa-linkedin-in"></i>
+            <i class="fa-brands fa-tiktok"></i>
           </a>
-          <a href="#!" class="rounded-full bg-transparent p-3 text-white hover:bg-[#b9a848] transition">
-            <i class="fab fa-github"></i>
-          </a>
+
         </div>
         <p>&copy; 2025 Peak Health. All rights reserved.</p>
       </div>
@@ -420,31 +533,6 @@
     <!-- tailwind -->
     <script src="https://cdn.jsdelivr.net/npm/tw-elements/js/tw-elements.umd.min.js"></script>
 
-    <!--search button -->
-    <script>
-      const openSearch = document.getElementById("openSearch");
-      const closeSearch = document.getElementById("closeSearch");
-      const searchOverlay = document.getElementById("searchOverlay");
-      const searchInput = document.getElementById("searchInput");
-
-      // Open search
-      openSearch.addEventListener("click", () => {
-        searchOverlay.classList.remove("hidden");
-        searchInput.focus();
-      });
-
-      // Close search
-      closeSearch.addEventListener("click", () => {
-        searchOverlay.classList.add("hidden");
-      });
-
-      // Close on ESC key
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          searchOverlay.classList.add("hidden");
-        }
-      });
-    </script>
 
     <!-- Hamburger Menu Toggle -->
      <script>
@@ -456,35 +544,29 @@
       });
     </script>
 
+    <!-- submenu toggle -->
     <script>
-    const input = document.getElementById("searchInput");
-    const resultsBox = document.createElement("div");
-    resultsBox.className = "absolute bg-white w-full z-50 rounded shadow-md";
-    input.parentNode.appendChild(resultsBox);
-
-    input.addEventListener("input", async () => {
-      const q = input.value;
-      if (!q) {
-        resultsBox.innerHTML = "";
-        return;
-      }
-
-      const res = await fetch(`/api/search-products/?q=${encodeURIComponent(q)}`);
-      const data = await res.json();
-
-      resultsBox.innerHTML = data.map(p => `
-        <div class="flex items-center gap-3 p-2 hover:bg-gray-100 cursor-pointer"
-          onclick="window.location.href='/product/${p.id}/'">
-          <img src="${p.image}" alt="${p.name}" class="w-12 h-12 object-cover rounded" />
-          <div>
-            <div class="font-semibold">${p.name}</div>
-            <div class="text-sm text-gray-500">${p.price} EGP</div>
-          </div>
-        </div>
-      `).join("");
-    });
-  </script>
-
+      document.addEventListener("DOMContentLoaded", function () {
+        const toggleButtons = document.querySelectorAll(".submenu-toggle");
+    
+        toggleButtons.forEach((btn) => {
+          const chevron = btn.querySelector("i");
+    
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+    
+            // جيب العنصر اللي بعد الزر مباشرة (اللي هو .accountSubmenu)
+            const submenu = btn.parentElement.nextElementSibling;
+    
+            if (submenu && submenu.classList.contains("accountSubmenu")) {
+              submenu.classList.toggle("active");
+              chevron.classList.toggle("rotate-90");
+            }
+          });
+        });
+      });
+    </script>
+  
     
     <script
     src="https://code.jquery.com/jquery-3.7.1.js"
@@ -493,7 +575,10 @@
 
     
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{% static 'assets/js/search.js' %}"></script>
 
   <script src="{% static 'assets/js/function.js' %}"></script>
+  <script src="{% static 'assets/js/messages.js' %}"></script>
+  <script src="{% static 'assets/js/spinner.js' %}"></script>
   </body>
 </html>

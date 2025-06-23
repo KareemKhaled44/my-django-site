@@ -66,8 +66,9 @@
     <div class="flex Buttons-Container  items-center justify-between   gap-4 ">
         
         <!-- Sidebar Toggle Button (Hidden on Large Screens) -->
-        <button id="openSidebar" class="lg:hidden p-3 bg-[#1E1E1E] text-white rounded-full shadow-md z-50 self-start xs:self-auto">
-            ☰
+        <button id="openSidebar" class="lg:hidden p-3 bg-dark text-gold
+         border border-gold rounded-md  self-start xs:self-auto">
+          <i class="fas fa-bars"></i>
         </button>
 
         <!-- Page Title (Home / Supplements) -->
@@ -112,58 +113,6 @@
     <!-- tailwind -->
     <script src="https://cdn.jsdelivr.net/npm/tw-elements/js/tw-elements.umd.min.js"></script>
 
-    <!-- JavaScript for Sidebar Toggle -->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-      const openSidebar = document.getElementById("openSidebar");
-      const closeSidebar = document.getElementById("closeSidebar");
-      const sidebar = document.getElementById("sidebar");
-
-      // Function to open sidebar
-      function openMenu() {
-          sidebar.classList.remove("-translate-x-full");
-          openSidebar.classList.add("hidden"); // Hide the ☰ button
-      }
-
-      // Function to close sidebar
-      function closeMenu() {
-          sidebar.classList.add("-translate-x-full");
-          openSidebar.classList.remove("hidden"); // Show the ☰ button again
-      }
-
-      // Open Sidebar
-      openSidebar.addEventListener("click", (e) => {
-          e.stopPropagation(); // Prevent event from bubbling up
-          openMenu();
-      });
-
-      // Close Sidebar (only if closeSidebar exists)
-      if (closeSidebar) {
-          closeSidebar.addEventListener("click", (e) => {
-              e.stopPropagation();
-              closeMenu();
-          });
-      }
-
-      // Close Sidebar When Clicking Outside
-      document.addEventListener("click", (event) => {
-          if (!sidebar.contains(event.target) && !openSidebar.contains(event.target)) {
-              closeMenu();
-          }
-      });
-
-      // Prevent sidebar from closing when clicking inside
-      sidebar.addEventListener("click", (e) => e.stopPropagation());
-    });
-
-    </script>
-
-  <!--search button -->
-  <script src="{% static 'assets/js/search.js' %}"></script>
-
-  <script src="{% static 'assets/js/range-slider.js' %}"></script>
-  <script src="{% static 'assets/js/function.js' %}"></script>
-  <script src="{% static 'assets/js/filters.js' %}"></script>
   </body>
   
 </html>

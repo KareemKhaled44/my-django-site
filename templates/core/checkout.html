@@ -57,6 +57,7 @@
 <body>
 <form action="{% url 'core:checkout' %}" method="POST">
   {% csrf_token %}
+ 
   <div class="p-4">
     <div class="max-w-7xl mx-auto px-4">
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -65,61 +66,72 @@
                 <!-- Delivery Information -->
                 <div>
                     <h2 class="text-3xl font-semibold text-[#b9a848]">Delivery Information</h2>
-                    <p class="text-[#F9FAFB] text-sm mt-4">Enter your details to ensure smooth delivery of your order.</p>
-                    
-                        <div class="grid gap-6">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                      <label class="block text-sm font-medium text-[#b9a848] mb-1">First Name</label>
-                                    <div class="">
-                                      {{ address_form.first_name }}</div> 
-                                  </div>
-                                  <div>
-                                      <label class="block text-sm font-medium text-[#b9a848] mb-1">Last Name</label>
-                                      <div class="">
-                                      {{ address_form.last_name }}</div>
-                                </div>
-                            </div>
-                            
+                    {% if address_form.errors %}
+                    <div class="text-red-500 text-sm mt-2">
+                        {% for field in address_form %}
+                            {% for error in field.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in address_form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div id="new-address-section"  class="grid gap-6 my-4">
+                        <div class="grid grid-cols-2 gap-4">
+                              
                             <div>
-                                <label class="block text-sm font-medium text-[#b9a848] mb-1">Email Address</label>
+                                  <label class="block text-sm font-medium text-[#b9a848] mb-1">First Name</label>
                                 <div class="">
-                                  {{ address_form.email }}
-                                </div>
+                                  {{ address_form.first_name }}</div> 
+                              </div>
+                              <div>
+                                  <label class="block text-sm font-medium text-[#b9a848] mb-1">Last Name</label>
+                                  <div class="">
+                                  {{ address_form.last_name }}</div>
                             </div>
-                            
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-[#b9a848] mb-1">Email Address</label>
+                            <div class="">
+                              {{ address_form.email }}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-[#b9a848] mb-1">Phone Number</label>
+                            <div class="">
+                              {{ address_form.phone }}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-[#b9a848] mb-1">Delivery Address</label>
+                            <div class="">
+                              {{ address_form.street_address }}
+                            </div>
+                            <div class=" mt-2">
+                              {{ address_form.apartment }}
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-[#b9a848] mb-1">Phone Number</label>
+                                <label class="block text-sm font-medium text-[#b9a848] mb-1">City</label>
                                 <div class="">
-                                  {{ address_form.phone }}
+                                  {{ address_form.city }}
                                 </div>
                             </div>
-                            
                             <div>
-                                <label class="block text-sm font-medium text-[#b9a848] mb-1">Delivery Address</label>
+                                <label class="block text-sm font-medium text-[#b9a848] mb-1">Postal Code</label>
                                 <div class="">
-                                  {{ address_form.street_address }}
-                                </div>
-                                <div class=" mt-2">
-                                  {{ address_form.apartment }}
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-[#b9a848] mb-1">City</label>
-                                    <div class="">
-                                      {{ address_form.city }}
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-[#b9a848] mb-1">Postal Code</label>
-                                    <div class="">
-                                      {{ address_form.postal_code }}
-                                    </div>
+                                  {{ address_form.postal_code }}
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </div>
                 <hr>
                 <!-- Payment Information -->
@@ -260,14 +272,7 @@
   </div>
 </form>
 
-  <!--search button -->
-  <script src="{% static 'assets/js/search.js' %}"></script>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-  <script src="{% static 'assets/js/function.js' %}"></script>
-  <script src="{% static 'assets/js/range-slider.js' %}"></script>
-  <script src="{% static 'assets/js/filters.js' %}"></script>
   
 </body>
 </html>

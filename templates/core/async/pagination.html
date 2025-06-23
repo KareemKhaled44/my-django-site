@@ -3,7 +3,7 @@
     <!-- Previous Button -->
     {% if page_obj.has_previous %}
       <a href="?page={{ page_obj.previous_page_number }}{% if query_string %}&{{ query_string|safe }}{% endif %}"
-         class="pagination-link px-3 py-2 border rounded text-gray-300 hover:bg-gray-200 hover:text-black transition">
+         class="pagination-link px-3 py-1 rounded-lg border border-white/30 text-light/70 hover:bg-gold/20 hover:text-light transition">
         « Prev
       </a>
     {% endif %}
@@ -12,12 +12,12 @@
     {% for page_num in page_obj.paginator.page_range %}
       {% if page_num <= 2 or page_num > page_obj.paginator.num_pages|add:'-2' or page_num|add:'1' >= page_obj.number and page_num <= page_obj.number|add:'1' %}
         {% if page_obj.number == page_num %}
-          <span class="px-3 py-2 border rounded text-white bg-[#b9a848] border-[#b9a848]">
+          <span class="px-3 py-1 rounded-lg border border-white/30 text-light hover:bg-gold/20 transition">
             {{ page_num }}
           </span>
         {% else %}
-          <a href="?page={{ page_num }}{% if query_string %}&{{ query_string|safe }}{% endif %}"
-             class="pagination-link px-3 py-2 border rounded text-gray-300 hover:bg-gray-200 hover:text-black transition">
+          <a href="?page={{ page_num }}{% if query_string %}&{{ query_string|safe }}{% endif %} "
+             class="pagination-link px-3 py-1 rounded-lg border border-white/30 text-light hover:bg-gold/20 transition">
             {{ page_num }}
           </a>
         {% endif %}
@@ -29,7 +29,7 @@
     <!-- Next Button -->
     {% if page_obj.has_next %}
       <a href="?page={{ page_obj.next_page_number }}{% if query_string %}&{{ query_string|safe }}{% endif %}"
-         class="pagination-link px-3 py-2 border rounded text-gray-300 hover:bg-gray-200 hover:text-black transition">
+         class="pagination-link px-3 py-1 rounded-lg border border-white/30 text-light/70 hover:bg-gold/20 hover:text-light transition">
         Next »
       </a>
     {% endif %}

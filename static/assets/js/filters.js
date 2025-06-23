@@ -45,7 +45,7 @@ function applyFilters() {
       url.searchParams.append("brands[]", brand);
     });
   }
-
+  showSpinner();
   $.ajax({
     url: url.toString(),
     method: "GET",
@@ -56,9 +56,13 @@ function applyFilters() {
       console.log("Filtering products...");
     },
     success: function (data) {
-      $("#product-container").html(data.html);
-      $("#pagination-container").html(data.pagination);
-      console.log("Filtered products loaded successfully");
+      setTimeout(function () {
+        hideSpinner();
+        $("#product-container").html(data.html);
+        $("#pagination-container").html(data.pagination);
+        console.log("Filtered products loaded successfully");
+      }, 500);
+      
     },
     error: function () {
       console.log("Error while filtering products");

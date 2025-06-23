@@ -5,12 +5,14 @@ $(document).ready(function () {
       headers: { "X-CSRFToken": csrftoken },
     });
   }
-  // Function to apply filters and update product list
+  // Function for pagination
+  // Only apply ajax pagination if NOT in admin dashboard
+  if (!window.location.pathname.includes('useradmin')) {
   $(document).on("click", ".pagination-link", function (e) {
     e.preventDefault();
 
     const page_url = $(this).attr("href");
-
+    showSpinner();
     $.ajax({
       url: page_url,
       method: "GET",
@@ -18,18 +20,30 @@ $(document).ready(function () {
         "X-Requested-With": "XMLHttpRequest",
       },
       success: function (data) {
-        $("#product-container").html(data.html);
-        $("#pagination-container").html(data.pagination);
+        //smooth scroll to top
+        $("html, body").animate(
+          {
+            scrollTop: $("#product-container").offset().top - 60,
+          },
+          500
+        );
+        setTimeout(function () {
+          hideSpinner();
+
+          $("#product-container").html(data.html);
+          $("#pagination-container").html(data.pagination);
+        }, 500);
       },
       error: function () {
         console.log("Pagination load failed");
       },
     });
   });
+  }
 
   $("#filter-button").click(function (e) {
     e.preventDefault();
-    applyFilters(); 
+    applyFilters();
   });
 
   $("#in-stock").change(function (e) {
@@ -46,34 +60,24 @@ $(document).ready(function () {
     e.preventDefault();
     applyFilters();
   });
-  
+
   $(".brand-filter").change(function (e) {
     e.preventDefault();
     applyFilters();
   });
 
   // add to cart functionality
-  $(".add-to-cart-btn").on("click", function() {
+  $(".add-to-cart-btn").on("click", function () {
     let this_val = $(this);
 
-    // Use .closest to scope within the card
     let product_card = this_val.closest(".card");
-
     let productId = product_card.find(".product-id").val();
     let quantity = product_card.find(".product-quantity").val();
     let product_title = product_card.find(".product-title").text();
     let product_price = product_card.find(".current-product-price").text();
-    let product_image = product_card.find(".product-image").attr('src');
+    let product_image = product_card.find(".product-image").attr("src");
 
-
-    console.log("quantity:",quantity,
-      "productId:", productId,
-       "product_title:", product_title,
-       "product_price:",  product_price,
-       "product_image:", product_image
-      );
-
-
+    showSpinner();
     $.ajax({
       url: "/add-to-cart/",
       data: {
@@ -81,17 +85,24 @@ $(document).ready(function () {
         quantity: quantity,
         product_title: product_title,
         product_price: product_price,
-        product_image: product_image
+        product_image: product_image,
       },
-      beforesend: function() {
-        console.log("Adding to cart...");
-      },
-      success: function(response){
-        console.log("Product added to cart successfully");
-        this_val.html("<span style='color:#28282B'>✔</span>");
+      success: function (response) {
+        setTimeout(function () {
+          hideSpinner();
+          this_val.html("<span style='color:#28282B'>✔</span>");
+          $("#cart-items-count").text(response.cart_total_items);
 
-        $("#cart-items-count").text(response.cart_total_items);
-      }
+          // Chain the second AJAX call to update the mini cart
+          $.ajax({
+            url: "/update-cart-preview/",
+            success: function (res) {
+              console.log("Cart preview updated successfully");
+              $("#cart-preview-container").html(res.cart_preview_html);
+            },
+          });
+        }, 500);
+      },
     });
   });
 
@@ -101,20 +112,25 @@ $(document).ready(function () {
     let this_val = $(this);
 
     console.log("Deleting product with ID:", productId);
-
+    showSpinner();
     $.ajax({
       url: "/delete-from-cart/",
       data: {
         pid: productId,
       },
-      beforesend: function () {
+      beforeSend: function () {
         console.log("Deleting from cart...");
         this_val.hide();
       },
       success: function (response) {
-        this_val.show();
-        $("#cart-items-count").text(response.cart_total_items);
-        $("#cart-list").html(response.data);
+        setTimeout(function () {
+          hideSpinner();
+          console.log("Product deleted from cart successfully");
+          $("#cart-items-count").text(response.cart_total_items);
+          this_val.closest("tr[id^='cart-item']").fadeOut(300, function () {
+            $(this).remove();
+          });
+        }, 500);
       },
       error: function () {
         console.log("Error deleting product from cart");
@@ -128,8 +144,7 @@ $(document).ready(function () {
     let quantity = $(`#qty-${productId}`).val();
     let this_val = $(this);
 
-    console.log("Updating product with ID:", productId, "to quantity:", quantity);
-
+    showSpinner();
     $.ajax({
       url: "/update-cart-item/",
       data: {
@@ -140,14 +155,23 @@ $(document).ready(function () {
         console.log("Updating cart item...");
       },
       success: function (response) {
-        $("#cart-items-count").text(response.cart_total_items);
-        $("#cart-list").html(response.data);
+        setTimeout(function () {
+          hideSpinner();
+          $("#cart-items-count").text(response.cart_total_items);
+          // Update the total price for the specific cart item
+          $(`#subtotal-${productId}`).text(`EGP ${response.item_subtotal}`);
+
+          // Update the total amount in the cart summary
+          $("#cart_total_amount").text("EGP " + response.cart_total_amount);
+
+          console.log("Cart item updated successfully");
+        }, 400);
       },
       error: function () {
         console.log("Error updating cart item");
       },
     });
-  });  
+  });
 
   // Function to handle apply coupon button
   $("#apply-coupon-btn").on("click", function (e) {
@@ -155,7 +179,7 @@ $(document).ready(function () {
     let couponCode = $("#coupon-code").val();
 
     console.log("Applying coupon code:", couponCode);
-
+    showSpinner();
     $.ajax({
       url: "/apply-coupon/",
       data: {
@@ -165,27 +189,28 @@ $(document).ready(function () {
         console.log("Applying coupon...");
       },
       success: function (response) {
-        if (response.success) {
-          console.log("Coupon applied successfully");
-          $("#discount-amount").text("EGP - " + response.discount);
-          $("#total-amount").text("EGP " + response.total_after_discount);
+        setTimeout(function () {
+          hideSpinner();
+          if (response.success) {
+            console.log("Coupon applied successfully");
+            $("#discount-amount").text("EGP - " + response.discount);
+            $("#total-amount").text("EGP " + response.total_after_discount);
 
-          $("#Subtotal-amount").html(
-            '<span style="text-decoration: line-through;">EGP ' +
-              response.cart_total_amount +
-              "</span>"
-          );
+            $("#Subtotal-amount").html(
+              '<span style="text-decoration: line-through;">EGP ' +
+                response.cart_total_amount +
+                "</span>"
+            );
 
-          $(".discount-section").show();
-          $(".total-section").show();
+            $(".discount-section").show();
+            $(".total-section").show();
 
-          showMessage(response.message, "success");
-        } else {
-          console.log("Failed to apply coupon");
-          showMessage(response.message, "error");
-        }
-
-        
+            showMessage(response.message, "success");
+          } else {
+            console.log("Failed to apply coupon");
+            showMessage(response.message, "error");
+          }
+        }, 500);
       },
       error: function () {
         console.log("Error applying coupon");
@@ -201,7 +226,6 @@ $(document).ready(function () {
     let email = $("#email").val();
     let subject = $("#subject").val();
     let message = $("#message").val();
-
     showSpinner();
     $.ajax({
       url: "/Ajax_contact_form/",
@@ -215,29 +239,175 @@ $(document).ready(function () {
 
       beforeSend: function () {
         console.log("Sending contact form...");
-        
       },
       success: function (response) {
-        if (response.success) {
-          console.log("Contact form submitted successfully");
-          showMessage(response.message, "success");
-          // Optionally clear the form
-          $("#contact-form")[0].reset();
-        } else {
-          console.log("Failed to submit contact form");
-          showMessage(response.message, "error");
-        }
+        setTimeout(function () {
+          hideSpinner();
+          if (response.success) {
+            console.log("Contact form submitted successfully");
+            showMessage(response.message, "success");
+            $("#contact-form")[0].reset();
+          } else {
+            console.log("Failed to submit contact form");
+            showMessage(response.message, "error");
+          }
+        }, 1000);
       },
       error: function () {
         console.log("Error submitting contact form");
       },
     });
   });
-  
-  
+
+  // Function to make address as default
+  $(document).on("click", ".make-default-btn", function (e) {
+    e.preventDefault();
+    let Id = $(this).attr("data-id");
+    let this_val = $(this);
+    console.log(" ID:", Id);
+    console.log("this_val:", this_val);
+    showSpinner();
+    $.ajax({
+      url: "/make-default-address/",
+      data: {
+        id: Id,
+      },
+      method: "GET",
+      beforeSend: function () {
+        console.log("Making address default...");
+        this_val.hide();
+      },
+      success: function (response) {
+        setTimeout(function () {
+          if (response.success) {
+            hideSpinner();
+            // اخفي كل الايقونات والزرار
+            $(".check-btn").hide();
+            $(".make-default-btn").show();
+
+            // بعدين أظهر الايقونة الخاصة بالعنصر اللي اختاره
+            this_val.prev(".check-btn").show();
+            this_val.hide();
+          }
+        }, 500);
+
+        console.log("Address made default successfully");
+      },
+      error: function () {
+        console.log("Error making address default");
+      },
+    });
+  });
+
+  // Function to delete address
+  $(document).on("click", "#delete-address", function (e) {
+    e.preventDefault();
+    let Aid = $(this).attr("data-address-id");
+    let this_val = $(this);
+    console.log("Deleting address with ID:", Aid);
+    $.ajax({
+      url: "/delete-address/",
+      data: {
+        aid: Aid,
+      },
+      beforeSend: function () {
+        console.log("Deleting address...");
+        this_val.hide();
+      },
+      success: function (response) {
+        if (response.success) {
+          console.log("Address deleted successfully");
+
+          // Remove the whole address card (container) from the DOM
+          this_val.closest(".address-card").fadeOut(300, function () {
+            $(this).remove();
+          });
+
+          showMessage(response.message, "success");
+        }
+      },
+      error: function () {
+        console.log("Error deleting address");
+      },
+    });
+  });
+
+  // function to add to wishlist
+  $(document).on("click", ".add-to-wishlist", function (e) {
+    e.preventDefault();
+    let productId = $(this).attr("data-pid");
+    let this_val = $(this);
+    showSpinner();
+    console.log("Adding to wishlist product with ID:", productId);
+    $.ajax({
+      url: "/add_to_wishlist/",
+      data: {
+        pid: productId,
+      },
+      beforeSend: function () {
+        console.log("Adding to wishlist...");
+      },
+      success: function (response) {
+        if (response.success) {
+          setTimeout(function () {
+            console.log("Product added to wishlist successfully");
+            this_val.html("<i class='fa-solid fa-heart text-[#b9a848]'></i>");
+
+            showMessage(response.message, "success");
+            hideSpinner();
+          }, 400);
+        } else {
+          setTimeout(function () {
+            console.log("Product already in wishlist");
+            showMessage(response.message, "success");
+            hideSpinner();
+          }, 400);
+        }
+      },
+      error: function () {
+        console.log("Error adding product to wishlist");
+      },
+    });
+  });
+
+  // function to delete from wishlist
+  $(document).on("click", ".delete-from-wishlist", function (e) {
+    e.preventDefault();
+    let productId = $(this).attr("data-pid");
+    let this_val = $(this);
+    console.log("Deleting from wishlist product with ID:", productId);
+    showSpinner();
+    $.ajax({
+      url: "/delete_from_wishlist/",
+      data: {
+        pid: productId,
+      },
+      beforeSend: function () {
+        console.log("Deleting from wishlist...");
+        this_val.hide();
+      },
+      success: function (response) {
+        if (response.success) {
+          setTimeout(function () {
+            console.log("Product deleted from wishlist successfully");
+
+            this_val.closest(".wishlist-card").fadeOut(300, function () {
+              $(this).remove();
+            });
+            showMessage(response.message, "success");
+            hideSpinner();
+          }, 400);
+        } else {
+          setTimeout(function () {
+            console.log("Error deleting product from wishlist");
+            showMessage(response.message, "error");
+            hideSpinner();
+          }, 400);
+        }
+      },
+      error: function () {
+        console.log("Error deleting product from wishlist");
+      },
+    });
+  });
 });
-
-
-
-
-

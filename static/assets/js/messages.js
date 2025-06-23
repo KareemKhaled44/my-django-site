@@ -28,6 +28,4 @@ function showMessage(message, type = "info") {
     setTimeout(() => alert.remove(), 500);
   }, 3000);
 }
-// spinner
-
 

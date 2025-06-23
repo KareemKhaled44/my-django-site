@@ -1,0 +1,229 @@
+{% extends "useradmin/base-sidebar.html" %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peak Health - Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-dark text-light">
+      <!-- Main Content -->
+      <div class="min-h-screen">
+          <header class="bg-dark/90 border-b-2 border-white/30 p-3 sm:p-4 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
+              <h2 class="text-lg sm:text-xl font-semibold">Dashboard Overview</h2>                 
+                  <div class="flex items-center">
+                      <span class="ml-2 text-sm sm:text-base">Admin</span>
+                  </div>             
+          </header>          
+          <!-- Stats Cards - Improved grid for mobile -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 sm:gap-6 sm:p-6">
+              <!-- Revenue Card -->
+              <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
+                  <div class="flex justify-between items-start">
+                      <div>
+                          <p class="text-light/80 text-sm sm:text-base">Total Revenue</p>
+                          <h3 class="text-xl sm:text-2xl font-bold text-primary">EGP {{revenue|floatformat:2}}</h3>
+                      </div>
+                      <div class="bg-primary/20 p-2 rounded-full">
+                          <i class="fas fa-dollar-sign text-primary text-sm sm:text-base"></i>
+                      </div>
+                  </div>
+              </div>
+  
+              <!-- Orders Card -->
+              <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
+                  <div class="flex justify-between items-start">
+                      <div>
+                          <p class="text-light/80 text-sm sm:text-base">Total Orders</p>
+                          <h3 class="text-xl sm:text-2xl font-bold text-primary">{{total_orders_count}}</h3>
+                      </div>
+                      <div class="bg-primary/20 p-2 rounded-full">
+                          <i class="fas fa-shopping-cart text-primary text-sm sm:text-base"></i>
+                      </div>
+                  </div>
+              </div>
+  
+              <!-- Products Card -->
+              <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
+                  <div class="flex justify-between items-start">
+                      <div>
+                          <p class="text-light/80 text-sm sm:text-base">Total Products</p>
+                          <h3 class="text-xl sm:text-2xl font-bold text-primary">{{all_products.count}}</h3>
+                      </div>
+                      <div class="bg-primary/20 p-2 rounded-full">
+                          <i class="fas fa-box-open text-primary text-sm sm:text-base"></i>
+                      </div>
+                  </div>
+                  {% if low_stock_products %}
+                  <p class="text-xs sm:text-sm text-light/80 mt-2">{{ low_stock_products.count }} low in stock</p>
+                  {% endif %}
+              </div>
+  
+              <!-- Monthly Earnings Card -->
+              <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
+                  <div class="flex justify-between items-start">
+                      <div>
+                          <p class="text-light/80 text-sm sm:text-base">Monthly Earnings</p>
+                          <h3 class="text-xl sm:text-2xl font-bold text-primary">EGP {{monthly_revenue|floatformat:2}}</h3>
+                      </div>
+                      <div class="bg-primary/20 p-2 rounded-full">
+                          <i class="fas fa-chart-line text-primary text-sm sm:text-base"></i>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Bar Chart -->
+            <div class="w-full h-96">
+              <canvas id="barChart" class="w-full h-full"></canvas>
+            </div>
+          
+            <!-- Pie Chart -->
+            <div class="w-full h-96">
+              <canvas id="pieChart" class="w-full h-full"></canvas>
+            </div>
+          </div>
+          <!-- Orders & Quick Actions -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 sm:gap-6 sm:p-6">
+              <!-- Orders -->
+              <div class="lg:col-span-2 bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
+                  <div class="flex justify-between items-center mb-4 sm:mb-6">
+                      <h3 class="text-base sm:text-lg font-semibold text-primary">Latest Orders</h3>
+                        <a href="#" class="text-primary hover:underline text-xs sm:text-sm">View All</a>
+                  </div>
+              
+                  <div class="max-h-[400px] overflow-x-auto overflow-y-auto custom-scrollbar">
+                      <table class="w-full min-w-[600px]">
+                          <thead class="sticky top-0 bg-dark/70 backdrop-blur border-b-2 border-white/30 text-left z-10">
+                              <tr class="text-primary">
+                                  <th class="p-2 text-xs sm:text-sm">Order ID</th>
+                                  <th class="p-2 text-xs sm:text-sm">Name</th>
+                                  <th class="p-2 text-xs sm:text-sm">Date</th>
+                                  <th class="p-2 text-xs sm:text-sm">Status</th>
+                                  <th class="p-2 text-xs sm:text-sm">Paid</th>
+                                  <th class="p-2 text-xs sm:text-sm">Price</th>
+                                  <th class="p-2 text-xs sm:text-sm">Saved</th>
+                                  <th class="p-2 text-xs sm:text-sm">Total</th>
+                                  <th class="p-2 text-xs sm:text-sm">Action</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% if not latest_orders %}
+                              <tr class="border-b border-white/30">
+                                  <td colspan="9" class="p-4 text-center text-gray-400 text-sm sm:text-base">No orders found.</td>
+                              </tr>
+                              {% endif %}
+                              {% for order in latest_orders %}
+                              <tr class="border-b border-white/10 hover:bg-primary/10 transition">
+                                  <td class="py-3 text-xs sm:text-sm">#{{order.oid}}</td>
+                                  <td class="text-xs sm:text-sm">{{order.user.username}}</td>
+                                  <td class="text-xs sm:text-sm">{{order.order_date}}</td>
+                                  <td><span class="bg-green-500/20 text-green-500 px-2 py-1 rounded-full text-xs">{{order.order_status}}</span></td>
+                                  {% if order.paid_status %}
+                                  <td class="p-4"><i class="fa-solid fa-circle-check text-green-500 text-xs sm:text-sm pl-4 sm:pl-8"></i></td>
+                                  {% else %}
+                                  <td class="p-4"><i class="fa-solid fa-circle-xmark text-red-500 text-xs sm:text-sm pl-4 sm:pl-8"></i></td>
+                                  {% endif %}
+                                  <td class="px-2 text-xs sm:text-sm">EGP {{order.price}}</td>
+                                  <td class="px-2 text-xs sm:text-sm">EGP -{{order.saved}}</td>
+                                  <td class="px-2 text-xs sm:text-sm">EGP {{order.total_price}}</td>
+                                  <td class="px-2"><a href="#" class="text-primary hover:underline text-xs sm:text-sm">View</a></td>
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+  
+              <!-- Quick Actions - Improved for mobile -->
+              <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
+                  <h3 class="text-base sm:text-lg font-semibold text-primary mb-4 sm:mb-6">Quick Actions</h3>
+                  
+                  <div class="space-y-3 sm:space-y-4">
+                      <a href="{% url 'useradmin:add-product' %}" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-primary transition text-sm sm:text-base">
+                          <i class="fas fa-plus-circle text-primary mr-2 sm:mr-3 text-sm sm:text-base"></i>
+                          <span>Add New Product</span>
+                      </a>
+                      
+                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-primary transition text-sm sm:text-base">
+                          <i class="fas fa-key text-primary mr-2 sm:mr-3 text-sm sm:text-base"></i>
+                          <span>Change Password</span>
+                      </a>
+                      
+                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-primary transition text-sm sm:text-base">
+                          <i class="fas fa-tags text-primary mr-2 sm:mr-3 text-sm sm:text-base"></i>
+                          <span>Manage Product Labels</span>
+                      </a>
+                      
+                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-primary transition text-sm sm:text-base">
+                          <i class="fas fa-cog text-primary mr-2 sm:mr-3 text-sm sm:text-base"></i>
+                          <span>Store Settings</span>
+                      </a>
+                  </div>
+              </div>
+          </div>
+      </div>
+    <script>
+        const labels = JSON.parse('{{ month|escapejs }}');
+        const data = JSON.parse('{{ orders_count|escapejs }}');
+    
+        const barctx = document.getElementById("barChart");
+    
+        new Chart(barctx, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Orders",
+                    data: data,
+                    backgroundColor: 'rgba(252, 218, 26, 0.2)',
+                    borderColor: 'rgba(252, 218, 26, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // Pie Chart
+        const pieCtx = document.getElementById("pieChart");
+        const pieData = JSON.parse('{{ in_out_stock_data|escapejs }}');
+        const pieLabels = JSON.parse('{{ in_out_stock_labels|escapejs }}');
+        new Chart(pieCtx, {
+            type: "pie",
+            data: {
+            labels: pieLabels,
+            datasets: [{
+                label: "Stock Status",
+                data: pieData,
+                backgroundColor: [
+                'rgba(0, 200, 100, 1)',
+                'rgba(255, 99, 132, 1)',
+                ],
+                borderColor: [
+                'rgba(0, 200, 100, 1)',
+                'rgba(255, 99, 132, 1)',
+                ],
+                borderWidth: 1,
+            }],
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            },
+        });
+    </script>
+  </body>
+</html>
+{% endblock content %}
+

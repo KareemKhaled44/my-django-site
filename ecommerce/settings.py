@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     #apps
     'core',
     'userauths',
+    'useradmin',
 
 ]
 
@@ -72,6 +73,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.price_range_context',
+                'core.context_processors.cart_data',  
             ],
         },
     },
@@ -156,3 +158,12 @@ JAZZMIN_SETTINGS = {
 AUTH_USER_MODEL = 'userauths.User'
 
 CSRF_TRUSTED_ORIGINS = ['https://*.ngrok-free.app']
+LOGIN_URL = '/sign-in/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'kemokingo44@gmail.com'
+EMAIL_HOST_PASSWORD = 'krmt uyrl rqya agtr'
+DEFAULT_FROM_EMAIL = 'My Website <kemokingo44@gmail.com>'

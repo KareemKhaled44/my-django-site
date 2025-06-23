@@ -99,7 +99,13 @@
             -{{ p.get_discount_percentage }}% off
             </div>
             {% endif %}
-          <h3  class="product-title text-4xl text-white">{{p.title}}</h3>
+          <div class="flex justify-between">
+            <h3  class="product-title text-4xl text-white">{{p.title}}</h3>
+            <button data-pid="{{p.pid}}"
+                class="add-to-wishlist">
+                <i class="fa-regular fa-heart text-[#b9a848] text-lg transition-all duration-200"></i>
+            </button>
+          </div>
           <p class="text-[#414141]">{{p.brand}}, {{p.category}}</p>
           {% if p.in_stock %}
           <p class="text-green-600">
@@ -196,7 +202,7 @@
         </div>
       </div>
     </section>
-
+    <!--related products-->
     <main class="">
       <h2 class="head-title font-bold">Related Product</h2>
         <section class="products">
@@ -223,7 +229,13 @@
           <img src="{{p.image.url}}" alt="">
 
           <div class=" mt-3 ">
-            <p>{{p.category}}</p>
+            <div class="flex items-center justify-between">
+              <p>{{p.category}}</p>
+              <button data-pid="{{p.pid}}"
+              class="add-to-wishlist">
+              <i class="fa-regular fa-heart text-[#b9a848] text-lg transition-all duration-200"></i>
+              </button>
+            </div>
             <a href="{% url 'core:product-detail' p.pid %}"><span class="title">{{p.title}}</span></a>
             <p class="description">
               {{p.description}}<br /> 
@@ -243,7 +255,7 @@
               {% if p.in_stock %}
                 <!-- الزرار -->
                 <a href="{% url 'core:product-detail' p.pid %}"class="add-to-cart">
-                  <i class="fa-solid fa-cart-shopping"></i>
+                  <i class="fa-solid fa-cart-shopping cart-icon"></i>
                   <span class="text">add to cart</span>
                 </a>
                 {% else %}
@@ -272,12 +284,7 @@
         mainImage.src = thumbnail.src;
       }
     </script>
-
-    <!--search button -->
-    <script src="{% static 'assets/js/search.js' %}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script src="{% static 'assets/js/function.js' %}"></script>
+    
 
 
   </body>

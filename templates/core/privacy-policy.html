@@ -1,0 +1,170 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Peak Health Supplements</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#b9a848',
+                        dark: '#28282B',
+                        light: '#F9FAFB',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/header.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/index.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/login.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/checkout.css' %}" />
+    <style>
+        .policy-section h2 {
+            scroll-margin-top: 100px;
+        }
+    </style>
+</head>
+<body class="bg-transparent text-light">
+    <!-- Hero Section -->
+    <section class="relative py-20  border-b-2 border-white/30">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-primary mb-6">PRIVACY POLICY</h1>
+            <p class="text-xl md:text-2xl max-w-3xl mx-auto">Your trust is important to us at Peak Health</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-16 max-w-4xl">
+        <div class="mb-12 text-center">
+            <p class="mt-4">At Peak Health Supplements, we are committed to protecting your privacy. This policy explains how we collect, use, and safeguard your information.</p>
+        </div>
+
+        <!-- Policy Sections -->
+        <div class="space-y-12 policy-section">
+            <!-- Information Collection -->
+            <section id="information-collection" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-database mr-3"></i> Information We Collect
+                </h2>
+                <div class="space-y-4">
+                    <p>We may collect the following types of information:</p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li><strong>Personal Information:</strong> Name, email, phone number, shipping/billing address</li>
+                        <li><strong>Payment Information:</strong> Credit card details (processed securely through our payment processor)</li>
+                        <li><strong>Health Information:</strong> Optional fitness goals or supplement preferences you share with us</li>
+                        <li><strong>Technical Data:</strong> IP address, browser type, device information</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- How We Use Information -->
+            <section id="information-use" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-cogs mr-3"></i> How We Use Your Information
+                </h2>
+                <div class="space-y-4">
+                    <p>Your information helps us:</p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>Process and fulfill your supplement orders</li>
+                        <li>Provide personalized product recommendations</li>
+                        <li>Improve our products and customer service</li>
+                        <li>Send important account/order notifications</li>
+                        <li>Prevent fraud and ensure security</li>
+                        <li>Comply with legal obligations</li>
+                    </ul>
+                    <p class="pt-2">We will never sell your personal information to third parties.</p>
+                </div>
+            </section>
+
+            <!-- Data Security -->
+            <section id="data-security" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-lock mr-3"></i> Data Security
+                </h2>
+                <div class="space-y-4">
+                    <p>We implement industry-standard security measures to protect your information:</p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>SSL/TLS encryption for all data transmissions</li>
+                        <li>Secure payment processing with PCI-compliant partners</li>
+                        <li>Regular security audits of our systems</li>
+                        <li>Limited employee access to sensitive data</li>
+                    </ul>
+                    <p class="pt-2">While we take reasonable precautions, no internet transmission is 100% secure.</p>
+                </div>
+            </section>
+
+            <!-- Cookies -->
+            <section id="cookies" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-cookie mr-3"></i> Cookies & Tracking
+                </h2>
+                <div class="space-y-4">
+                    <p>Our website uses cookies to:</p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>Remember your preferences and login status</li>
+                        <li>Analyze site traffic and usage patterns</li>
+                        <li>Enable shopping cart functionality</li>
+                        <li>Deliver targeted ads (through third-party services)</li>
+                    </ul>
+                    <div class="mt-4 p-4 bg-dark/50 rounded border border-white/20">
+                        <p class="font-semibold text-primary">Cookie Consent</p>
+                        <p>By using our site, you consent to our use of cookies. You can manage preferences in your browser settings.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Your Rights -->
+            <section id="your-rights" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-user-shield mr-3"></i> Your Privacy Rights
+                </h2>
+                <div class="space-y-4">
+                    <p>Depending on your location, you may have the right to:</p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>Access the personal data we hold about you</li>
+                        <li>Request correction of inaccurate information</li>
+                        <li>Request deletion of your personal data</li>
+                        <li>Opt-out of marketing communications</li>
+                        <li>Lodge a complaint with a regulatory authority</li>
+                    </ul>
+                    <p class="pt-4">To exercise these rights, please contact us at <span class="text-primary">privacy@peakhealth.com</span></p>
+                </div>
+            </section>
+
+            <!-- Changes -->
+            <section id="policy-changes" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-sync-alt mr-3"></i> Policy Changes
+                </h2>
+                <div class="space-y-4">
+                    <p>We may update this policy periodically. The updated version will be posted here with a new "Last Updated" date.</p>
+                    <p>For material changes, we may notify you via email or through our website.</p>
+                </div>
+            </section>
+
+            <!-- Contact -->
+            <section id="contact" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-envelope mr-3"></i> Contact Us
+                </h2>
+                <div class="space-y-4">
+                    <p>For privacy-related questions or concerns:</p>
+                    <p><strong>Email:</strong> <span class="text-primary">privacy@peakhealth.com</span></p>
+                    <p><strong>Mail:</strong> Peak Health Privacy Officer, 123 Supplement Lane, Health City, HC 12345</p>
+                </div>
+            </section>
+        </div>
+    </div>
+  
+</body>
+</html>
+{% endblock content %}

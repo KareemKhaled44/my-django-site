@@ -17,7 +17,6 @@ class User(AbstractUser):
       return self.username
     
 class Contact(models.Model):
-
     full_name = models.CharField(max_length=100)
     email = models.EmailField()
     subject = models.CharField(max_length=200)

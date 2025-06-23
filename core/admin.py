@@ -1,10 +1,13 @@
 from django.contrib import admin
-from core.models import Product, ProductImages, Coupon, Category, Address, Supplier, CartOrder, CartOrderItem, Flavor, Brand
+from core.models import Product, ProductImages, Coupon, Category, Address, Supplier, CartOrder, CartOrderItem, Flavor, Brand, Wishlist
 # Register your models here.
 class ProductImages(admin.TabularInline):
       model = ProductImages
       extra = 1
 
+class WishlistAdmin(admin.ModelAdmin):
+      list_display = ('user', 'product')
+      
 
 class FlavorAdmin(admin.ModelAdmin):
     list_display = ['name']
@@ -24,21 +27,22 @@ class CategoryAdmin(admin.ModelAdmin):
       
 
 class CartOrderAdmin(admin.ModelAdmin):
-      list_display = ('oid','user', 'order_status', 'paid_status', 'order_date', 'price', 'saved', 'total_price')
+      list_display = ('oid','user', 'order_status', 'paid_status', 'invoice_number', 'order_date', 'price', 'saved', 'total_price')
       list_filter = ('order_status', 'paid_status')
       search_fields = ('user', 'order_date')
 
 class CartOrderItemAdmin(admin.ModelAdmin):
-      list_display = ('order', 'product', 'order_image', 'quantity', 'price', 'total_price', 'invoice_number')
+      list_display = ('order', 'product', 'order_image', 'quantity', 'price', 'total_price')
       list_filter = ('order', 'product')
 
 class AddressAdmin(admin.ModelAdmin):
-      list_display = ('first_name', 'last_name','city')
+      list_display = ('first_name', 'last_name','city', 'status')
       search_fields = ('first_name', 'last_name', 'city', 'postal_code')
 
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Wishlist, WishlistAdmin)
 admin.site.register(Address, AddressAdmin)
 admin.site.register(Supplier)
 admin.site.register(CartOrder, CartOrderAdmin)

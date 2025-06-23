@@ -1,0 +1,181 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Return Policy - Peak Health Supplements</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#b9a848',
+                        dark: '#28282B',
+                        light: '#F9FAFB',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/header.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/index.css' %}" />
+    <link rel="stylesheet" href="{% static '/assets/css/login.css' %}" />
+    <style>
+        .policy-section h2 {
+            scroll-margin-top: 100px;
+        }
+    </style>
+</head>
+<body class=" text-light">
+    <!-- Hero Section -->
+    <section class="relative py-20  border-b-2 border-white/30">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-primary mb-6">RETURN POLICY</h1>
+            <p class="text-xl md:text-2xl max-w-3xl mx-auto">Your satisfaction is our priority at Peak Health</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-16 max-w-4xl">
+        <div class="mb-12 text-center">
+            <p class="text-lg">Last Updated: <span class="text-primary">January 1, 2023</span></p>
+            <p class="mt-4">At Peak Health Supplements, we stand behind our products. If you're not completely satisfied, please review our return policy below.</p>
+        </div>
+
+        <!-- Policy Sections -->
+        <div class="space-y-12 policy-section">
+            <!-- Return Eligibility -->
+            <section id="eligibility" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-check-circle mr-3"></i> Return Eligibility
+                </h2>
+                <div class="space-y-4">
+                    <p>To be eligible for a return:</p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>Items must be unopened and in original packaging</li>
+                        <li>Return request must be made within 30 days of delivery</li>
+                        <li>Proof of purchase is required</li>
+                    </ul>
+                    <div class="mt-4 p-4 bg-dark/50 rounded border border-white/20">
+                        <p class="font-semibold text-primary">Note on Opened Products:</p>
+                        <p>For quality control reasons, we cannot accept returns of opened supplement containers unless the product is defective.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Non-Returnable Items -->
+            <section id="non-returnable" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-times-circle mr-3"></i> Non-Returnable Items
+                </h2>
+                <div class="space-y-4">
+                    <p>The following items cannot be returned:</p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>Opened supplement containers</li>
+                        <li>Products purchased during clearance sales</li>
+                        <li>Personalized or special order items</li>
+                        <li>Products without original packaging</li>
+                        <li>Items damaged due to misuse</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Return Process -->
+            <section id="process" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-exchange-alt mr-3"></i> Return Process
+                </h2>
+                <div class="space-y-4">
+                    <ol class="list-decimal pl-6 space-y-4">
+                        <li>
+                            <strong>Contact our support team</strong> at <span class="text-primary">returns@peakhealth.com</span> within 30 days of delivery
+                        </li>
+                        <li>
+                            <strong>Provide your order number</strong> and reason for return
+                        </li>
+                        <li>
+                            <strong>Wait for approval</strong> and return instructions
+                        </li>
+                        <li>
+                            <strong>Ship items back</strong> using the provided return label (customer responsible for return shipping)
+                        </li>
+                        <li>
+                            <strong>Receive refund</strong> to original payment method within 5-10 business days after we receive and inspect your return
+                        </li>
+                    </ol>
+                    <div class="mt-4 p-4 bg-dark/50 rounded border border-white/20">
+                        <p class="font-semibold text-primary">Important:</p>
+                        <p>We recommend using a trackable shipping service as we cannot guarantee receipt of your return.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Refunds -->
+            <section id="refunds" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-money-bill-wave mr-3"></i> Refunds
+                </h2>
+                <div class="space-y-4">
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>Refunds will be issued to the original payment method</li>
+                        <li>Processing time: 5-10 business days after we receive your return</li>
+                        <li>Original shipping costs are non-refundable</li>
+                        <li>Restocking fees may apply for large quantity returns</li>
+                    </ul>
+                    <p class="pt-2">Sale items are only eligible for store credit.</p>
+                </div>
+            </section>
+
+            <!-- Exchanges -->
+            <section id="exchanges" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-sync-alt mr-3"></i> Exchanges
+                </h2>
+                <div class="space-y-4">
+                    <p>We currently only replace items if they are defective or damaged. If you need to exchange for a different product:</p>
+                    <ol class="list-decimal pl-6 space-y-2 mt-2">
+                        <li>Return the original item following our return process</li>
+                        <li>Place a new order for the desired product</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Damaged/Defective Items -->
+            <section id="damaged" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-exclamation-triangle mr-3"></i> Damaged or Defective Items
+                </h2>
+                <div class="space-y-4">
+                    <p>If you receive a damaged or defective product:</p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>Contact us within 7 days of delivery at <span class="text-primary">support@peakhealth.com</span></li>
+                        <li>Include photos of the damaged item and packaging</li>
+                        <li>We'll ship a replacement at no additional cost</li>
+                    </ul>
+                    <p class="pt-2">For perishable items, we may require return of the damaged product.</p>
+                </div>
+            </section>
+
+            <!-- Contact -->
+            <section id="contact" class="border-2 border-white/30 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                    <i class="fas fa-envelope mr-3"></i> Return Questions?
+                </h2>
+                <div class="space-y-4">
+                    <p>Contact our customer service team for assistance with returns:</p>
+                    <p><strong>Email:</strong> <span class="text-primary">returns@peakhealth.com</span></p>
+                    <p><strong>Phone:</strong> <span class="text-primary">1-800-PEAK-HEALTH</span> (Mon-Fri, 9am-5pm EST)</p>
+                    <p><strong>Mail:</strong> Peak Health Returns, 123 Supplement Lane, Health City, HC 12345</p>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock content %}

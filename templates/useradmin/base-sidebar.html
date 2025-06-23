@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peak Health - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#b9a848',
+                        dark: '#28282B',
+                        light: '#F9FAFB',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
+
+</head>
+<body class="bg-dark text-light">
+    <!-- Wrapper: Sidebar + Main Content -->
+    <div class="flex overflow-hidden">
+        <!-- Mobile Sidebar Toggle Button (hidden on desktop) -->
+        <button id="sidebarToggle" class="lg:hidden fixed top-4 left-4 z-50 p-2
+         rounded-md bg-dark/80 text-primary border border-primary/50">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Sidebar -->
+        <div id="sidebar" class="w-64 bg-dark/90 h-screen border-r-2 border-white/30 fixed lg:static transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40">
+            <div class="p-4 border-b-2 border-white/30">
+                <h1 class="text-2xl font-bold text-primary">
+                    <i class="fas fa-mountain mr-2"></i> <a href="{% url 'core:index' %}">Peak Health</a> 
+                </h1>
+                <p class="text-sm text-light/80">Admin Dashboard</p>
+            </div>
+            
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="{% url 'useradmin:dashboard' %}" class="flex items-center p-2 text-primary bg-dark/50 rounded-lg">
+                            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'useradmin:products' %}" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <i class="fas fa-box-open mr-3"></i> Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'useradmin:add-product' %}" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <i class="fa-solid fa-square-plus mr-3"></i> New Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <i class="fas fa-shopping-cart mr-3"></i> Orders
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <i class="fas fa-chart-line mr-3"></i> Analytics
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <i class="fas fa-users mr-3"></i> Customers
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="#" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <i class="fas fa-cog mr-3"></i> Settings
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- Collapse/Expand Button (visible on desktop) -->
+            <div class="hidden lg:block absolute bottom-4 left-0 right-0 px-4">
+                <button id="collapseSidebar" class="w-full p-2 text-light/70 hover:text-primary rounded-lg border border-white/20 hover:border-primary transition">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="mainContent" class="flex-1 overflow-auto p-6 lg:ml-0 transition-all duration-300">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <script>
+        // Mobile sidebar toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+        
+        // Desktop collapse/expand
+        const collapseSidebar = document.getElementById('collapseSidebar');
+        let isCollapsed = false;
+        
+        collapseSidebar?.addEventListener('click', () => {
+            isCollapsed = !isCollapsed;
+            
+            if (isCollapsed) {
+                sidebar.classList.add('w-20');
+                sidebar.classList.remove('w-64');
+                collapseSidebar.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                
+                // Hide all text in nav items except icons
+                document.querySelectorAll('#sidebar nav li a span').forEach(el => {
+                    el.classList.add('hidden');
+                });
+                
+                // Center icons
+                document.querySelectorAll('#sidebar nav li a').forEach(el => {
+                    el.classList.add('justify-center');
+                    el.classList.remove('justify-start');
+                });
+                
+                // Adjust logo
+                document.querySelector('#sidebar h1').classList.add('text-center');
+                document.querySelector('#sidebar h1 i').classList.remove('mr-2');
+                document.querySelector('#sidebar p').classList.add('hidden');
+            } else {
+                sidebar.classList.remove('w-20');
+                sidebar.classList.add('w-64');
+                collapseSidebar.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                
+                // Show all text in nav items
+                document.querySelectorAll('#sidebar nav li a span').forEach(el => {
+                    el.classList.remove('hidden');
+                });
+                
+                // Reset alignment
+                document.querySelectorAll('#sidebar nav li a').forEach(el => {
+                    el.classList.remove('justify-center');
+                    el.classList.add('justify-start');
+                });
+                
+                // Reset logo
+                document.querySelector('#sidebar h1').classList.remove('text-center');
+                document.querySelector('#sidebar h1 i').classList.add('mr-2');
+                document.querySelector('#sidebar p').classList.remove('hidden');
+            }
+        });
+    </script>
+    <script src="{% static 'assets/js/messages.js' %}"></script>
+    <script src="{% static 'assets/js/spinner.js' %}"></script>
+      <!--search button -->
+    <script src="{% static 'assets/js/search.js' %}"></script>
+  
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+    <script src="{% static 'assets/js/function.js' %}"></script>
+    <script src="{% static 'assets/js/range-slider.js' %}"></script>
+    <script src="{% static 'assets/js/filters.js' %}"></script>
+    <script src="{% static 'assets/js/sidebar-toggle.js' %}"></script>
+    <script src="{% static 'assets/js/password-toggle.js' %}"></script>
+
+</body>
+  

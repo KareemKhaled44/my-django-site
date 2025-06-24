@@ -146,7 +146,12 @@
                 <tr class="border-b border-white/30 hover:bg-gold/10">
                   <td class="p-4 text-gold whitespace-nowrap">{{order.oid}}</td>
                   <td class="p-4 whitespace-nowrap text-light">{{order.order_date}}</td>
-                  <td class="p-4"><span class="bg-gold/20 text-gold px-3 py-1 rounded-full text-xs">{{order.order_status}}</span></td>
+                  <td class="p-4"><span class="bg-dark border border-white/20 rounded-full pl-3 pr-3 py-1 text-sm font-medium transition-colors
+                    {% if order.order_status == 'delivered' %} bg-green-900/30 text-green-400
+                    {% elif order.order_status == 'shipped' %} bg-yellow-900/30 text-yellow-400
+                    {% elif order.order_status == 'pending' %} bg-blue-900/30 text-blue-400
+                    {% elif order.order_status == 'canceled' %} bg-red-900/30 text-red-400
+                    {% else %} bg-gray-900/30 text-gray-400{% endif %}">{{order.order_status}}</span></td>
                   {% if order.paid_status == True %}
                   <td class="p-4">
                      <i class="fa-solid fa-circle-check text-green-500 pl-8"></i></td>

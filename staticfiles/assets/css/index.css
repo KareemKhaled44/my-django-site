@@ -189,7 +189,7 @@ section.products{
                   box-shadow: 0px 5px 10px #0000001a;
                   position: relative;
             }
-            & .fa-solid {
+            & .cart-icon {
                   color: #28282B;
                   position: absolute;
                   left: -50px;
@@ -288,12 +288,6 @@ media queries
       & img {
         max-height: 150px;
       }
-
-      & .add-to-cart {
-        width: 110px;
-        height: 32px;
-        font-size: 0.75rem;
-      }
     }
   }
 }
@@ -332,7 +326,7 @@ media queries
 
      
 
-      & .fa-solid {
+      & .cart-icon {
             display: none;
       }
 

@@ -284,6 +284,7 @@ def checkout_view(request):
             order_status='Pending',
             address=address,
             paid_status=False,
+            payment_method=payment_method,
         )
         messages.success(request, f"Order created successfully with ID: {order.oid}")
 
@@ -306,7 +307,7 @@ def checkout_view(request):
         request.session.pop('cart_data_obj', None)
         request.session.pop('applied_coupon', None)
 
-        if payment_method == "COD":
+        if payment_method == "Cash on Delivery":
             messages.success(request, "Order placed successfully. Cash on Delivery.")
             return redirect('core:invoice')
         else:

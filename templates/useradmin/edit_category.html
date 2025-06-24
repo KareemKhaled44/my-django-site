@@ -1,0 +1,99 @@
+{% extends "useradmin/base-sidebar.html" %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#b9a848',
+                        dark: '#28282B',
+                        light: '#F9FAFB',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-dark">
+    <div class="container mx-auto p-4 md:p-6">
+      
+      
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6 md:mb-8">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-gold">Update Category</h1>
+                <p class="text-light/80">Fill in the category details below</p>
+            </div>
+            <a href="{% url 'useradmin:category' %}" class="text-light hover:text-gold flex items-center gap-1">
+                ← Back to Products
+            </a>
+        </div>
+
+        {% if form.errors %}
+            <div class="bg-red-500/10 text-red-500 p-4 rounded-lg mb-6">
+                  <ul class="list-disc pl-5 mt-2">
+                  {% for field in form %}
+                        {% for error in field.errors %}
+                              <li>{{ error }}</li>
+                        {% endfor %}
+                  {% endfor %}
+                  </ul>
+            </div>
+        {% endif %}
+
+        <!-- Product Form -->
+        <div class="bg-dark rounded-lg shadow-lg border border-white/10 p-6">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Left Column -->
+                    <div class="space-y-6">
+                        <!-- Product Name -->
+                        <div>
+                            <label for="title" class="block text-sm font-medium text-light mb-1">Category Name *</label>
+                            {{ form.title }}
+                        </div>
+                        
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="space-y-6">
+                        <!-- Product Image -->
+                        <div>
+                            <label class="block text-sm font-medium text-light mb-1">Category Image *</label>
+                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-white/10 border-dashed rounded-lg">
+                                <div class="space-y-1 text-center">
+                                    <img src="{{category.image.url}}" class="mx-auto h-32 w-32 rounded-lg object-cover" alt="Product Image">
+                                    <div class="flex text-sm text-light/70">
+                                        <label for="image" class="relative cursor-pointer rounded-md font-medium text-gold hover:text-gold/80 focus-within:outline-none">
+                                            {{ form.image }}
+                                        </label>
+                                    </div>
+                                    <p class="text-xs text-light/50">PNG, JPG up to 2MB</p>
+                                </div>
+                            </div>
+                        </div>                
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="mt-8 flex justify-end gap-3">                  
+                    <button type="submit" class="btn">
+                        Update Category
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock content %}

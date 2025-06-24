@@ -27,3 +27,21 @@ class AddCategoryForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form', 'placeholder': 'Enter category title'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form'})
         }
+
+class AddBrandForm(forms.ModelForm):
+    class Meta:
+        model = Brand
+        fields = ['name', 'image', 'user']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form', 'placeholder': 'Enter brand title'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form'}),
+            'user': forms.Select(attrs={'class': 'form bg-[#414141]'})
+        }
+
+class AddFlavorForm(forms.ModelForm):
+    class Meta:
+        model = Flavor
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form', 'placeholder': 'Enter flavor name'}),
+        }

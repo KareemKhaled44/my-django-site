@@ -28,10 +28,10 @@
         <!-- Header with Search and Add Product button -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-8">
             <div class="w-full md:w-auto">
-                <h1 class="text-2xl md:text-3xl font-bold text-gold">Category List</h1>
+                <h1 class="text-2xl md:text-3xl font-bold text-gold">Flavor List</h1>
             </div>
-            <a href="{% url 'useradmin:add-category' %}" class="btn">
-                  <i class="fa-solid fa-plus"></i> Add Category
+            <a href="{% url 'useradmin:add-flavor' %}" class="btn">
+                  <i class="fa-solid fa-plus"></i> Add Flavor
             </a>
             
         </div>
@@ -49,9 +49,9 @@
                         
                   </form>
                   {% if search_mode %}
-                  <a href="{% url 'useradmin:products' %}" class="text-sm text-light
-                        hover:text-primary underline mt-4">
-                        ← View all products
+                  <a href="{% url 'useradmin:flavor' %}" class="text-sm text-light
+                        hover:text-gold underline mt-4">
+                        ← View all flavors
                   </a>
                   {% endif %}
             </div>           
@@ -69,27 +69,23 @@
                         </tr>
                     </thead>
                     <tbody class="bg-dark divide-y divide-white/10">
-                        {% for c in categories %}
-                        <tr id="product-container"
-                         class="products hover:bg-white/5 transition-colors duration-150">
-                            <td class="px-4 py-4 md:px-6 md:py-4 whitespace-nowrap text-sm font-medium text-gold">#{{c.cid}}</td>
+                        {% for f in flavors %}
+                        <tr class="products hover:bg-white/5 transition-colors duration-150">
+                            <td class="px-4 py-4 md:px-6 md:py-4 whitespace-nowrap text-sm font-medium text-gold">#{{f.id}}</td>
                             <td class="px-4 py-4 md:px-6 md:py-4">
                                 <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-10 w-10">
-                                        <img class="h-10 w-10 rounded object-cover" src="{{c.image.url}}" alt="Product image">
-                                    </div>
+                                    
                                     <div class="ml-3 md:ml-4">
-                                        <div class="text-sm font-medium text-light">{{c.title}}</div>
-                                        <div class="text-sm text-light/70">{{p.category}}</div>
+                                        <div class="text-sm font-medium text-light">{{f.name}}</div>
                                     </div>
                                 </div>
                             </td>
                            
                             <td class="px-4 py-4 md:px-6 md:py-4 whitespace-nowrap text-sm font-medium flex items-center gap-2">
-                                <a href="{% url 'useradmin:edit-category' c.cid %}" class="text-gold hover:text-gold/80 hover:underline flex items-center gap-1">
+                                <a href="{% url 'useradmin:edit-flavor' f.id %}" class="text-gold hover:text-gold/80 hover:underline flex items-center gap-1">
                                     <i class="fa-regular fa-pen-to-square"></i> Edit
                                 </a>
-                                <a href="{% url 'useradmin:delete-category' c.cid %}" class="text-red-400 hover:text-red-300 hover:underline flex items-center gap-1">
+                                <a href="{% url 'useradmin:delete-flavor' f.id %}" class="text-red-400 hover:text-red-300 hover:underline flex items-center gap-1">
                                     <i class="fa-solid fa-trash"></i> Delete
                                 </a>
                             </td>

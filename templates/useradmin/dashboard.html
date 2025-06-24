@@ -12,7 +12,11 @@
 <body class="bg-dark text-light">
       <!-- Main Content -->
       <div class="min-h-screen">
-                    
+            <header>
+            <div class="flex items-center justify-center p-4 sm:p-6 bg-dark/50 border-b-2 border-white/30">
+                <h1 class="text-xl sm:text-2xl font-bold text-gold">Dashboard</h1>
+                
+            </header>
           <!-- Stats Cards - Improved grid for mobile -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 sm:gap-6 sm:p-6">
               <!-- Revenue Card -->
@@ -20,10 +24,10 @@
                   <div class="flex justify-between items-start">
                       <div>
                           <p class="text-light/80 text-sm sm:text-base">Total Revenue</p>
-                          <h3 class="text-xl sm:text-2xl font-bold text-primary">EGP {{revenue|floatformat:2}}</h3>
+                          <h3 class="text-xl sm:text-2xl font-bold text-gold">EGP {{revenue|floatformat:2}}</h3>
                       </div>
-                      <div class="bg-primary/20 p-2 rounded-full">
-                          <i class="fas fa-dollar-sign text-primary text-sm sm:text-base"></i>
+                      <div class="bg-gold/20 p-2 rounded-full">
+                          <i class="fas fa-dollar-sign text-gold text-sm sm:text-base"></i>
                       </div>
                   </div>
               </div>
@@ -33,10 +37,10 @@
                   <div class="flex justify-between items-start">
                       <div>
                           <p class="text-light/80 text-sm sm:text-base">Total Orders</p>
-                          <h3 class="text-xl sm:text-2xl font-bold text-primary">{{total_orders_count}}</h3>
+                          <h3 class="text-xl sm:text-2xl font-bold text-gold">{{total_orders_count}}</h3>
                       </div>
-                      <div class="bg-primary/20 p-2 rounded-full">
-                          <i class="fas fa-shopping-cart text-primary text-sm sm:text-base"></i>
+                      <div class="bg-gold/20 p-2 rounded-full">
+                          <i class="fas fa-shopping-cart text-gold text-sm sm:text-base"></i>
                       </div>
                   </div>
               </div>
@@ -46,10 +50,10 @@
                   <div class="flex justify-between items-start">
                       <div>
                           <p class="text-light/80 text-sm sm:text-base">Total Products</p>
-                          <h3 class="text-xl sm:text-2xl font-bold text-primary">{{all_products.count}}</h3>
+                          <h3 class="text-xl sm:text-2xl font-bold text-gold">{{all_products.count}}</h3>
                       </div>
-                      <div class="bg-primary/20 p-2 rounded-full">
-                          <i class="fas fa-box-open text-primary text-sm sm:text-base"></i>
+                      <div class="bg-gold/20 p-2 rounded-full">
+                          <i class="fas fa-box-open text-gold text-sm sm:text-base"></i>
                       </div>
                   </div>
                   {% if low_stock_products %}
@@ -62,10 +66,10 @@
                   <div class="flex justify-between items-start">
                       <div>
                           <p class="text-light/80 text-sm sm:text-base">Monthly Earnings</p>
-                          <h3 class="text-xl sm:text-2xl font-bold text-primary">EGP {{monthly_revenue|floatformat:2}}</h3>
+                          <h3 class="text-xl sm:text-2xl font-bold text-gold">EGP {{monthly_revenue|floatformat:2}}</h3>
                       </div>
-                      <div class="bg-primary/20 p-2 rounded-full">
-                          <i class="fas fa-chart-line text-primary text-sm sm:text-base"></i>
+                      <div class="bg-gold/20 p-2 rounded-full">
+                          <i class="fas fa-chart-line text-gold text-sm sm:text-base"></i>
                       </div>
                   </div>
               </div>
@@ -83,17 +87,17 @@
           </div>
           <!-- Orders & Quick Actions -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 sm:gap-6 sm:p-6">
-              <!-- Orders -->
+              <!-- latest Orders -->
               <div class="lg:col-span-2 bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
                   <div class="flex justify-between items-center mb-4 sm:mb-6">
-                      <h3 class="text-base sm:text-lg font-semibold text-primary">Latest Orders</h3>
-                        <a href="#" class="text-primary hover:underline text-xs sm:text-sm">View All</a>
+                      <h3 class="text-base sm:text-lg font-semibold text-gold">Latest Orders</h3>
+                        <a href="#" class="text-gold hover:underline text-xs sm:text-sm">View All</a>
                   </div>
               
                   <div class="max-h-[400px] overflow-x-auto overflow-y-auto custom-scrollbar">
                       <table class="w-full min-w-[600px]">
                           <thead class="sticky top-0 bg-dark/70 backdrop-blur border-b-2 border-white/30 text-left z-10">
-                              <tr class="text-primary">
+                              <tr class="text-gold">
                                   <th class="p-2 text-xs sm:text-sm">Order ID</th>
                                   <th class="p-2 text-xs sm:text-sm">Name</th>
                                   <th class="p-2 text-xs sm:text-sm">Date</th>
@@ -112,7 +116,7 @@
                               </tr>
                               {% endif %}
                               {% for order in latest_orders %}
-                              <tr class="border-b border-white/10 hover:bg-primary/10 transition">
+                              <tr class="border-b border-white/10 hover:bg-gold/10 transition">
                                   <td class="py-3 text-xs sm:text-sm">#{{order.oid}}</td>
                                   <td class="text-xs sm:text-sm">{{order.user.username}}</td>
                                   <td class="text-xs sm:text-sm">{{order.order_date}}</td>
@@ -125,7 +129,7 @@
                                   <td class="px-2 text-xs sm:text-sm">EGP {{order.price}}</td>
                                   <td class="px-2 text-xs sm:text-sm">EGP -{{order.saved}}</td>
                                   <td class="px-2 text-xs sm:text-sm">EGP {{order.total_price}}</td>
-                                  <td class="px-2"><a href="#" class="text-primary hover:underline text-xs sm:text-sm">View</a></td>
+                                  <td class="px-2"><a href="{% url 'useradmin:order-detail' order.oid %}" class="text-gold hover:underline text-xs sm:text-sm">View</a></td>
                               </tr>
                               {% endfor %}
                           </tbody>
@@ -135,26 +139,26 @@
   
               <!-- Quick Actions - Improved for mobile -->
               <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
-                  <h3 class="text-base sm:text-lg font-semibold text-primary mb-4 sm:mb-6">Quick Actions</h3>
+                  <h3 class="text-base sm:text-lg font-semibold text-gold mb-4 sm:mb-6">Quick Actions</h3>
                   
                   <div class="space-y-3 sm:space-y-4">
-                      <a href="{% url 'useradmin:add-product' %}" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-primary transition text-sm sm:text-base">
-                          <i class="fas fa-plus-circle text-primary mr-2 sm:mr-3 text-sm sm:text-base"></i>
+                      <a href="{% url 'useradmin:add-product' %}" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
+                          <i class="fas fa-plus-circle text-gold mr-2 sm:mr-3 text-sm sm:text-base"></i>
                           <span>Add New Product</span>
                       </a>
                       
-                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-primary transition text-sm sm:text-base">
-                          <i class="fas fa-key text-primary mr-2 sm:mr-3 text-sm sm:text-base"></i>
+                      <a href="{% url 'useradmin:change-password' %}" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
+                          <i class="fas fa-key text-gold mr-2 sm:mr-3 text-sm sm:text-base"></i>
                           <span>Change Password</span>
                       </a>
                       
-                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-primary transition text-sm sm:text-base">
-                          <i class="fas fa-tags text-primary mr-2 sm:mr-3 text-sm sm:text-base"></i>
+                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
+                          <i class="fas fa-tags text-gold mr-2 sm:mr-3 text-sm sm:text-base"></i>
                           <span>Manage Product Labels</span>
                       </a>
                       
-                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-primary transition text-sm sm:text-base">
-                          <i class="fas fa-cog text-primary mr-2 sm:mr-3 text-sm sm:text-base"></i>
+                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
+                          <i class="fas fa-cog text-gold mr-2 sm:mr-3 text-sm sm:text-base"></i>
                           <span>Store Settings</span>
                       </a>
                   </div>

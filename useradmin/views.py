@@ -1,16 +1,19 @@
 from django.shortcuts import render
 import datetime
 from django.shortcuts import redirect
-from core.models import Product, Category, CartOrder, CartOrderItem
+from core.models import Product, Category, CartOrder, CartOrderItem, Brand, Flavor
 from django.db.models import Sum
 from userauths.models import User
 from core.services import paginate_products
-from useradmin.forms import AddProductForm, AddCategoryForm
+from useradmin.forms import AddProductForm, AddCategoryForm, AddBrandForm, AddFlavorForm
+from userauths.forms import PasswordChangeForm
 import calendar
 from django.db.models.functions import ExtractMonth
 from django.db.models import Count, F
 import json
 from django.utils.safestring import mark_safe
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 # Create your views here.
 
 def dashboard(request):
@@ -20,7 +23,7 @@ def dashboard(request):
     low_stock_products = Product.objects.filter(quantity__lte=5)
     all_categories = Category.objects.all()
     new_customers = User.objects.all().order_by('id')[:5]
-    latest_orders = CartOrder.objects.all().order_by('-oid')[:5]
+    latest_orders = CartOrder.objects.all().order_by('-order_date')[:5]
 
 
     this_month = datetime.datetime.now().month
@@ -121,6 +124,54 @@ def delete_product_view(request, pid):
     product.delete()
     return redirect('useradmin:products')
 
+def admin_orders_view(request):
+    all_orders = CartOrder.objects.all().order_by('-order_date')
+    if 'q' in request.GET:
+        query = request.GET.get('q')
+        search_mode = bool(query)
+        orders = CartOrder.objects.filter(oid__icontains=query)
+    else:
+        search_mode = False
+        orders = CartOrder.objects.all().order_by('-order_date')
+
+    # Apply pagination if needed
+    page_obj, query_string = paginate_products(request, orders, per_page=8)
+
+    context = {
+        'orders': page_obj.object_list,
+        'search_mode': search_mode,
+        'page_obj': page_obj,
+        'query_string': query_string,
+    }
+    return render(request, 'useradmin/orders.html', context)
+
+def order_detail_view(request, oid):
+    order = CartOrder.objects.get(oid=oid)
+    order_items = CartOrderItem.objects.filter(order=order)
+    
+    # Calculate total price for the order
+    sub_total = sum(item.price * item.quantity for item in order_items)
+
+    context = {
+        'order': order,
+        'order_items': order_items,
+        'sub_total': sub_total,
+    }
+    return render(request, 'useradmin/order_detail.html', context)
+
+def change_order_status(request, oid):
+    order = CartOrder.objects.get(oid=oid)
+    if request.method == 'POST':
+        new_status = request.POST.get('status')  
+        order.order_status  = new_status
+        order.save()
+        messages.success(request, f"Order status updated to {new_status}.")
+        return redirect('useradmin:order-detail', oid=oid)
+    else:
+        messages.error(request, "Invalid request method.")
+    return redirect('useradmin:order-detail', oid=oid)
+
+
 def analytics_view(request):
     total_revenue = CartOrder.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0
     in_stock_products = Product.objects.filter(in_stock=True).count()
@@ -212,7 +263,147 @@ def add_category_view(request):
     
     return render(request, 'useradmin/add_category.html', {'form': form})
 
+def edit_category_view(request, cid):
+    category = Category.objects.get(cid=cid)
+    form = AddCategoryForm(request.POST or None, request.FILES or None, instance=category)
+    
+    if request.method == 'POST' and form.is_valid():
+        new_form = form.save(commit=False)
+        new_form.user = request.user
+        new_form.save()
+        return redirect('useradmin:category')
+    else:
+        print(form.errors)
+        form = AddCategoryForm(instance=category)
+    
+    context = {
+        'form': form,
+        'category': category,
+    }
+    return render(request, 'useradmin/edit_category.html', context)
+
 def delete_category_view(request, cid):
     category = Category.objects.get(cid=cid)
     category.delete()
     return redirect('useradmin:category')
+
+def admin_brands_view(request):
+    all_brands = Brand.objects.all()
+    if 'q' in request.GET:
+        query = request.GET.get('q')
+        search_mode = bool(query)
+        brands = Brand.objects.filter(name__icontains=query)
+    else:
+        search_mode = False
+        brands = Brand.objects.all()
+
+    context = {
+        'brands': brands,
+        'search_mode': search_mode,
+        'all_brands': all_brands,
+    }
+    return render(request, 'useradmin/brands.html', context)
+
+def add_brand_view(request):
+    form = AddBrandForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST' and form.is_valid():
+        new_form = form.save(commit=False)
+        new_form.user = request.user
+        new_form.save()
+        return redirect('useradmin:brand')
+    else:
+        form = AddBrandForm()
+        
+    return render(request, 'useradmin/add_brand.html', {'form': form})
+
+def edit_brand_view(request, bid):
+    brand = Brand.objects.get(bid=bid)
+    form = AddBrandForm(request.POST or None, request.FILES or None, instance=brand)
+    
+    if request.method == 'POST' and form.is_valid():
+        new_form = form.save(commit=False)
+        new_form.user = request.user
+        new_form.save()
+        return redirect('useradmin:brand')
+    else:
+        print(form.errors)
+        form = AddBrandForm(instance=brand)
+    
+    context = {
+        'form': form,
+        'brand': brand,
+    }
+    return render(request, 'useradmin/edit_brand.html', context)
+
+def delete_brand_view(request, bid):
+    brand = Brand.objects.get(bid=bid)
+    brand.delete()
+    return redirect('useradmin:brand')
+
+def admin_flavors_view(request):
+    all_flavors = Flavor.objects.all()
+    if 'q' in request.GET:
+        query = request.GET.get('q')
+        search_mode = bool(query)
+        flavors = Flavor.objects.filter(name__icontains=query)
+    else:
+        search_mode = False
+        flavors = Flavor.objects.all()
+
+    context = {
+        'flavors': flavors,
+        'search_mode': search_mode,
+        'all_flavors': all_flavors,
+    }
+    return render(request, 'useradmin/flavors.html', context)
+
+def add_flavor_view(request):
+    form = AddFlavorForm(request.POST or None)
+    
+    if request.method == 'POST' and form.is_valid():
+        new_form = form.save(commit=False)
+        new_form.user = request.user
+        new_form.save()
+        return redirect('useradmin:flavor')
+    else:
+        form = AddFlavorForm()
+    
+    return render(request, 'useradmin/add_flavor.html', {'form': form})
+
+def edit_flavor_view(request, id):
+    flavor = Flavor.objects.get(id=id)
+    form = AddFlavorForm(request.POST or None, instance=flavor)
+    if request.method == 'POST' and form.is_valid():
+        new_form = form.save(commit=False)
+        new_form.user = request.user
+        new_form.save()
+        return redirect('useradmin:flavor')
+    else:
+        print(form.errors)
+        form = AddFlavorForm(instance=flavor)
+    context = {
+        'form': form,
+        'flavor': flavor,
+    }
+    return render(request, 'useradmin/edit_flavor.html', context)
+
+def delete_flavor_view(request, id):
+    flavor = Flavor.objects.get(id=id)
+    flavor.delete()
+    return redirect('useradmin:flavor')
+
+def admin_change_password(request):
+    if request.method == 'POST':
+        password_form = PasswordChangeForm(request.user, request.POST)
+        if password_form.is_valid():
+            user = password_form.save()
+            # Keep the user logged in after password change
+            update_session_auth_hash(request, user)
+            messages.success(request, "Password changed successfully!")
+            return redirect('useradmin:dashboard')
+        else:
+            messages.error(request, "Error changing password. Please check the form.")
+    else:
+        password_form = PasswordChangeForm(request.user)
+    return render(request, 'useradmin/change_password.html', {'password_form': password_form})
+        

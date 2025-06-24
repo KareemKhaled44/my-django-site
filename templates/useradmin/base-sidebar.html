@@ -12,7 +12,7 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#b9a848',
+                        gold: '#b9a848',
                         dark: '#28282B',
                         light: '#F9FAFB',
                     }
@@ -28,20 +28,21 @@
     <!-- Wrapper: Sidebar + Main Content -->
     <div class="flex overflow-hidden">
         <!-- Mobile Sidebar Toggle Button (hidden on desktop) -->
-        <button id="openSidebar" class="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-dark/80 text-primary border border-primary/50">
+        <button id="openSidebar" class=" fixed p-3 m-3 bg-dark text-gold
+        border border-gold rounded-md  self-start xs:self-auto">
             <i class="fas fa-bars"></i>
         </button>
-        <div class="flex  h-screen">
+        <div class="flex h-screen">
             <!-- Sidebar -->
             <div id="sidebar" class="fixed left-0 top-0 w-72 h-full 
             bg-[#28282B] text-white transform overflow-y-auto
-            -translate-x-full lg:translate-x-0 border-r-2 border-white/30  
+            -translate-x-full border-r-2 border-white/30  
             transition-transform duration-300 
-            lg:static lg:w-64 lg:h-screen lg:flex lg:flex-col p-4 z-40">
+             p-4 z-40">
                 <button id="closeSidebar" 
-                class="lg:hidden text-[#b9a848] text-2xl">✖ Close</button>
+                class="text-[#b9a848] text-2xl">✖ Close</button>
                 <div class="p-4 border-b-2 border-white/30">
-                    <h1 class="text-2xl font-bold text-primary">
+                    <h1 class="text-2xl font-bold text-gold">
                         <i class="fas fa-mountain mr-2"></i> <a href="{% url 'core:index' %}">Peak Health</a> 
                     </h1>
                     <p class="text-sm text-light/80">Admin Dashboard</p>
@@ -50,53 +51,53 @@
                 <nav class="p-4">
                     <ul class="space-y-2">
                         <li>
-                            <a href="{% url 'useradmin:dashboard' %}" class="flex items-center p-2 text-primary bg-dark/50 rounded-lg">
+                            <a href="{% url 'useradmin:dashboard' %}" class="flex items-center p-2 text-gold bg-dark/50 rounded-lg">
                                 <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'useradmin:products' %}" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:products' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
                                 <i class="fas fa-box-open mr-3"></i> Products
                             </a>
                         </li>
 
                         <li>
-                            <a href="{% url 'useradmin:add-product' %}" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:add-product' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
                                 <i class="fa-solid fa-square-plus mr-3"></i> New Products
                             </a>
                         </li>
 
                         <li>
-                            <a href="{% url 'useradmin:category' %}" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:category' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
                                 <i class="fa-solid fa-layer-group mr-3"></i> Categories
                             </a>
                         </li>
 
                         <li>
-                            <a href="#" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:orders' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
                                 <i class="fas fa-shopping-cart mr-3"></i> Orders
                             </a>
                         </li>
                         
                         <li>
-                            <a href="{% url 'useradmin:analytics' %}" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:analytics' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
                                 <i class="fas fa-chart-line mr-3"></i> Analytics
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:brand' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
                                 <i class="fa-regular fa-copyright mr-3"></i> Brands
                             </a>
                         </li>
 
                         <li>
-                            <a href="#" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:flavor' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
                                 <i class="fas fa-lemon mr-3"></i> Flavors
                             </a>
                         </li>
                         
                         <li>
-                            <a href="#" class="flex items-center p-2 text-light hover:text-primary rounded-lg hover:bg-dark/50 transition">
+                            <a href="#" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
                                 <i class="fas fa-cog mr-3"></i> Settings
                             </a>
                         </li>
@@ -105,7 +106,7 @@
                 
                 <!-- Collapse/Expand Button (visible on desktop) -->
                 <div class="hidden lg:block absolute bottom-4 left-0 right-0 px-4">
-                    <button id="collapseSidebar" class="w-full p-2 text-light/70 hover:text-primary rounded-lg border border-white/20 hover:border-primary transition">
+                    <button id="collapseSidebar" class="w-full p-2 text-light/70 hover:text-gold rounded-lg border border-white/20 hover:border-primary transition">
                         <i class="fas fa-chevron-left"></i>
                     </button>
                 </div>

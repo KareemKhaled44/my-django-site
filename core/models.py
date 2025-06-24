@@ -19,6 +19,12 @@ ORDER_STATUS_CHOICES = (
     ('canceled', 'Canceled'),
 )
 
+PAYMENT_METHOD_CHOICES = [
+    ('Cash on Delivery', 'Cash on Delivery'),
+    ('FLUTTER', 'Flutterwave'),
+    # ممكن تضيف PayPal أو غيره بعدين
+]
+
 CITIES = [
     ("Cairo", "Cairo"),
     ("Alexandria", "Alexandria"),
@@ -227,6 +233,8 @@ class CartOrder(models.Model):
     paid_status=models.BooleanField(default=False) #to show if the order is paid or not
 
     shipping_price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) #to show shipping price of the item
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES)
+
 
     class Meta:
         verbose_name_plural='cart orders'

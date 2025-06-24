@@ -16,14 +16,14 @@ class ProfileEditForm(forms.ModelForm):
         model = User
         fields = ['username', 'email']
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-input w-full'}),
-            'email': forms.EmailInput(attrs={'class': 'form-input w-full'}),
+            'username': forms.TextInput(attrs={'class': 'form w-full'}),
+            'email': forms.EmailInput(attrs={'class': 'form w-full'}),
         }
 
 class PasswordChangeForm(PasswordChangeForm):
-      old_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-input w-full'}))
-      new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-input w-full'}))
-      new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-input w-full'}))
+      old_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form w-full'}))
+      new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form w-full'}))
+      new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form w-full'}))
       class Meta:
             model = User
             fields = ['old_password', 'new_password1', 'new_password2']

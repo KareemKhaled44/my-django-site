@@ -25,4 +25,8 @@ urlpatterns = [
     path('edit-flavor/<id>/', views.edit_flavor_view, name='edit-flavor'),
     path('delete-flavor/<id>/', views.delete_flavor_view, name='delete-flavor'),
     path('change-password/', views.admin_change_password, name='change-password'),
+    path('contact-us/', views.admin_contact_us_view, name='contact-us'),
+    path('contact-detail/<id>/', views.contact_detail_view, name='contact-detail'),
+    path('delete-contact/<id>/', views.contact_delete_view, name='delete-contact'),
+    path('settings/', views.admin_settings_view, name='settings'),
 ]

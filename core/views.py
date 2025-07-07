@@ -369,13 +369,16 @@ def Ajax_contact_form(request):
     if request.method == 'POST':
         full_name = request.POST.get('full_name')
         email = request.POST.get('email')
+        phone = request.POST.get('phone')
         subject = request.POST.get('subject')
         message = request.POST.get('message')
+        
         
 
         Contact.objects.create(
             full_name=full_name,
             email=email,
+            phone=phone,
             subject=subject,
             message=message
         )
@@ -394,6 +397,7 @@ def customer_dashboard(request):
     orders = CartOrder.objects.filter(user=request.user).order_by('-order_date')
     addresses = Address.objects.filter(user=request.user)
     wishlist = Wishlist.objects.filter(user=request.user).order_by('-id')
+    contact = Contact.objects.filter(user=request.user).order_by('-created_at')
 
     profile_form = ProfileEditForm(instance=request.user)
     password_form = PasswordChangeForm(request.user)
@@ -425,6 +429,7 @@ def customer_dashboard(request):
         'profile_form': profile_form,
         'password_form': password_form,
         'wishlist': wishlist,
+        'contact': contact,
     }
     return render(request, 'core/dashboard.html', context)
 

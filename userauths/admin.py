@@ -6,7 +6,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email')
     
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'email', 'subject')
+    list_display = ('full_name', 'user', 'created_at', 'email', 'subject', 'status')
 
 
 admin.site.register(User, UserAdmin)

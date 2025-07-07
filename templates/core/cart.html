@@ -59,6 +59,12 @@
                         <img class="h-16 w-16 rounded mr-4" src="{{ item.image }}" alt="Product">
                         <span class="font-medium hover:text-[#b9a848] transition duration-150">
                           <a href="{% url 'core:product-detail' pid %}">{{ item.title }}</a>
+                          <p class="mt-1 text-sm text-light/80">
+                            Flavor:
+                            {% for flavor in item.flavors.all %}
+                              {{ flavor }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                          </p>
                         </span>
                       </div>
                     </td>

@@ -3,7 +3,7 @@ import datetime
 from django.shortcuts import redirect
 from core.models import Product, Category, CartOrder, CartOrderItem, Brand, Flavor
 from django.db.models import Sum
-from userauths.models import User
+from userauths.models import User, Contact
 from core.services import paginate_products
 from useradmin.forms import AddProductForm, AddCategoryForm, AddBrandForm, AddFlavorForm
 from userauths.forms import PasswordChangeForm
@@ -407,3 +407,39 @@ def admin_change_password(request):
         password_form = PasswordChangeForm(request.user)
     return render(request, 'useradmin/change_password.html', {'password_form': password_form})
         
+def admin_contact_us_view(request):
+    contact = Contact.objects.all()
+    order = CartOrder.objects.all().order_by('-order_date') 
+
+    if 'q' in request.GET:
+        query = request.GET.get('q')
+        search_mode = bool(query)
+        contact = Contact.objects.filter(name__icontains=query)
+    else:
+        search_mode = False
+        contact = Contact.objects.all().order_by('-created_at')
+
+    # Apply pagination if needed
+    page_obj, query_string = paginate_products(request, contact, per_page=8)
+    context = {
+        'contact': page_obj.object_list,
+        'search_mode': search_mode,
+        'page_obj': page_obj,
+        'query_string': query_string,
+        'order': order,
+    }
+    return render(request, 'useradmin/contact_us.html', context)
+
+def contact_delete_view(request, id):
+    contact = Contact.objects.get(id=id)
+    contact.delete()
+    return redirect('useradmin:contact-us')
+
+def contact_detail_view(request, id):
+    contact = Contact.objects.get(id=id)
+    context = {
+        'contact': contact,
+    }
+    return render(request, 'useradmin/contact_detail.html', context)
+def admin_settings_view(request):
+    return render(request, 'useradmin/settings.html')

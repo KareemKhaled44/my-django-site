@@ -8,15 +8,26 @@ body{
 background image
 ================ */
 div.top-img{
-      background-image: url('/static/assets/img/pexels-anush-1229356.jpg');
+      background-image: url('/static/assets/img/top-image.png');
       background-size: cover;
       background-position: center ;
-      height: 90vh;
+      height: 80vh;
       position: relative;
       background-repeat: no-repeat;
-      
 }
 
+.hero-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+  }
+  
+  .hero-image img {
+      width: 100%;
+      height: auto;
+  }
 
 /* ============
 text on image
@@ -24,10 +35,9 @@ text on image
 section.content{
       position: absolute;
       font-size: 2rem;
-      top: 50%;
+      top: 55%;
       transform: translateY(-100%);
-      margin-left: 8%;
-
+      margin-left: 6%;
       & h1{
             color: #b9a848;
             font-size: 2.5rem;
@@ -38,7 +48,7 @@ section.content{
       & p{
             color: #ebebeb;
             font-size: 1.5rem;
-            margin-block: 1rem;
+            margin-block: 0.5rem;
             text-shadow: 2px 2px 4px #28282B;
       }
 
@@ -62,6 +72,10 @@ section.content{
 }
 
 @media (max-width:600px) {
+      div.top-img{
+            height: 70vh;
+            background-image: url('/static/assets/img/Fitness\ Gym\ Facebook\ Cover.png');
+      }
       section.content{
             margin-top: 100px;
             margin-left: 0;

@@ -226,6 +226,7 @@ $(document).ready(function () {
     let email = $("#email").val();
     let subject = $("#subject").val();
     let message = $("#message").val();
+    let phone = $("#phone").val();
     showSpinner();
     $.ajax({
       url: "/Ajax_contact_form/",
@@ -235,6 +236,7 @@ $(document).ready(function () {
         email: email,
         subject: subject,
         message: message,
+        phone: phone,
       },
 
       beforeSend: function () {

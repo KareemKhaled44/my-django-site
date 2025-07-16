@@ -1,0 +1,136 @@
+{% extends "useradmin/base-sidebar.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex justify-between items-start">
+            <div>
+                <h1 class="text-3xl font-bold text-gold">Add Order Items</h1>
+                <p class="text-light/80">Order #{{ order.oid }}</p>
+            </div>
+            <div class="bg-dark/50 rounded-lg px-4 py-2">
+                <p class="text-gold font-medium">Total: EGP {{ order.total_price }}</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-2 mt-2 text-sm text-light/70">
+            <span>Status: {{ order.get_order_status_display }}</span>
+            <span>•</span>
+            <span>Payment: {{ order.get_payment_method_display }}</span>
+            {% if order.paid_status %}
+            <span class="ml-2 px-2 py-0.5 rounded-full text-xs bg-green-900/30 text-green-400">Paid</span>
+            {% else %}
+            <span class="ml-2 px-2 py-0.5 rounded-full text-xs bg-red-900/30 text-red-400">Unpaid</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column - Add Items -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Add Item Form -->
+            <div class="bg-primary rounded-lg shadow-lg border border-white/10 p-6">
+                <h2 class="text-xl font-semibold text-light mb-4">Add Product</h2>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-light mb-2">Product *</label>
+                            {{ form.product }}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-light mb-2">Quantity *</label>
+                            {{ form.quantity }}
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <button type="submit" class="px-4 py-2 rounded-lg bg-gold text-dark font-medium hover:bg-gold/90 transition">
+                            Add to Order
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Order Items Table -->
+            <div class="bg-primary rounded-lg shadow-lg border border-white/10 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-white/10">
+                        <thead class="bg-primary backdrop-blur border-b border-white/10">
+                            <tr class="text-light text-xs">
+                                <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Product</th>
+                                <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Price</th>
+                                <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Qty</th>
+                                <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Total</th>
+                                <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-primary divide-y divide-white/10">
+                            {% for item in items %}
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <img class="h-10 w-10 rounded object-cover" src="{{ item.image.url }}" alt="{{ item.product.title }}">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-light">{{ item.product.title }}</div>
+                                            <div class="text-sm text-light/70">{{ item.product.category }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-light">EGP {{ item.price }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-light">{{ item.quantity }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-light">EGP {{ item.total_price }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="{% url 'useradmin:delete-order-item' order.oid item.id %}" class="text-red-400 hover:text-red-300">Remove</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="px-6 py-4 text-center text-light/70">No items added yet</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Order Summary -->
+        <div class="space-y-6">
+            <!-- Order Summary -->
+            <div class="bg-primary rounded-lg shadow-lg border border-white/10 p-6">
+                <h2 class="text-xl font-semibold text-light mb-4">Order Summary</h2>
+                <div class="space-y-3">
+                  <div class="flex justify-between text-light">
+                      <span>Subtotal:</span>
+                      <span>EGP {{ order.price }}</span>
+                  </div>
+                  <div class="flex justify-between text-light">
+                      <span>Discount:</span>
+                      <span class="text-green-400">-EGP {{ order.saved }}</span>
+                  </div>
+                  <div class="flex justify-between text-light">
+                      <span>Shipping:</span>
+                      <span>EGP {{ order.shipping_price }}</span>
+                  </div>
+                  <div class="border-t border-white/10 pt-3 mt-3 flex justify-between text-lg font-semibold text-gold">
+                      <span>Total:</span>
+                      <span>EGP {{ order.total_price }}</span>
+                  </div>
+                 </div>
+            </div>
+
+            <!-- Complete Order -->
+            <div class="bg-primary rounded-lg shadow-lg border border-white/10 p-6">
+                <a href="{% url 'useradmin:orders' %}" class="w-full py-3 rounded-lg bg-gold text-dark font-medium hover:bg-gold/90 transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-check"></i> Complete Order
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

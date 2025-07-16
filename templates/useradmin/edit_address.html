@@ -1,0 +1,94 @@
+{% extends "useradmin/base-sidebar.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <!-- Header with Back Button -->
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gold">Edit Address</h1>
+            <p class="text-light/80">Update the address details below</p>
+        </div>
+        <a href="{% url 'useradmin:addresses' %}" class="text-light hover:text-gold flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+            </svg>
+            Back to Addresses
+        </a>
+    </div>
+
+    <!-- Address Form -->
+    <div class="bg-primary rounded-lg shadow-lg border border-white/10 p-6">
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Left Column -->
+                <div class="space-y-6">
+                    <!-- First Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-light mb-2">First Name *</label>
+                        {{ form.first_name }}
+                    </div>
+                    
+                    <!-- Phone -->
+                    <div>
+                        <label class="block text-sm font-medium text-light mb-2">Phone Number *</label>
+                        {{ form.phone }}
+                    </div>
+                    
+                    <!-- Street Address -->
+                    <div>
+                        <label class="block text-sm font-medium text-light mb-2">Street Address *</label>
+                        {{ form.street_address }}
+                    </div>
+                    
+                    <!-- Postal Code -->
+                    <div>
+                        <label class="block text-sm font-medium text-light mb-2">Postal Code</label>
+                        {{ form.postal_code }}
+                    </div>
+                </div>
+                
+                <!-- Right Column -->
+                <div class="space-y-6">
+                    <!-- Last Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-light mb-2">Last Name *</label>
+                        {{ form.last_name }}
+                    </div>
+                    
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-sm font-medium text-light mb-2">Email *</label>
+                        {{ form.email }}
+                    </div>
+                    
+                    <!-- Apartment -->
+                    <div>
+                        <label class="block text-sm font-medium text-light mb-2">Apartment/Suite</label>
+                        {{ form.apartment }}
+                    </div>
+                    
+                    <!-- City -->
+                    <div>
+                        <label class="block text-sm font-medium text-light mb-2">City *</label>
+                        {{ form.city }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="mt-8 flex justify-end gap-3">
+                <a href="{% url 'useradmin:addresses' %}" class="px-6 py-2 rounded-lg border border-white/10 text-light hover:bg-white/5 transition">
+                    Cancel
+                </a>
+                <button type="submit" class="px-6 py-2 rounded-lg bg-gold text-dark font-medium hover:bg-gold/90 transition flex items-center gap-1">
+                  <i class="fa-solid fa-save"></i>
+                    Save Address
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

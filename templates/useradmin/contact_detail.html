@@ -15,16 +15,35 @@
             </svg>
             Back to Messages
         </a>
-    </div>
+    </div>  
 
     <!-- Message Card -->
     <div class="bg-primary rounded-lg shadow-lg border border-white/10 overflow-hidden">
         <!-- Message Header -->
         <div class="border-b border-white/10 px-6 py-4 flex justify-between items-center">
             <div>
-                <h2 class="text-xl font-semibold text-light">Regarding: Order #{{order.oid}} Issue</h2>
-                <p class="text-sm text-light/70">Received on {{order.order_date}}</p>
+                <h2 class="text-xl font-semibold text-light">Regarding: {{contact.subject}}</h2>
+                <p class="text-sm text-light/70">Received on {{contact.created_at}}</p>
             </div>
+            <form method="POST" action="{% url 'useradmin:contact-status' contact.id %}" class="relative inline-block">
+                {% csrf_token %}
+                <div>
+                    <select name="status" class="appearance-none cursor-pointer bg-dark border border-white/20 rounded-lg
+                        px-4 py-2 pr-8 text-sm text-light focus:outline-none focus:ring-1
+                         focus:ring-gold focus:border-gold/50">
+                        <option value="new">new</option>
+                        <option value="in_progress">in_progress</option>
+                        <option value="on_hold">on_hold</option>
+                        <option value="resolved">resolved</option>
+                        <option value="spam">spam</option>
+                    </select>
+                    <button type="submit" class="btn">Save</button>
+                    <div class=" absolute inset-y-0 right-12 flex items-center pr-5">
+                        <i class="fa-solid fa-caret-down text-light text-xs"></i>
+                    </div>
+                </div>               
+            </form>
+
             <span class="border border-white/20 rounded-full px-3 py-1 text-xs font-semibold transition-colors
                         {% if contact.status == 'new' %} bg-blue-900/30 text-blue-400
                         {% elif contact.status == 'in_progress' %} bg-yellow-900/30 text-yellow-400
@@ -34,9 +53,11 @@
                         {% elif contact.status == 'spam' %} bg-red-900/30 text-red-400
                         {% else %} bg-gray-900/30 text-gray-400
                         {% endif %}
-                  ">
-                        {{ contact.status|capfirst }}
+                        ">
+                {{ contact.status|capfirst }}
             </span>
+            
+            
         </div>
 
         <!-- Message Body -->
@@ -59,42 +80,7 @@
                     {{ contact.message }}
                   </div>
                 </div>
-            </div>
-
-            <!-- Response Section -->
-            <div class="border-t border-white/10 pt-6">
-                <h3 class="text-lg font-semibold text-light mb-4">Response</h3>
-                <form>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-light mb-2">Status</label>
-                        <select class="w-full md:w-64 px-4 py-2 rounded-lg bg-dark border border-white/10 text-light focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
-                            <option>Pending</option>
-                            <option selected>Resolved</option>
-                            <option>In Progress</option>
-                            <option>Spam</option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-light mb-2">Reply Message</label>
-                        <textarea rows="5" class="w-full px-4 py-2 rounded-lg bg-dark border border-white/10 text-light focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">Dear Ahmed,
-
-Thank you for reaching out. We apologize for the inconvenience with your order. We've initiated a replacement which will be shipped within 2 business days.
-
-Please keep the damaged item for pickup by our delivery partner.
-
-Best regards,
-Support Team</textarea>
-                    </div>
-                    <div class="flex justify-end gap-3">
-                        <button type="button" class="px-6 py-2 rounded-lg border border-white/10 text-light hover:bg-white/5 transition">
-                            Discard
-                        </button>
-                        <button type="submit" class="px-6 py-2 rounded-lg bg-gold text-dark font-medium hover:bg-gold/90 transition">
-                            Send Response
-                        </button>
-                    </div>
-                </form>
-            </div>
+            </div>           
         </div>
     </div>
 </div>

@@ -13,9 +13,13 @@
       <!-- Main Content -->
       <div class="min-h-screen">
             <header>
-            <div class="flex items-center justify-center p-4 sm:p-6 bg-dark/50 border-b-2 border-white/30">
+            <div class="flex items-center justify-center ml-3 p-4 sm:p-6 bg-dark/50 border-b-2 border-white/30">
                 <h1 class="text-xl sm:text-2xl font-bold text-gold">Dashboard</h1>
-                
+                <div class="ml-auto">
+                <i class="fa-solid fa-house-user text-gold"></i>
+                <a href="{% url 'core:index' %}" class="text-gold hover:underline text-sm sm:text-base">Home</a>
+                </div>
+            </div>
             </header>
           <!-- Stats Cards - Improved grid for mobile -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 sm:gap-6 sm:p-6">
@@ -120,7 +124,12 @@
                                   <td class="py-3 text-xs sm:text-sm">#{{order.oid}}</td>
                                   <td class="text-xs sm:text-sm">{{order.user.username}}</td>
                                   <td class="text-xs sm:text-sm">{{order.order_date}}</td>
-                                  <td><span class="bg-green-500/20 text-green-500 px-2 py-1 rounded-full text-xs">{{order.order_status}}</span></td>
+                                  <td class="p-4"><span class="bg-dark border border-white/20 rounded-full pl-3 pr-3 py-1 text-sm font-medium transition-colors
+                                    {% if order.order_status == 'Delivered' %} bg-green-900/30 text-green-400
+                                    {% elif order.order_status == 'Shipped' %} bg-yellow-900/30 text-yellow-400
+                                    {% elif order.order_status == 'Pending' %} bg-blue-900/30 text-blue-400
+                                    {% elif order.order_status == 'Canceled' %} bg-red-900/30 text-red-400
+                                    {% else %} bg-gray-900/30 text-gray-400{% endif %}">{{order.order_status}}</span></td>
                                   {% if order.paid_status %}
                                   <td class="p-4"><i class="fa-solid fa-circle-check text-green-500 text-xs sm:text-sm pl-4 sm:pl-8"></i></td>
                                   {% else %}
@@ -152,14 +161,19 @@
                           <span>Change Password</span>
                       </a>
                       
-                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
-                          <i class="fas fa-tags text-gold mr-2 sm:mr-3 text-sm sm:text-base"></i>
-                          <span>Manage Product Labels</span>
+                      <a href="{% url 'useradmin:contact-us' %}" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
+                          <i class="fas fa-headset text-gold mr-2 sm:mr-3 text-sm sm:text-base"></i>
+                          <span>Contact messages</span>
+                      </a>
+
+                      <a href="{% url 'useradmin:suppliers' %}" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
+                            <i class="fas fa-truck text-gold mr-2 sm:mr-3 text-sm sm:text-base"></i>
+                          <span>Suppliers</span>
                       </a>
                       
-                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
+                      <a href="{% url 'useradmin:settings' %}" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
                           <i class="fas fa-cog text-gold mr-2 sm:mr-3 text-sm sm:text-base"></i>
-                          <span>Store Settings</span>
+                          <span> Settings</span>
                       </a>
                   </div>
               </div>

@@ -3,10 +3,10 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, Pass
 from userauths.models import User
 
 class UserRegistrationForm(UserCreationForm):
-      username= forms.CharField(widget=forms.TextInput(attrs={ 'class': 'form-input w-full'}))
-      email= forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-input w-full'}))
-      password1= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-input w-full'}))
-      password2= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-input w-full'}))
+      username= forms.CharField(widget=forms.TextInput(attrs={ 'class': 'form-input form w-full'}))
+      email= forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-input form w-full'}))
+      password1= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-input form w-full'}))
+      password2= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-input form w-full'}))
       class Meta:
             model = User
             fields = ['username', 'email', 'password1', 'password2']

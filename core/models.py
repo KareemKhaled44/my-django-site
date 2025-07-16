@@ -13,10 +13,10 @@ STATUS_CHOICES = (
 )
 
 ORDER_STATUS_CHOICES = (
-    ('pending', 'Pending'),
-    ('shipped', 'Shipped'),
-    ('delivered', 'Delivered'),
-    ('canceled', 'Canceled'),
+    ('Pending', 'Pending'),
+    ('Shipped', 'Shipped'),
+    ('Delivered', 'Delivered'),
+    ('Canceled', 'Canceled'),
 )
 
 PAYMENT_METHOD_CHOICES = [
@@ -72,14 +72,20 @@ class Supplier(models.Model):
     address=models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     user=models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) #to show user who created the supplier
-    days_return = models.PositiveIntegerField(default=0)  # عدد الأيام اللي ممكن يرجّع فيها
-    authentic_rating = models.IntegerField(default=5) # تقييم المورد
-
+    days_return = models.PositiveIntegerField(default=0)  # number of days for return policy
+    authentic_rating = models.IntegerField(default=5) # to show rating of the supplier
     class Meta:
         verbose_name_plural='suppliers' #to show plural name in admin panel
 
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.sid:
+            self.sid = shortuuid.ShortUUID().random(length=8).upper()
+            prefix = "SUP-"
+            self.sid = f"{prefix}{self.sid}"
+        super().save(*args, **kwargs)
     
 
 ############################ flavor model ###############################
@@ -211,11 +217,16 @@ class Address(models.Model):
     postal_code = models.CharField(max_length=10, blank=True, null=True)
     city = models.CharField(max_length=100, choices=CITIES, default='Cairo', blank=True, null=True)  # Default city is Cairo
 
+    created_at = models.DateTimeField(auto_now_add=True)
+
     class Meta:
         verbose_name_plural='addresses'
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.street_address}, {self.city}" if self.first_name and self.last_name else "Unnamed Address"
     
 
-############################ cart, order, orderitem models ###############################
+############################ cartorder, cartorderitem models ###############################
 class CartOrder(models.Model):
     oid = ShortUUIDField(primary_key=True)
     invoice_number=ShortUUIDField(max_length=100, blank=True, null=True) #to show invoice number of the item
@@ -269,9 +280,6 @@ class CartOrderItem(models.Model):
     class Meta:
         verbose_name_plural='cart order items'
     
-    
-
-
     def order_image(self):
         if self.product and self.product.image:
             return mark_safe(f'<img src="{self.product.image.url}" height="70" width="70" />')
@@ -287,6 +295,7 @@ class Coupon(models.Model):
     code = models.CharField(max_length=20, unique=True)
     discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name_plural='coupons'

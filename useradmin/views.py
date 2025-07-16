@@ -1,12 +1,12 @@
 from django.shortcuts import render
 import datetime
 from django.shortcuts import redirect
-from core.models import Product, Category, CartOrder, CartOrderItem, Brand, Flavor
+from core.models import Product, Category, CartOrder, CartOrderItem, Brand, Flavor, Address, Coupon, Supplier
 from django.db.models import Sum
 from userauths.models import User, Contact
 from core.services import paginate_products
-from useradmin.forms import AddProductForm, AddCategoryForm, AddBrandForm, AddFlavorForm
-from userauths.forms import PasswordChangeForm
+from useradmin.forms import AddProductForm, AddCartOrderForm, AddOrderItemForm, AddCategoryForm, AddBrandForm, AddFlavorForm, AddAddressForm, AddCouponForm, AddSupplierForm
+from userauths.forms import PasswordChangeForm, ProfileEditForm, UserRegistrationForm
 import calendar
 from django.db.models.functions import ExtractMonth
 from django.db.models import Count, F
@@ -171,6 +171,69 @@ def change_order_status(request, oid):
         messages.error(request, "Invalid request method.")
     return redirect('useradmin:order-detail', oid=oid)
 
+def add_order_view(request):
+    form = AddCartOrderForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        order = form.save(commit=False)
+        order.save()
+        form.save_m2m()  # for saving coupons
+        return redirect('useradmin:add-order-items', oid=order.oid)  # Redirect to Step 2
+    return render(request, 'useradmin/add_order.html', {'form': form})
+
+def add_order_items_view(request, oid):
+    order = CartOrder.objects.get(oid=oid)
+    form = AddOrderItemForm(request.POST or None)
+
+    if request.method == 'POST' and form.is_valid():
+        item = form.save(commit=False)
+        item.order = order
+        item.price = item.product.price
+        item.total_price = item.price * item.quantity
+        item.image = item.product.image  # optional
+        item.save()
+
+        update_order_totals(order) # Update order totals after adding item
+        return redirect('useradmin:add-order-items', oid=oid)
+
+    items = CartOrderItem.objects.filter(order=order)
+
+    context = {
+        'form': form,
+        'order': order,
+        'items': items,
+    }
+    return render(request, 'useradmin/add_order_items.html', context)
+
+def update_order_totals(order):
+    items = order.cartorderitem_set.all()
+    subtotal = sum(item.total_price for item in items)
+
+    # Calculate total discount from all active coupons
+    total_discount = 0
+    for coupon in order.coupons.filter(active=True):
+        discount = (subtotal * coupon.discount_percentage) / 100
+        total_discount += discount
+
+    order.price = subtotal
+    order.saved = total_discount
+    order.total_price = subtotal - total_discount + order.shipping_price
+    order.save()
+
+def delete_order_item_view(request, oid, item_id):
+    item = CartOrderItem.objects.get(id=item_id, order__oid=oid)
+    order = item.order
+    item.delete()
+
+    update_order_totals(order)
+
+    messages.success(request, "Order item deleted successfully.")
+    return redirect('useradmin:add-order-items', oid=order.oid)
+
+def delete_order_view(request, oid):
+    order = CartOrder.objects.get(oid=oid)
+    order.delete()
+    messages.success(request, "Order deleted successfully.")
+    return redirect('useradmin:orders')
 
 def analytics_view(request):
     total_revenue = CartOrder.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0
@@ -392,21 +455,122 @@ def delete_flavor_view(request, id):
     flavor.delete()
     return redirect('useradmin:flavor')
 
-def admin_change_password(request):
-    if request.method == 'POST':
-        password_form = PasswordChangeForm(request.user, request.POST)
-        if password_form.is_valid():
-            user = password_form.save()
-            # Keep the user logged in after password change
-            update_session_auth_hash(request, user)
-            messages.success(request, "Password changed successfully!")
-            return redirect('useradmin:dashboard')
-        else:
-            messages.error(request, "Error changing password. Please check the form.")
+def admin_addresses_view(request):
+    all_addresses = Address.objects.all()
+    if 'q' in request.GET:
+        query = request.GET.get('q')
+        search_mode = bool(query)
+        addresses = all_addresses.filter(first_name__icontains=query)
     else:
-        password_form = PasswordChangeForm(request.user)
-    return render(request, 'useradmin/change_password.html', {'password_form': password_form})
+        search_mode = False
+        addresses = all_addresses.order_by('-created_at')
+
+    # Apply pagination if needed
+    page_obj, query_string = paginate_products(request, addresses, per_page=8)
+
+    context = {
+        'addresses': page_obj.object_list,
+        'search_mode': search_mode,
+        'page_obj': page_obj,
+        'query_string': query_string,
+    }
+    return render(request, 'useradmin/addresses.html', context)
+
+def add_address_view(request):
+    if request.method == 'POST':
+        form = AddAddressForm(request.POST)
+        if form.is_valid():
+            address = form.save(commit=False)
+            address.user = request.user
+            address.save()
+            messages.success(request, "Address added successfully!")
+            return redirect('useradmin:addresses')
+        else:
+            messages.error(request, "Error adding address. Please check the form.")
+    else:
+        form = AddAddressForm()
+
+    return render(request, 'useradmin/add_address.html', {'form': form})
+
+def edit_address_view(request, id):
+    address = Address.objects.get(id=id)
+    if request.method == 'POST':
+        form = AddAddressForm(request.POST, instance=address)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Address updated successfully!")
+            return redirect('useradmin:addresses')
+        else:
+            messages.error(request, "Error updating address. Please check the form.")
+    else:
+        form = AddAddressForm(instance=address)
+
+    return render(request, 'useradmin/edit_address.html', {'form': form, 'address': address})
+
+def delete_address_view(request, id):
+    address = Address.objects.get(id=id)
+    address.delete()
+    messages.success(request, "Address deleted successfully!")
+    return redirect('useradmin:addresses') 
         
+def admin_coupons_view(request):
+    coupons = Coupon.objects.all()
+    if 'q' in request.GET:
+        query = request.GET.get('q')
+        search_mode = bool(query)
+        coupons = coupons.filter(code__icontains=query)
+    else:
+        search_mode = False
+        coupons = coupons.order_by('-created_at')
+
+    # Apply pagination if needed
+    page_obj, query_string = paginate_products(request, coupons, per_page=8)
+
+    context = {
+        'coupons': page_obj.object_list,
+        'search_mode': search_mode,
+        'page_obj': page_obj,
+        'query_string': query_string,
+    }
+    return render(request, 'useradmin/coupons.html', context)
+
+def add_coupon_view(request):
+    if request.method == 'POST':
+        form = AddCouponForm(request.POST)
+        if form.is_valid():
+            coupon = form.save(commit=False)
+            coupon.user = request.user
+            coupon.save()
+            messages.success(request, "Coupon added successfully!")
+            return redirect('useradmin:coupons')
+        else:
+            messages.error(request, "Error adding coupon. Please check the form.")
+    else:
+        form = AddCouponForm()
+
+    return render(request, 'useradmin/add_coupon.html', {'form': form})
+
+def edit_coupon_view(request, id):
+    coupon = Coupon.objects.get(id=id)
+    if request.method == 'POST':
+        form = AddCouponForm(request.POST, instance=coupon)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Coupon updated successfully!")
+            return redirect('useradmin:coupons')
+        else:
+            messages.error(request, "Error updating coupon. Please check the form.")
+    else:
+        form = AddCouponForm(instance=coupon)
+
+    return render(request, 'useradmin/edit_coupon.html', {'form': form, 'coupon': coupon})
+
+def delete_coupon_view(request, id):
+    coupon = Coupon.objects.get(id=id)
+    coupon.delete()
+    messages.success(request, "Coupon deleted successfully!")
+    return redirect('useradmin:coupons')
+
 def admin_contact_us_view(request):
     contact = Contact.objects.all()
     order = CartOrder.objects.all().order_by('-order_date') 
@@ -414,7 +578,7 @@ def admin_contact_us_view(request):
     if 'q' in request.GET:
         query = request.GET.get('q')
         search_mode = bool(query)
-        contact = Contact.objects.filter(name__icontains=query)
+        contact = Contact.objects.filter(full_name__icontains=query)
     else:
         search_mode = False
         contact = Contact.objects.all().order_by('-created_at')
@@ -441,5 +605,165 @@ def contact_detail_view(request, id):
         'contact': contact,
     }
     return render(request, 'useradmin/contact_detail.html', context)
+
+def change_contact_status(request, id):
+    contact = Contact.objects.get(id=id)
+    if request.method == 'POST':
+        new_status = request.POST.get('status')  
+        contact.status = new_status
+        contact.save()
+        messages.success(request, f"Contact status updated to {new_status}.")
+        return redirect('useradmin:contact-detail', id=id)
+    else:
+        messages.error(request, "Invalid request method.")
+    return redirect('useradmin:contact-detail', id=id)
+
+def admin_users_view(request):
+    users = User.objects.all()
+    if 'q' in request.GET:
+        query = request.GET.get('q')
+        search_mode = bool(query)
+        users = users.filter(username__icontains=query)
+    else:
+        search_mode = False
+        users = users.order_by('-id')
+
+    # Apply pagination if needed
+    page_obj, query_string = paginate_products(request, users, per_page=8)
+
+    context = {
+        'users': page_obj.object_list,
+        'search_mode': search_mode,
+        'page_obj': page_obj,
+        'query_string': query_string,
+    }
+    return render(request, 'useradmin/users.html', context)
+
+def add_user_view(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            messages.success(request, "User added successfully!")
+            return redirect('useradmin:users')
+        else:
+            messages.error(request, "Error adding user. Please check the form.")
+    else:
+        form = UserRegistrationForm()
+
+    return render(request, 'useradmin/add_user.html', {'form': form})
+
+def edit_user_view(request, id):
+    user = User.objects.get(id=id)
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User updated successfully!")
+            return redirect('useradmin:users')
+        else:
+            messages.error(request, "Error updating user. Please check the form.")
+    else:
+        form = UserRegistrationForm(instance=user)
+
+    return render(request, 'useradmin/edit_user.html', {'form': form, 'user': user})
+
+def delete_user_view(request, id):
+    user = User.objects.get(id=id)
+    user.delete()
+    messages.success(request, "User deleted successfully!")
+    return redirect('useradmin:users')
+
+def admin_suppliers_view(request):
+    suppliers = Supplier.objects.all()
+    if 'q' in request.GET:
+        query = request.GET.get('q')
+        search_mode = bool(query)
+        suppliers = suppliers.filter(name__icontains=query)
+    else:
+        search_mode = False
+        suppliers = suppliers.order_by('-sid')
+
+    # Apply pagination if needed
+    page_obj, query_string = paginate_products(request, suppliers, per_page=8)
+
+    context = {
+        'suppliers': page_obj.object_list,
+        'search_mode': search_mode,
+        'page_obj': page_obj,
+        'query_string': query_string,
+    }
+    return render(request, 'useradmin/suppliers.html', context)
+
+def add_supplier_view(request):
+    if request.method == 'POST':
+        form = AddSupplierForm(request.POST)
+        if form.is_valid():
+            supplier = form.save(commit=False)
+            supplier.user = request.user  # Set the user who created the supplier
+            supplier.save()
+            messages.success(request, "Supplier added successfully!")
+            return redirect('useradmin:suppliers')
+        else:
+            messages.error(request, "Error adding supplier. Please check the form.")
+    else:
+        form = AddSupplierForm()
+
+    return render(request, 'useradmin/add_supplier.html', {'form': form})
+
+def edit_supplier_view(request, sid):
+    supplier = Supplier.objects.get(sid=sid)
+    if request.method == 'POST':
+        form = AddSupplierForm(request.POST, instance=supplier)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Supplier updated successfully!")
+            return redirect('useradmin:suppliers')
+        else:
+            messages.error(request, "Error updating supplier. Please check the form.")
+    else:
+        form = AddSupplierForm(instance=supplier)
+
+    return render(request, 'useradmin/edit_supplier.html', {'form': form, 'supplier': supplier})
+
+def delete_supplier_view(request, sid):
+    supplier = Supplier.objects.get(sid=sid)
+    supplier.delete()
+    messages.success(request, "Supplier deleted successfully!")
+    return redirect('useradmin:suppliers')
+
 def admin_settings_view(request):
-    return render(request, 'useradmin/settings.html')
+    profile_form = ProfileEditForm(instance=request.user)
+
+    if request.method == 'POST':
+        profile_form = ProfileEditForm(request.POST, instance=request.user)
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect('useradmin:settings')
+        else:
+            messages.error(request, "Error updating profile. Please check the form.")
+
+    else:
+        profile_form = ProfileEditForm(instance=request.user)
+    
+    context = {
+        'profile_form': profile_form,
+    }
+    return render(request, 'useradmin/settings.html', context)
+
+def admin_change_password(request):
+    if request.method == 'POST':
+        password_form = PasswordChangeForm(request.user, request.POST)
+        if password_form.is_valid():
+            user = password_form.save()
+            # Keep the user logged in after password change
+            update_session_auth_hash(request, user)
+            messages.success(request, "Password changed successfully!")
+            return redirect('useradmin:dashboard')
+        else:
+            messages.error(request, "Error changing password. Please check the form.")
+    else:
+        password_form = PasswordChangeForm(request.user)
+    return render(request, 'useradmin/change_password.html', {'password_form': password_form})

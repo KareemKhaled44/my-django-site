@@ -64,10 +64,6 @@
         class="flex items-center gap-2 rounded-lg py-4 px-2 bg-transparent border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
           <i class="fas fa-user"></i> Account Details
         </button>
-        <button onclick="showSection('contact-history')"
-        class="flex items-center gap-2 rounded-lg py-4 px-2 bg-transparent border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
-          <i class="fa-regular fa-message"></i> Contact History
-        </button>
         <a href="{% url 'userauths:sign-out' %}"
         class="flex items-center gap-2 rounded-lg py-4 px-2 bg-transparent border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
           <i class="fas fa-sign-out-alt"></i> Sign out
@@ -108,11 +104,6 @@
               class="p-4 border border-white/30 rounded shadow hover:bg-gold  cursor-pointer text-center">
                 <div class="text-3xl mb-2"><i class="fas fa-user"></i></div>
                 <div class="font-semibold">Account Details</div>
-              </button>
-
-              <button class="p-4 border border-white/30 rounded shadow hover:bg-gold  cursor-pointer text-center">
-                <div class="text-3xl mb-2"><i class="fa-regular fa-message"></i></div>
-                <div class="font-semibold">Contact History</div>
               </button>
 
               <a href="{% url 'userauths:sign-out' %}"
@@ -333,53 +324,6 @@
                 Change Password
             </button>
           </form>
-        </div>
-        
-        <!-- Contact History Section -->
-        <div id="contact-history" class="section hidden">
-          <h2 class="text-2xl text-gold font-bold mb-4">Contact History</h2>
-          
-          <div class="overflow-x-auto overflow-y-auto max-h-[500px]  rounded-lg border border-white/30 bg-transparent">
-            <table class="min-w-full divide-y divide-white/10">
-              <thead class="bg-transparent">
-                <tr class="text-left text-gold">
-                  <th class="px-6 py-3 font-medium uppercase ">Date</th>
-                  <th class="px-6 py-3 font-medium uppercase ">Name</th>
-                  <th class="px-6 py-3 font-medium uppercase ">Email</th>
-                  <th class="px-6 py-3 font-medium uppercase ">Subject</th>
-                  <th class="px-6 py-3 font-medium uppercase ">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% if not contact %}
-                <tr class="text-gray-400">You have no contact messages.</tr>
-                {% endif %}
-                {% for c in contact %}
-                <tr class="border-b border-white/30 hover:bg-gold/10">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-light">{{c.created_at}}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-light">{{c.full_name}}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-light">{{c.email}}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-light">{{c.subject}}</td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="border border-white/20 rounded-full px-3 py-1 text-xs font-semibold transition-colors
-                      {% if c.status == 'new' %} bg-blue-900/30 text-blue-400
-                      {% elif c.status == 'in_progress' %} bg-yellow-900/30 text-yellow-400
-                      {% elif c.status == 'on_hold' %} bg-orange-900/30 text-orange-400
-                      {% elif c.status == 'resolved' %} bg-green-900/30 text-green-400
-                      {% elif c.status == 'closed' %} bg-gray-900/30 text-gray-400
-                      {% elif c.status == 'spam' %} bg-red-900/30 text-red-400
-                      {% else %} bg-gray-900/30 text-gray-400
-                      {% endif %}
-                    ">
-                      {{ c.status|capfirst }}
-                    </span>
-                  </td>
-                  
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
         </div>
 
       </div>

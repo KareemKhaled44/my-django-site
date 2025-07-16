@@ -7,6 +7,9 @@
     <title>Peak Health - Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -23,8 +26,37 @@
     <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
 </head>
 <body class="bg-dark text-light">
+    <!-- Messages Container -->
+    <div id="messages-container"
+       class="fixed top-10 left-1/2 transform -translate-x-1/2 z-50 space-y-3 mt-20">
+        {% for message in messages %}
+          <div class="alert px-5 py-3 rounded-xl shadow-lg min-w-[300px] max-w-md text-center transition-opacity duration-300
+                      {% if 'success' in message.tags %}
+                        bg-[#28282B] border-l-4 border-green-500
+                      {% elif 'error' in message.tags %}
+                        bg-[#28282B] border-l-4 border-red-500
+                      {% elif 'warning' in message.tags %}
+                        bg-[#28282B] border-l-4 border-[#b9a848]
+                      {% else %}
+                        bg-[#28282B] border-l-4 border-blue-500
+                      {% endif %}">
+            <p class="text-[#ebebeb] text-sm font-medium">{{ message }}</p>
+          </div>
+        {% endfor %}
+    </div>
+    <script>
+        setTimeout(() => {
+          document.querySelectorAll('.alert').forEach(el => {
+            el.style.transition = "opacity 0.5s ease";
+            el.style.opacity = "0";
+            setTimeout(() => el.style.display = 'none', 500);
+          });
+        }, 3000);
+    </script>
+    
     <!-- Wrapper: Sidebar + Main Content -->
     <div class="flex overflow-hidden">
         <!-- Mobile Sidebar Toggle Button (hidden on desktop) -->
@@ -49,72 +81,92 @@
                 </div>
                 
                 <nav class="p-4">
-                    <ul class="space-y-2">
+                    <ul class="space-y-2" id="sidebar-menu">
                         <li>
-                            <a href="{% url 'useradmin:dashboard' %}" class="flex items-center p-2 text-gold bg-dark/50 rounded-lg">
+                            <a href="{% url 'useradmin:dashboard' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
                                 <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'useradmin:products' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:products' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
                                 <i class="fas fa-box-open mr-3"></i> Products
                             </a>
                         </li>
 
                         <li>
-                            <a href="{% url 'useradmin:add-product' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:add-product' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
                                 <i class="fa-solid fa-square-plus mr-3"></i> New Products
                             </a>
                         </li>
 
                         <li>
-                            <a href="{% url 'useradmin:category' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:category' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
                                 <i class="fa-solid fa-layer-group mr-3"></i> Categories
                             </a>
                         </li>
 
                         <li>
-                            <a href="{% url 'useradmin:orders' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:orders' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
                                 <i class="fas fa-shopping-cart mr-3"></i> Orders
                             </a>
                         </li>
-                        
+
                         <li>
-                            <a href="{% url 'useradmin:analytics' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:coupons' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
+                                <i class="fas fa-tags mr-3"></i> Coupons
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{% url 'useradmin:analytics' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
                                 <i class="fas fa-chart-line mr-3"></i> Analytics
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'useradmin:brand' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:brand' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
                                 <i class="fa-regular fa-copyright mr-3"></i> Brands
                             </a>
                         </li>
 
                         <li>
-                            <a href="{% url 'useradmin:flavor' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:flavor' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
                                 <i class="fas fa-lemon mr-3"></i> Flavors
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{% url 'useradmin:addresses' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
+                                <i class="fa-solid fa-location-dot mr-3"></i> Addresses
                             </a>
                         </li>
                         
                         <li>
-                            <a href="{% url 'useradmin:contact-us' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:contact-us' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
                                 <i class="fas fa-headset mr-3"></i> Contact Us
                             </a>
                         </li>
+
                         <li>
-                            <a href="{% url 'useradmin:settings' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg hover:bg-dark/50 transition">
+                            <a href="{% url 'useradmin:users' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg  transition">
+                                <i class="fas fa-users mr-3"></i> Users
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{% url 'useradmin:suppliers' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg  transition">
+                                <i class="fas fa-truck mr-3"></i> Suppliers
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{% url 'useradmin:settings' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
                                 <i class="fas fa-cog mr-3"></i> Settings
                             </a>
                         </li>
                     </ul>
                 </nav>
                 
-                <!-- Collapse/Expand Button (visible on desktop) -->
-                <div class="hidden lg:block absolute bottom-4 left-0 right-0 px-4">
-                    <button id="collapseSidebar" class="w-full p-2 text-light/70 hover:text-gold rounded-lg border border-white/20 hover:border-primary transition">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                </div>
+                
             </div>
         </div>
         
@@ -126,6 +178,21 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const currentPath = window.location.pathname;
+          const links = document.querySelectorAll("#sidebar-menu a");
+      
+          links.forEach(link => {
+            const linkPath = link.getAttribute("href");
+            if (currentPath === linkPath || currentPath.startsWith(linkPath)) {
+              link.classList.remove("text-light", "hover:text-gold");
+              link.classList.add("text-gold", "bg-dark/50");
+            }
+          });
+        });
+    </script>
+      
     
     <script src="{% static 'assets/js/messages.js' %}"></script>
     <script src="{% static 'assets/js/spinner.js' %}"></script>
@@ -139,6 +206,20 @@
     <script src="{% static 'assets/js/filters.js' %}"></script>
     <script src="{% static 'assets/js/sidebar-toggle.js' %}"></script>
     <script src="{% static 'assets/js/password-toggle.js' %}"></script>
+
+    <!-- Initialize Tom Select for searchable dropdowns -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          new TomSelect('select.searchable', {
+            create: false,
+            sortField: {
+              field: "text",
+              direction: "asc"
+            }
+          });
+        });
+    </script>
+      
 
 </body>
   

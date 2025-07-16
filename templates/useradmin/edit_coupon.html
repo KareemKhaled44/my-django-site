@@ -1,0 +1,61 @@
+{% extends "useradmin/base-sidebar.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <!-- Header with Back Button -->
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gold">Edit Coupon</h1>
+            <p class="text-light/80">Update discount code details</p>
+        </div>
+        <a href="{% url 'useradmin:coupons' %}" class="text-light hover:text-gold flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i>
+            Back to Coupons
+        </a>
+    </div>
+
+    <!-- Coupon Form -->
+    <div class="bg-primary rounded-lg shadow-lg border border-white/10 p-6 max-w-2xl mx-auto">
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="space-y-6">
+                <!-- Coupon Code -->
+                <div>
+                    <label class="block text-sm font-medium text-light mb-2">Coupon Code *</label>
+                    {{ form.code }}
+                    <p class="mt-1 text-xs text-light/50">Unique code customers will enter at checkout</p>
+                </div>
+                
+                <!-- Discount Percentage -->
+                <div>
+                    <label class="block text-sm font-medium text-light mb-2">Discount Percentage *</label>
+                    <div class="relative">
+                        {{ form.discount_percentage }}
+                        <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-light/70">%</span>
+                    </div>
+                </div>
+                
+                <!-- Active Status -->
+                <div class="flex items-center">
+                    {{ form.active }}
+                    <label class="ml-2 text-sm font-medium text-light">Activate this coupon</label>
+                </div>
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="mt-8 flex justify-end gap-3">
+                <a href="{% url 'useradmin:coupons' %}" class="px-6 py-2 rounded-lg border border-white/10 text-light hover:bg-white/5 transition">
+                    Cancel
+                </a>
+                <button type="submit" class="px-6 py-2 rounded-lg bg-gold text-dark font-medium hover:bg-gold/90 transition flex items-center gap-2">
+                    <i class="fas fa-save"></i>
+                    Update Coupon
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

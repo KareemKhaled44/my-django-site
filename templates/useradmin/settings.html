@@ -9,144 +9,49 @@
         <p class="text-light/80">Manage your store configuration and preferences</p>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Left Column - Store Info -->
+    <div class="grid grid-cols-1">
+        <!-- Left Column - Admin Info -->
         <div class="lg:col-span-2 space-y-6">
-            <!-- Store Settings Card -->
+            <!-- Admin Settings Card -->
             <div class="bg-primary rounded-lg shadow-lg border border-white/10 p-6">
-                <h2 class="text-xl font-semibold text-light mb-6">Store Information</h2>
+                <h2 class="text-xl font-semibold text-light mb-6">ِAdmin Information</h2>
                 
-                <form>
+                <form method="POST" >
+                    {% csrf_token %}   
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Store Name -->
+                        <!-- Admin Name -->
                         <div>
-                            <label class="block text-sm font-medium text-light mb-2">Store Name *</label>
-                            <input type="text" class="w-full px-4 py-2 rounded-lg bg-dark border border-white/10 text-light focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" value="My Awesome Store">
+                            <label class="block text-sm font-medium text-light mb-2">Admin Name *</label>
+                            {{profile_form.username}} 
                         </div>
                         
-                        <!-- Store Email -->
+                        <!-- Admin Email -->
                         <div>
-                            <label class="block text-sm font-medium text-light mb-2">Contact Email *</label>
-                            <input type="email" class="w-full px-4 py-2 rounded-lg bg-dark border border-white/10 text-light focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" value="contact@myawesomestore.com">
-                        </div>
-                        
-                        <!-- Store Phone -->
-                        <div>
-                            <label class="block text-sm font-medium text-light mb-2">Phone Number</label>
-                            <input type="tel" class="w-full px-4 py-2 rounded-lg bg-dark border border-white/10 text-light focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" value="+20 123 456 7890">
-                        </div>
-                        
-                        <!-- Currency -->
-                        <div>
-                            <label class="block text-sm font-medium text-light mb-2">Currency *</label>
-                            <select class="w-full px-4 py-2 rounded-lg bg-dark border border-white/10 text-light focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
-                                <option>EGP (Egyptian Pound)</option>
-                                <option>USD (US Dollar)</option>
-                                <option>EUR (Euro)</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Address -->
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-light mb-2">Store Address</label>
-                            <textarea rows="3" class="w-full px-4 py-2 rounded-lg bg-dark border border-white/10 text-light focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">123 Business St, Cairo, Egypt</textarea>
-                        </div>
+                            <label class="block text-sm font-medium text-light mb-2">Admin Email *</label>
+                            {{profile_form.email}}
+                        </div>                       
                     </div>
+                    <!-- Save Button -->
+                    <button
+                    type="submit"
+                    class="btn mt-3">
+                    Save Changes
+                    </button>
                 </form>
             </div>
             
-            <!-- Payment Methods Card -->
+            <!-- Change Password -->
             <div class="bg-primary rounded-lg shadow-lg border border-white/10 p-6">
-                <h2 class="text-xl font-semibold text-light mb-6">Payment Methods</h2>
+                <h2 class="text-xl font-semibold text-light mb-6">Change Password</h2>
                 
-                <div class="space-y-4">
-                    <!-- PayPal -->
-                    <div class="flex items-center justify-between p-4 bg-dark/50 rounded-lg">
-                        <div class="flex items-center">
-                            <img src="{% static 'images/paypal.png' %}" alt="PayPal" class="h-8 mr-4">
-                            <span class="text-light">PayPal</span>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" class="sr-only peer" checked>
-                            <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold"></div>
-                        </label>
-                    </div>
-                    
-                    <!-- Credit Card -->
-                    <div class="flex items-center justify-between p-4 bg-dark/50 rounded-lg">
-                        <div class="flex items-center">
-                            <img src="{% static 'images/credit-card.png' %}" alt="Credit Card" class="h-8 mr-4">
-                            <span class="text-light">Credit/Debit Card</span>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" class="sr-only peer" checked>
-                            <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold"></div>
-                        </label>
-                    </div>
-                    
-                    <!-- Cash on Delivery -->
-                    <div class="flex items-center justify-between p-4 bg-dark/50 rounded-lg">
-                        <div class="flex items-center">
-                            <img src="{% static 'images/cod.png' %}" alt="Cash on Delivery" class="h-8 mr-4">
-                            <span class="text-light">Cash on Delivery</span>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" class="sr-only peer" checked>
-                            <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold"></div>
-                        </label>
-                    </div>
-                </div>
+                <a href="{% url 'useradmin:change-password' %}" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
+                    <i class="fas fa-key text-gold mr-2 sm:mr-3 text-sm sm:text-base"></i>
+                    <span>Change Password</span>
+                </a>
             </div>
         </div>
         
-        <!-- Right Column - Other Settings -->
-        <div class="space-y-6">
-            <!-- Store Logo -->
-            <div class="bg-primary rounded-lg shadow-lg border border-white/10 p-6">
-                <h2 class="text-xl font-semibold text-light mb-4">Store Logo</h2>
-                <div class="flex flex-col items-center">
-                    <div class="mb-4 w-32 h-32 rounded-full bg-dark/50 flex items-center justify-center overflow-hidden border-2 border-white/10">
-                        <img src="{% static 'images/store-logo.png' %}" alt="Store Logo" class="max-w-full max-h-full">
-                    </div>
-                    <button class="px-4 py-2 rounded-lg bg-gold text-dark font-medium hover:bg-gold/90 transition">Change Logo</button>
-                </div>
-            </div>
-            
-            <!-- Maintenance Mode -->
-            <div class="bg-primary rounded-lg shadow-lg border border-white/10 p-6">
-                <h2 class="text-xl font-semibold text-light mb-4">Maintenance Mode</h2>
-                <div class="flex items-center justify-between">
-                    <p class="text-light/80 text-sm">Temporarily take your store offline</p>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-500"></div>
-                    </label>
-                </div>
-            </div>
-            
-            <!-- Save Settings -->
-            <div class="bg-primary rounded-lg shadow-lg border border-white/10 p-6">
-                <button class="w-full py-3 rounded-lg bg-gold text-dark font-medium hover:bg-gold/90 transition flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                    Save All Settings
-                </button>
-            </div>
-            
-            <!-- Danger Zone -->
-            <div class="bg-primary rounded-lg shadow-lg border border-red-500/30 p-6">
-                <h2 class="text-xl font-semibold text-red-400 mb-4">Danger Zone</h2>
-                <div class="space-y-4">
-                    <button class="w-full py-2 px-4 rounded-lg border border-red-500/50 text-red-400 hover:bg-red-500/10 transition">
-                        Reset All Settings
-                    </button>
-                    <button class="w-full py-2 px-4 rounded-lg border border-red-500/50 text-red-400 hover:bg-red-500/10 transition">
-                        Delete Test Data
-                    </button>
-                </div>
-            </div>
-        </div>
+        
     </div>
 </div>
 

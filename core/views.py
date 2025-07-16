@@ -267,12 +267,24 @@ def checkout_view(request):
         else:
             address_form = AddressForm(request.POST)
             if address_form.is_valid():
-                address = address_form.save(commit=False)
-                address.user = user
-                address.save()
+                cleaned = address_form.cleaned_data
+
+                # Check if the exact same address already exists
+                existing = Address.objects.filter(
+                    user=user,
+                    email=cleaned['email'],
+                    street_address=cleaned['street_address'],
+                    city=cleaned['city'],
+                    postal_code=cleaned['postal_code']
+                ).first()
+
+                if existing:
+                    address = existing
+                else:
+                    address = address_form.save(commit=False)
+                    address.user = user
+                    address.save()
             else:
-                # Add this to see what's wrong with the form
-                print(address_form.errors)
                 return redirect('core:checkout')
 
         # إنشاء الأوردر بعد نجاح العنوان

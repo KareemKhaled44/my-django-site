@@ -40,7 +40,7 @@ def register_view(request):
     return render(request, 'userauths/sign-up.html', context)
 
 def login_view(request):
-
+    categories = Category.objects.all()
     if request.user.is_authenticated:
         messages.warning(request, 'You are already logged in')
         return redirect('core:index')
@@ -64,7 +64,9 @@ def login_view(request):
             return redirect('userauths:sign-in')
         
         
-    return render(request, 'userauths/sign-in.html')
+    return render(request, 'userauths/sign-in.html', {
+        'categories': categories,
+    })
 
 def logout_view(request):
     logout(request)

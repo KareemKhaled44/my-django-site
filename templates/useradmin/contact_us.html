@@ -8,22 +8,41 @@
         <h1 class="text-3xl font-bold text-gold">Contact Messages</h1>
         <p class="text-light/80">Review customer inquiries and messages</p>
     </div>
-
+    <div class="w-full flex mb-4 ">
+        <div class="flex justify-between relative flex-grow">
+              <!-- Search and Filter -->
+                <div class="mb-6 flex flex-col md:flex-row gap-4">
+                    <form method="GET" class="flex-grow">
+                        <div class="relative">
+                            <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search coupons..." 
+                                class="pl-10 pr-4 py-2 rounded-lg bg-dark border border-white/10 text-light focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                            <i class="fas fa-search absolute left-3 top-3 text-light/50"></i>
+                        </div>
+                    </form>
+                </div>
+              {% if search_mode %}
+              <a href="{% url 'useradmin:contact-us' %}" class="text-sm text-light
+                    hover:text-primary underline mt-4">
+                    ← View all messages
+              </a>
+              {% endif %}
+        </div>           
+    </div>
     <!-- Messages Table -->
-    <div class="bg-primary rounded-lg shadow-lg border border-white/10 overflow-hidden">
+    <div class="bg-dark rounded-lg shadow-lg border border-white/10 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-white/10">
-                <thead class="bg-primary backdrop-blur border-b border-white/10">
-                    <tr class="text-light text-xs">
-                        <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Date</th>
-                        <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Name</th>
-                        <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Email</th>
-                        <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Subject</th>
-                        <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Actions</th>
+                <thead class="bg-gold backdrop-blur border-b border-white/10">
+                    <tr class="text-dark text-xs">
+                        <th class="px-6 py-3 text-left font-semibold uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-3 text-left font-semibold uppercase tracking-wider">Name</th>
+                        <th class="px-6 py-3 text-left font-semibold uppercase tracking-wider">Email</th>
+                        <th class="px-6 py-3 text-left font-semibold uppercase tracking-wider">Subject</th>
+                        <th class="px-6 py-3 text-left font-semibold uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left font-semibold uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="bg-primary divide-y divide-white/10">
+                <tbody class="bg-dark divide-y divide-white/10">
                     {% for c in contact %}
                     <tr class="hover:bg-white/5 transition-colors">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-light">{{c.created_at}}</td>

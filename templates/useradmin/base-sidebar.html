@@ -5,24 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peak Health - Admin Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        gold: '#b9a848',
-                        dark: '#28282B',
-                        light: '#F9FAFB',
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="{% static '/assets/css/output.css' %}" />
     <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -71,13 +58,20 @@
             -translate-x-full border-r-2 border-white/30  
             transition-transform duration-300 
              p-4 z-40">
+             <div class="flex justify-between">
                 <button id="closeSidebar" 
                 class="text-[#b9a848] text-2xl">✖ Close</button>
+                <div class="ml-auto">
+                    <i class="fa-solid fa-house-user text-gold"></i>
+                    <a href="{% url 'core:index' %}" class="text-gold hover:underline text-sm sm:text-base">Home</a>
+                </div>
+             </div>
+                
                 <div class="p-4 border-b-2 border-white/30">
                     <h1 class="text-2xl font-bold text-gold">
                         <i class="fas fa-mountain mr-2"></i> <a href="{% url 'core:index' %}">Peak Health</a> 
                     </h1>
-                    <p class="text-sm text-light/80">Admin Dashboard</p>
+                    <p class="text-sm text-light/80">Admin Dashboard</p>                  
                 </div>
                 
                 <nav class="p-4">
@@ -166,6 +160,11 @@
                     </ul>
                 </nav>
                 
+                <div style="background-color: green;" class=" text-sm sm:text-base text-light px-4 py-2 rounded">
+                    <a href="{% url 'useradmin:export-sales-report' %}" >
+                    Download Sales Report <i class="fas fa-file-download ml-2"></i>
+                </a>
+            </div>
                 
             </div>
         </div>

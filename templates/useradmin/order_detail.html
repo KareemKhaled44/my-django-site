@@ -27,7 +27,19 @@
                         <option value="Canceled">Canceled</option>
                     </select>
                     <button type="submit" class="btn">Save</button>
-
+                    <div class=" absolute inset-y-0 right-12 flex items-center pr-5">
+                        <i class="fa-solid fa-caret-down text-light text-xs"></i>
+                    </div>
+                </form>
+                <form method="POST" action="{% url 'useradmin:order-paid-status' order.oid %}" class="relative inline-block ml-4">
+                    {% csrf_token %}
+                    <select name="paid_status" class="appearance-none cursor-pointer bg-dark border border-white/20 rounded-lg
+                    px-4 py-2 pr-8 text-sm text-light focus:outline-none focus:ring-1
+                     focus:ring-gold focus:border-gold/50">
+                        <option value="true" {% if order.paid_status %}selected{% endif %}>Paid</option>
+                        <option value="false" {% if not order.paid_status %}selected{% endif %}>Unpaid</option>
+                    </select>
+                    <button type="submit" class="btn">Save</button>
                     <div class=" absolute inset-y-0 right-12 flex items-center pr-5">
                         <i class="fa-solid fa-caret-down text-light text-xs"></i>
                     </div>
@@ -70,7 +82,10 @@
                         <div class="flex-grow">
                             <div class="flex justify-between">
                                 <h3 class="text-base font-medium text-light">{{ item.product.title }}</h3>
-                                <p class="text-base font-medium text-gold">EGP {{ item.price }}</p>
+                                <div class="">
+                                    <p class="text-base font-medium text-gold"><span class="text-light/80 text-sm">Buying Price:</span> EGP {{ item.product.buying_price }}</p>
+                                    <p class="text-base font-medium text-gold"><span class="text-light/80 text-sm">Selling Price:</span> EGP {{ item.price }}</p>
+                                </div>
                             </div>
                             <p class="mt-1 text-sm text-light/80"> {{ item.product.brand }}</p>
                             <p class="mt-1 text-sm text-light/80">
@@ -102,7 +117,7 @@
                         </div>
                         <div class="flex justify-between text-light">
                             <span>Shipping</span>
-                            <span>EGP {{ order.shipping_cost|default:"0.00" }}</span>
+                            <span>EGP {{ order.shipping_cost }}</span>
                         </div>
                         <div class="flex justify-between text-light font-medium border-t border-white/10 pt-3 mt-3">
                             <span>Total</span>
@@ -149,14 +164,13 @@
             <div class="bg-dark rounded-lg shadow-md p-6 border border-white/10">
                 <h2 class="text-lg font-medium text-gold mb-4">Shipping Address</h2>
                 <div class="text-sm text-light space-y-2">
-                    <p>{{ order.address.first_name }}</p>
-                    <p>{{ order.address.last_name }}</p>
-                    <p>{{ order.address.street_address }}</p>
+                    <p><span class="text-gold text-sm">name:</span> {{ order.address.first_name }} {{ order.address.last_name }}</p>
+                    <p><span class="text-gold text-sm">street:</span> {{ order.address.street_address }}</p>
                     {% if order.address.apartment %}
-                    <p>{{ order.address.apartment }}</p>
+                    <p><span class="text-gold text-sm">apartment:</span> {{ order.address.apartment }}</p>
                     {% endif %}
-                    <p>{{ order.address.city }}</p>
-                    <p>{{ order.address.postal_code }}</p>
+                    <p><span class="text-gold text-sm">city:</span> {{ order.address.city }}</p>
+                    <p><span class="text-gold text-sm">postal code:</span> {{ order.address.postal_code }}</p>
                 </div>
             </div>           
         </div>

@@ -6,11 +6,11 @@
       <div style="display: flex;  justify-content: center;  align-items: center; height: 100%;">
 
         <div
-          class="w-full  max-w-md bg-black/10 backdrop-blur-sm border-2 border-[#ffffff55] shadow-lg shadow-[rgba(220,220,220,0.75)] rounded-lg shadow-md p-6"
+          class="w-full  max-w-md bg-black/10 backdrop-blur-sm border-2 border-white/30 shadow-md shadow-[rgba(220,220,220,0.75)] rounded-lg  p-6"
         >
           <!-- Container for the login form with a white background, rounded corners, and shadow effect -->
 
-          <h2 class="text-2xl font-bold text-[#b9a848] mb-4  text-center">Login</h2>
+          <h2 class="text-2xl font-bold text-gold mb-4  text-center">Login</h2>
           <!-- Heading for the login form -->
 
           <form class="flex flex-col relative" method="POST">
@@ -41,22 +41,22 @@
                     <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
                     <polyline points="1 9 7 14 15 4"></polyline>
                   </svg>
-                  <span class="text-base text-[#b9a848] font-bold ">Remember me</span>
+                  <span class="text-base text-gold font-bold ">Remember me</span>
                 </label>
               <!-- Checkbox for "Remember me" with a label -->
 
               <a
                 href="{% url 'password_reset' %}"
-                class="text-base text-[#b9a848] font-bold hover:underline mb-0.5"
+                class="text-base text-gold font-bold hover:underline mb-0.5"
                 >Forgot password?</a
               >
               <!-- Link for password recovery -->
 
-              <p class="text-white mt-4">
+              <p class="text-light mt-4">
                 Don't have an account?
                 <a
                   href="{% url 'userauths:sign-up' %}"
-                  class="text-base text-[#b9a848] font-bold hover:underline mt-4"
+                  class="text-base text-gold font-bold hover:underline mt-4"
                   >Register</a
                 >
               </p>
@@ -65,9 +65,9 @@
 
             <button
               type="submit"
-              class="bg-[#1E1E1E]  w-2/4 text-center text-[#b9a848] font-semibold border-2 border-[#ffffff55]  shadow-[_0px_0px_10px_rgba(95,157,231,0.2)] 
+              class="bg-darker  w-2/4 text-center text-gold  border-2 border-white/30  shadow-[_0px_0px_10px_rgba(95,157,231,0.2)] 
                font-bold py-2 px-4 rounded-md mt-4
-               hover:bg-[#b9a848] hover:text-[#28282B]  ease-in-out duration-150"
+               hover:bg-gold hover:text-dark  ease-in-out duration-150"
             >
               Login
             </button>

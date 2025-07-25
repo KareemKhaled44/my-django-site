@@ -4,7 +4,7 @@
       <!-- for any errors in registeration -->
       {% if form.errors %}
       <div class="flex items-center justify-center rounded-xl mt-6 px-6 py-4
-       w-full max-w-xl mx-auto shadow-md bg-[#28282B] border-l-4 border-red-500" role="alert">
+       w-full max-w-xl mx-auto shadow-md bg-dark border-l-4 border-red-500" role="alert">
       <strong class="text-neutral-50 ">Errors:</strong>
       <ul class="text-neutral-50">
             {% for field, errors in form.errors.items %}
@@ -14,11 +14,9 @@
       </div>
       {% endif %}
 
-    <main style="height: 70vh " class="min-w-full flex items-center justify-center">
+    <main style="height: 70vh" class="min-w-full flex items-center justify-center">
       <div class="flex items-center justify-center h-full w-full">
-        <div
-          class="w-full max-w-md bg-black/10 backdrop-blur-sm border-2 border-[#ffffff55]
-           shadow-lg shadow-[rgba(220,220,220,0.75)] rounded-lg shadow-md p-6">
+        <div class="w-full max-w-md bg-black/10 backdrop-blur-sm border-2 border-white/30 shadow-[rgba(220,220,220,0.75)] rounded-lg shadow-md p-6">
           <h2 class="text-2xl font-bold text-gold mb-4 text-center">
             Create Account
           </h2>
@@ -29,20 +27,20 @@
               <label>Username</label>
             </div>
             <div class="form-group">
-                  {{form.email}}
+              {{form.email}}
               <label>Email</label>
             </div>
             <div class="form-group">
               {{form.password1}}
               <label>Password</label>
               <i class="fa-solid fa-eye toggle-password absolute right-3 top-6 cursor-pointer"
-               data-target="id_password1"></i>
+              data-target="id_password1"></i>
             </div>
             <div class="form-group">
               {{form.password2}}
-              <label>Confirm Password </label>
+              <label>Confirm Password</label>
               <i class="fa-solid fa-eye toggle-password absolute right-3 top-6 cursor-pointer"
-               data-target="id_password2"></i>
+              data-target="id_password2"></i>
             </div>
             <div class="flex items-center justify-between flex-wrap">
               <input
@@ -54,20 +52,20 @@
                       <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
                       <polyline points="1 9 7 14 15 4"></polyline>
                     </svg>
-                    <span class="text-sm text-white">Agree all terms and conditions</span>
+                    <span class="text-sm text-light">Agree all terms and conditions</span>
                   </label>
-              <p class="text-white mt-4">
+              <p class="text-light mt-4">
                 Already have an account?
                 <a
                   href="{% url 'userauths:sign-in' %}"
-                  class="text-base text-[#b9a848] font-bold hover:underline"
+                  class="text-base text-gold font-bold hover:underline"
                   >Login</a
                 >
               </p>
             </div>
             <button
               type="submit"
-              class="bg-[#1E1E1E] w-2/4 text-center text-[#b9a848] font-semibold  border-2 border-[#ffffff55] shadow-[_0px_0px_10px_rgba(95,157,231,0.2)] font-bold py-2 px-4 rounded-md mt-4 hover:bg-[#b9a848] hover:text-[#28282B] ease-in-out duration-150"
+              class="bg-darker w-2/4 text-center text-gold  border-2 border-white/30 shadow-[_0px_0px_10px_rgba(95,157,231,0.2)] font-bold py-2 px-4 rounded-md mt-4 hover:bg-gold hover:text-dark ease-in-out duration-150"
             >
               Create
             </button>

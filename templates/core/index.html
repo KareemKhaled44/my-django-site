@@ -1,7 +1,7 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 {% block content %}
-  <body>
+
     <div class="top-img">
       <section class="content">
         <h1 class="font-bold">welcome to the world of supplements</h1>
@@ -34,8 +34,7 @@
         {% endfor %}
       </section>
     </main>
-
-           
+        
     <main class="">
       <h2 class="head-title font-bold">Best Sellers</h2>
         <section class="products">
@@ -62,7 +61,7 @@
               <p>{{p.category}}</p>
               <button data-pid="{{p.pid}}"
               class="add-to-wishlist">
-              <i class="fa-regular fa-heart text-[#b9a848] text-lg transition-all duration-200"></i>
+              <i class="fa-regular fa-heart text-gold text-lg transition-all duration-200"></i>
               </button>
             </div>
             <a href="{% url 'core:product-detail' p.pid %}"><span class="product-title title">{{p.title}}</span></a>
@@ -101,9 +100,9 @@
         </section>
 
         <div class="flex justify-center">
-          <a href="{% url 'core:product-list' %}" class="mt-8 text-[#b9a848] text-lg
-           font-semibold text-center w-52  py-2 px-4 bg-[#28282B] 
-           rounded-md shadow-md hover:bg-[#b9a848] hover:text-[#28282B] transition duration-300">
+          <a href="{% url 'core:product-list' %}" class="mt-8 text-gold text-lg
+           font-semibold text-center w-52  py-2 px-4 bg-dark 
+           rounded-md shadow-md hover:bg-gold hover:text-dark transition duration-300">
             View All Products
           </a>
         </div>
@@ -130,7 +129,7 @@
               <p>{{p.category}}</p>
               <button data-pid="{{p.pid}}"
               class="add-to-wishlist">
-              <i class="fa-regular fa-heart text-[#b9a848] text-lg transition-all duration-200"></i>
+              <i class="fa-regular fa-heart text-gold text-lg transition-all duration-200"></i>
               </button>
             </div>
             
@@ -170,38 +169,4 @@
         {% endfor %}     
       </section> 
     </main>
-
-    <!-- Hamburger Menu Toggle -->
-     <script>
-      const menuToggle = document.getElementById('menuToggle');
-      const mobileMenu = document.getElementById('mobileMenu');
-
-      menuToggle.addEventListener('click', () => {
-        mobileMenu.classList.toggle('active');
-      });
-    </script>
-
-    <!-- submenu toggle -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const toggleButtons = document.querySelectorAll(".submenu-toggle");
-    
-        toggleButtons.forEach((btn) => {
-          const chevron = btn.querySelector("i");
-    
-          btn.addEventListener("click", function (e) {
-            e.preventDefault();
-    
-            // جيب العنصر اللي بعد الزر مباشرة (اللي هو .accountSubmenu)
-            const submenu = btn.parentElement.nextElementSibling;
-    
-            if (submenu && submenu.classList.contains("accountSubmenu")) {
-              submenu.classList.toggle("active");
-              chevron.classList.toggle("rotate-90");
-            }
-          });
-        });
-      });
-    </script>
-  
 {% endblock content %}

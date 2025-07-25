@@ -1,43 +1,11 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - Peak Health Supplements</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#b9a848',
-                        dark: '#28282B',
-                        light: '#F9FAFB',
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/header.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/index.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/login.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/checkout.css' %}" />
-    <style>
-        .policy-section h2 {
-            scroll-margin-top: 100px;
-        }
-    </style>
-</head>
 <body class="bg-transparent text-light">
     <!-- Hero Section -->
     <section class="relative py-20  border-b-2 border-white/30">
         <div class="container mx-auto px-6 text-center">
-            <h1 class="text-4xl md:text-6xl font-bold text-primary mb-6">PRIVACY POLICY</h1>
+            <h1 class="text-4xl md:text-6xl font-bold text-gold mb-6">PRIVACY POLICY</h1>
             <p class="text-xl md:text-2xl max-w-3xl mx-auto">Your trust is important to us at Peak Health</p>
         </div>
     </section>
@@ -52,7 +20,7 @@
         <div class="space-y-12 policy-section">
             <!-- Information Collection -->
             <section id="information-collection" class="border-2 border-white/30 rounded-lg p-8">
-                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                <h2 class="text-2xl font-bold text-gold mb-6 flex items-center">
                     <i class="fas fa-database mr-3"></i> Information We Collect
                 </h2>
                 <div class="space-y-4">
@@ -68,7 +36,7 @@
 
             <!-- How We Use Information -->
             <section id="information-use" class="border-2 border-white/30 rounded-lg p-8">
-                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                <h2 class="text-2xl font-bold text-gold mb-6 flex items-center">
                     <i class="fas fa-cogs mr-3"></i> How We Use Your Information
                 </h2>
                 <div class="space-y-4">
@@ -87,7 +55,7 @@
 
             <!-- Data Security -->
             <section id="data-security" class="border-2 border-white/30 rounded-lg p-8">
-                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                <h2 class="text-2xl font-bold text-gold mb-6 flex items-center">
                     <i class="fas fa-lock mr-3"></i> Data Security
                 </h2>
                 <div class="space-y-4">
@@ -104,7 +72,7 @@
 
             <!-- Cookies -->
             <section id="cookies" class="border-2 border-white/30 rounded-lg p-8">
-                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                <h2 class="text-2xl font-bold text-gold mb-6 flex items-center">
                     <i class="fas fa-cookie mr-3"></i> Cookies & Tracking
                 </h2>
                 <div class="space-y-4">
@@ -116,7 +84,7 @@
                         <li>Deliver targeted ads (through third-party services)</li>
                     </ul>
                     <div class="mt-4 p-4 bg-dark/50 rounded border border-white/20">
-                        <p class="font-semibold text-primary">Cookie Consent</p>
+                        <p class="font-semibold text-gold">Cookie Consent</p>
                         <p>By using our site, you consent to our use of cookies. You can manage preferences in your browser settings.</p>
                     </div>
                 </div>
@@ -124,7 +92,7 @@
 
             <!-- Your Rights -->
             <section id="your-rights" class="border-2 border-white/30 rounded-lg p-8">
-                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                <h2 class="text-2xl font-bold text-gold mb-6 flex items-center">
                     <i class="fas fa-user-shield mr-3"></i> Your Privacy Rights
                 </h2>
                 <div class="space-y-4">
@@ -136,13 +104,13 @@
                         <li>Opt-out of marketing communications</li>
                         <li>Lodge a complaint with a regulatory authority</li>
                     </ul>
-                    <p class="pt-4">To exercise these rights, please contact us at <span class="text-primary">privacy@peakhealth.com</span></p>
+                    <p class="pt-4">To exercise these rights, please contact us at <span class="text-gold">privacy@peakhealth.com</span></p>
                 </div>
             </section>
 
             <!-- Changes -->
             <section id="policy-changes" class="border-2 border-white/30 rounded-lg p-8">
-                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                <h2 class="text-2xl font-bold text-gold mb-6 flex items-center">
                     <i class="fas fa-sync-alt mr-3"></i> Policy Changes
                 </h2>
                 <div class="space-y-4">
@@ -153,12 +121,12 @@
 
             <!-- Contact -->
             <section id="contact" class="border-2 border-white/30 rounded-lg p-8">
-                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                <h2 class="text-2xl font-bold text-gold mb-6 flex items-center">
                     <i class="fas fa-envelope mr-3"></i> Contact Us
                 </h2>
                 <div class="space-y-4">
                     <p>For privacy-related questions or concerns:</p>
-                    <p><strong>Email:</strong> <span class="text-primary">privacy@peakhealth.com</span></p>
+                    <p><strong>Email:</strong> <span class="text-gold">privacy@peakhealth.com</span></p>
                     <p><strong>Mail:</strong> Peak Health Privacy Officer, 123 Supplement Lane, Health City, HC 12345</p>
                 </div>
             </section>

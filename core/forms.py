@@ -14,5 +14,5 @@ class AddressForm(forms.ModelForm):
             'street_address': forms.TextInput(attrs={'class': 'form', 'placeholder': 'Street Address', 'required': 'required'}),
             'apartment': forms.TextInput(attrs={'class': 'form', 'placeholder': 'Apartment / Unit (optional)'}),
             'postal_code': forms.TextInput(attrs={'class': 'form', 'placeholder': 'Postal Code', 'required': 'required'}),
-            'city': forms.Select(attrs={'class': 'w-full px-4 py-3  bg-[#414141] text-[#F9FAFB] text-sm rounded-md focus:border-[#b9a848] outline-0 '}),
+            'city': forms.Select(attrs={'class': 'select-form', 'required': 'required'}),
         }

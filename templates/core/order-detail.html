@@ -1,33 +1,6 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>home</title>
-    <!-- tailwind -->
-    
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/header.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/index.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/login.css' %}" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-  </head>
-<body>
-
   <div class=" w-full  max-w-screen-xl mx-auto px-4 my-20">
     <!-- Breadcrumb -->
     <div class="p-4">
@@ -43,7 +16,7 @@
       <div class="w-full lg:w-2/4  space-y-4 pr-0 lg:pr-4">
         <a href="{% url 'core:dashboard' %}"
           class="flex items-center gap-2 rounded-lg py-4 px-2 border border-white/30 text-gold font-medium 
-                  w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200 
+                  w-full  hover:bg-gold hover:text-dark transition-colors duration-200 
                   box-border text-start">
             <i class="fas fa-sliders-h"></i> Dashboard
          </a>
@@ -94,13 +67,6 @@
           </div>
         </div>
       </div>
-     
-
-
     </div>
   </div>
-
-  
-</body>
-</html>
 {% endblock content %}

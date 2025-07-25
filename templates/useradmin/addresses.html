@@ -1,6 +1,5 @@
 {% extends "useradmin/base-sidebar.html" %}
 {% load static %}
-
 {% block content %}
 <div class="container mx-auto px-4 py-6">
     <!-- Header -->
@@ -21,7 +20,7 @@
                 <div class="mb-6 flex flex-col md:flex-row gap-4">
                     <form method="GET" class="flex-grow">
                         <div class="relative">
-                            <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search coupons..." 
+                            <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search addresses..." 
                                 class="pl-10 pr-4 py-2 rounded-lg bg-dark border border-white/10 text-light focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
                             <i class="fas fa-search absolute left-3 top-3 text-light/50"></i>
                         </div>

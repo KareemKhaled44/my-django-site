@@ -24,7 +24,7 @@
         <p>{{p.category}}</p>
         <button data-pid="{{p.pid}}"
         class="add-to-wishlist">
-        <i class="fa-regular fa-heart text-[#b9a848] text-lg transition-all duration-200"></i>
+        <i class="fa-regular fa-heart text-gold text-lg transition-all duration-200"></i>
         </button>
       </div>
       <a href="{% url 'core:product-detail' p.pid %}"><span class="title">{{ p.title }}</span></a>
@@ -36,7 +36,9 @@
       <!-- السعر -->
       <p class="price">
         {{p.price}} EGP <br>
+        {% if p.old_price %}
         <span class="old-price"> {{p.old_price}} EGP</span>
+        {% endif %}
       </p>
 
       {% if p.in_stock %}

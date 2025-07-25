@@ -45,6 +45,7 @@
                             {{ form.quantity }}
                         </div>
                     </div>
+
                     <div class="mt-4 flex justify-end">
                         <button type="submit" class="px-4 py-2 rounded-lg bg-gold text-dark font-medium hover:bg-gold/90 transition">
                             Add to Order
@@ -63,6 +64,7 @@
                                 <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Price</th>
                                 <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Qty</th>
                                 <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Total</th>
+                                <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Profit</th>
                                 <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
@@ -83,6 +85,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-light">EGP {{ item.price }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-light">{{ item.quantity }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-light">EGP {{ item.total_price }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-light">EGP {{ item.profit }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <a href="{% url 'useradmin:delete-order-item' order.oid item.id %}" class="text-red-400 hover:text-red-300">Remove</a>
                                 </td>
@@ -114,7 +117,7 @@
                   </div>
                   <div class="flex justify-between text-light">
                       <span>Shipping:</span>
-                      <span>EGP {{ order.shipping_price }}</span>
+                      <span>EGP {{ order.shipping_cost }}</span>    
                   </div>
                   <div class="border-t border-white/10 pt-3 mt-3 flex justify-between text-lg font-semibold text-gold">
                       <span>Total:</span>

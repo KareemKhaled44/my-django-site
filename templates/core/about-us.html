@@ -1,39 +1,12 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Peak Health Supplements</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#b9a848',
-                        dark: '#28282B',
-                        light: '#F9FAFB',
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/header.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/index.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/login.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/checkout.css' %}" />
-</head>
-<body class="bg-transparent text-light">
+<body>
     <!-- Hero Section -->
     <section class="relative py-20  border-b-2 border-white/30">
         <div class="container mx-auto px-6 text-center">
-            <h1 class="text-4xl md:text-6xl font-bold text-primary mb-6">ABOUT US</h1>
-            <p class="text-xl md:text-2xl max-w-3xl mx-auto">Fueling your journey to peak performance with premium supplements</p>
+            <h1 class="text-4xl md:text-6xl font-bold text-gold mb-6">ABOUT US</h1>
+            <p class="text-xl text-light md:text-2xl max-w-3xl mx-auto">Fueling your journey to peak performance with premium supplements</p>
         </div>
     </section>
     
@@ -42,9 +15,9 @@
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2 mb-10 md:mb-0 md:pr-10">
-                    <h2 class="text-3xl font-bold text-primary mb-6">Our Mission</h2>
-                    <p class="text-lg mb-6">At Peak Health, we're committed to providing scientifically-backed supplements that help you achieve your health and fitness goals.</p>
-                    <p class="text-lg">Every product is formulated with purity, potency, and performance in mind.</p>
+                    <h2 class="text-3xl font-bold text-gold mb-6">Our Mission</h2>
+                    <p class="text-lg text-light mb-6">At Peak Health, we're committed to providing scientifically-backed supplements that help you achieve your health and fitness goals.</p>
+                    <p class="text-lg text-light">Every product is formulated with purity, potency, and performance in mind.</p>
                 </div>
                 <div class="md:w-2/5">
                     <img src="{% static '/assets/img/peak health logo.png' %}" alt="Supplement products" class="rounded-lg border-2 border-white/30 shadow-lg">
@@ -56,49 +29,49 @@
     <!-- Values Section -->
     <section class="py-16 border-b-2 border-white/30">
         <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold text-primary mb-12 text-center">Our Core Values</h2>
+            <h2 class="text-3xl font-bold text-gold mb-12 text-center">Our Core Values</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Value 1 -->
                 <div class="border-2 border-white/30 rounded-lg p-6 hover:bg-dark/50 transition duration-300">
-                    <div class="text-primary text-3xl mb-4">
+                    <div class="text-gold text-3xl mb-4">
                         <i class="fas fa-flask"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Science-Backed</h3>
-                    <p>We formulate our products based on the latest nutritional science and clinical research.</p>
+                    <h3 class="text-xl text-light font-bold mb-3">Science-Backed</h3>
+                    <p class="text-light">We formulate our products based on the latest nutritional science and clinical research.</p>
                 </div>
                 
                 <!-- Value 2 -->
                 <div class="border-2 border-white/30 rounded-lg p-6 hover:bg-dark/50 transition duration-300">
-                    <div class="text-primary text-3xl mb-4">
+                    <div class="text-gold text-3xl mb-4">
                         <i class="fas fa-seedling"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Premium Quality</h3>
-                    <p>Only the finest ingredients sourced from trusted suppliers around the world.</p>
+                    <h3 class="text-xl text-light font-bold mb-3">Premium Quality</h3>
+                    <p class="text-light">Only the finest ingredients sourced from trusted suppliers around the world.</p>
                 </div>
                 
                 <!-- Value 3 -->
                 <div class="border-2 border-white/30 rounded-lg p-6 hover:bg-dark/50 transition duration-300">
-                    <div class="text-primary text-3xl mb-4">
+                    <div class="text-gold text-3xl mb-4">
                         <i class="fas fa-award"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Transparency</h3>
-                    <p>Full disclosure of ingredients with no proprietary blends or hidden formulas.</p>
+                    <h3 class="text-xl text-light font-bold mb-3">Transparency</h3>
+                    <p class="text-light">Full disclosure of ingredients with no proprietary blends or hidden formulas.</p>
                 </div>
             </div>
         </div>
       </section>
 
     <!-- CTA Section -->
-    <section class="py-16 bg-primary/10">
+    <section class="py-16 bg-gold/10">
         <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold text-primary mb-6">Ready to Elevate Your Health?</h2>
-            <p class="text-xl mb-8 max-w-2xl mx-auto">Join thousands of satisfied customers who trust Peak Health for their supplement needs.</p>
-            <a href="{% url 'core:product-list' %}" class="bg-dark text-primary font-bold py-3 px-8 rounded-md border-2 
-            border-white/30 hover:bg-primary hover:text-dark transition duration-300">
+            <h2 class="text-3xl font-bold text-gold mb-6">Ready to Elevate Your Health?</h2>
+            <p class="text-xl text-light mb-8 max-w-2xl mx-auto">Join thousands of satisfied customers who trust Peak Health for their supplement needs.</p>
+            <a href="{% url 'core:product-list' %}" class="bg-dark text-gold font-bold py-3 px-8 rounded-md border-2 
+            border-white/30 hover:bg-gold hover:text-dark transition duration-300">
                 Shop Now
             </a>
         </div>
     </section>
 </body>
-</html>
+
 {% endblock content %}

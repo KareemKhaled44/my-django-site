@@ -7,10 +7,12 @@ urlpatterns = [
     path('products/', views.admin_products_view, name='products'),
     path('add-product/', views.add_product_view, name='add-product'),
     path('edit-product/<pid>/', views.edit_product_view, name='edit-product'),
+    path('delete-internal-image/<int:img_id>/', views.delete_internal_image, name='delete-internal-image'),
     path('delete-product/<pid>/', views.delete_product_view, name='delete-product'),
     path('orders/', views.admin_orders_view, name='orders'),
     path('order-detail/<oid>/', views.order_detail_view, name='order-detail'),
     path('order-status/<oid>/', views.change_order_status, name='order-status'),
+    path('order-paid-status/<oid>/', views.change_order_paid_status, name='order-paid-status'),
     path('add-order/', views.add_order_view, name='add-order'),
     path('add-order-items/<oid>/', views.add_order_items_view, name='add-order-items'),
     path('delete-order-item/<oid>/<item_id>/', views.delete_order_item_view, name='delete-order-item'),
@@ -50,4 +52,7 @@ urlpatterns = [
     path('delete-supplier/<sid>/', views.delete_supplier_view, name='delete-supplier'),
     path('settings/', views.admin_settings_view, name='settings'),
     path('change-password/', views.admin_change_password, name='change-password'),
+
+    path("export-sales-report/", views.export_sales_report, name="export-sales-report"),
+
 ]

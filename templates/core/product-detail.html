@@ -3,85 +3,76 @@
 {% block content %}
 
     <section class="card flex flex-wrap gap-8 m-10 justify-center">
-      <div
-        class="flex flex-col md:flex-row md:w-3/4 lg:w-2/3 xl:w-1/2 border-2 border-white/30 rounded-2xl p-4 shadow-lg transition-all"
-      >
-        <!-- الصورة الرئيسية -->
-        <div class="flex flex-col items-center md:w-1/3">
+      <div class="flex flex-col md:flex-row md:w-4/5 lg:w-3/4 xl:w-2/3 border-2 border-white/30 rounded-2xl p-4 shadow-lg transition-all">
+        <!-- الصورة الرئيسية - الآن أكبر على سطح المكتب -->
+        <div class="flex flex-col items-center md:w-1/3 lg:w-2/5">
           <img
             id="mainImage"
-            class="product-image w-full max-h-80 rounded-2xl bg-[#28282B] object-cover border-2 border-[#b9a848]"
+            class="product-image w-full h-auto max-h-[500px] md:max-h-[500px] rounded-2xl bg-dark object-cover border-2 border-gold"
             src="{{p.image.url}}"
             alt="Product Image"
           />
 
           <!-- الصور المصغرة -->
-           
           <div class="flex gap-2 mt-3">
             <img
-              class="thumbnail w-16 h-16 cursor-pointer rounded-lg border-2 border-[#28282b] hover:border-[#b9a848] transition"
+              class="thumbnail w-16 h-16 cursor-pointer rounded-lg border-2 border-dark hover:border-gold transition"
               src="{{p.image.url}}"
               onclick="changeImage(this)"
               alt="Thumbnail 1"
             />
             {% for i in internal_images %}
             <img
-              class="thumbnail w-16 h-16 cursor-pointer rounded-lg border-2 border-[#28282b] hover:border-[#b9a848] transition"
+              class="thumbnail w-16 h-16 cursor-pointer rounded-lg border-2 border-dark hover:border-gold transition"
               src="{{i.image.url}}"
               onclick="changeImage(this)"
               alt="Thumbnail 1"
             />
             {% endfor %}
           </div>
-            
         </div>
 
         <!-- بيانات المنتج -->
-        <div class="ml-0 md:ml-10 mt-5 flex-1 relative ">
+        <div class="ml-0 md:ml-10 mt-5 md:w-1/2 lg:w-3/5 relative">
           {% if p.get_discount_percentage %}
             <div class="inline-block mb-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded shadow-lg">
             -{{ p.get_discount_percentage }}% off
             </div>
-            {% endif %}
+          {% endif %}
           <div class="flex justify-between">
-            <h3  class="product-title text-4xl text-white">{{p.title}}</h3>
-            <button data-pid="{{p.pid}}"
-                class="add-to-wishlist">
-                <i class="fa-regular fa-heart text-[#b9a848] text-lg transition-all duration-200"></i>
+            <h3 class="product-title text-4xl text-white">{{p.title}}</h3>
+            <button data-pid="{{p.pid}}" class="add-to-wishlist">
+              <i class="fa-regular fa-heart text-gold text-2xl transition-all duration-200"></i>
             </button>
           </div>
-          <p class="text-[#414141]">{{p.brand}}, {{p.category}}</p>
+          <p class="text-gray-400 text-lg">{{p.brand}}, {{p.category}}</p>
           {% if p.in_stock %}
           <p class="text-green-600">
-            <i class="fa-solid fa-check text-[#b9a848] pr-2 ">
-            </i>In Stock</p>
-            {% else %}
-              <p class="text-red-600">
-                  <i class="fa-solid fa-xmark text-[#b9a848] pr-2 "></i>Out of Stock</p>
-            {% endif %}
-          <p class="text-lg text-[#b9a848] mb-3">
+            <i class="fa-solid fa-check text-gold pr-2 text-xl"></i><span class="text-lg">In Stock</span></p>
+          {% else %}
+            <p class="text-red-600">
+              <i class="fa-solid fa-xmark text-gold pr-2 text-xl"></i><span class="text-lg">Out of Stock</span></p>
+          {% endif %}
+          <p class="text-lg text-gold mb-3">
             {{p.description}}
           </p>
 
           {% if p.flavors.all %}
             <div class="flex items-center gap-2">
-                  <h6 class="font-semibold text-[#b9a848]">Flavors:</h6>
-                  <form class="rounded-lg bg-[#b9a848] w-[110px] h-[35px] ">
-                        <select class="w-full h-full bg-transparent text-[#28282B] pl-1">
-                        {% for flavor in p.flavors.all %}
-                              <option class="text-semibold text-[#b9a848] bg-[#28282B]">{{flavor.name}}</option>
-                        {% endfor %}
-                        </select>
-                        
-                  </form>
+              <h6 class="font-semibold text-gold text-xl">Flavors:</h6>
+              <form class="rounded-lg bg-gold w-[110px] h-[35px]">
+                <select class="product-flavor w-full h-full bg-transparent text-dark pl-1">
+                  {% for flavor in p.flavors.all %}
+                    <option value="{{ flavor.name }}" class="text-semibold text-gold bg-dark">{{flavor.name}}</option>
+                  {% endfor %}
+                </select>
+              </form>
             </div>
-            {% endif %}
-
-
+          {% endif %}
 
           <div class="flex items-center justify-between gap-4 mt-3">
             <!-- السعر -->
-            <p  class="text-lg text-white font-semibold text-shadow">
+            <p class="text-lg text-white font-semibold text-shadow">
               <span class="current-product-price">{{p.price}}</span>EGP <br>
               {% if p.old_price %}
               <span class="text-white line-through font-medium my-2 [text-shadow:0_0_4px_rgba(150,150,150,0.8)]"> {{p.old_price}} EGP</span>
@@ -89,12 +80,11 @@
             </p>
 
             <!-- حقل التحكم في الكمية -->
-
-            <div class="flex items-center border border-[#b9a848] rounded-lg px-3 py-1">
+            <div class="flex items-center border border-gold rounded-lg px-3 py-1">
               <span class="text-white font-medium">Quantity:</span>
               <button
                 onclick="decreaseQuantity()"
-                class="text-xl text-[#b9a848] px-2 hover:text-white transition">
+                class="text-xl text-gold px-2 hover:text-white transition">
                 -
               </button>
 
@@ -107,13 +97,104 @@
 
               <button
                 onclick="increaseQuantity()"
-                class="text-xl text-[#b9a848] px-2 hover:text-white transition">
+                class="text-xl text-gold px-2 hover:text-white transition">
                 +
               </button>
             </div>
           </div>
 
-          <script>
+          <div class="mt-4 flex items-center md:justify-start justify-center md:mr-[10px]">
+            <input type="hidden" value="{{p.pid}}" class="product-id">
+            {% if p.in_stock %}
+            <button
+              class="add-to-cart-btn w-[140px] h-[40px] rounded-[12px] border-none bg-gold flex items-center justify-center
+                transition-all duration-500 overflow-hidden shadow-lg relative">
+              <i class="fa-solid fa-cart-shopping text-base text-dark pr-1
+                md:text-lg md:pr-2 lg:text-xl lg:pr-3"></i>
+              <span class="text-dark font-semibold text-base">Add to Cart</span>
+            </button>
+            {% else %}
+            <h3 class="text-red-500">This product is currently out of stock!</h3>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--related products-->
+    <main>
+      <h2 class="head-title font-bold">Related Product</h2>
+      <section class="products">
+        {% for p in products %}
+        <!-- first card -->
+        <article class="card relative">
+          {% if p.get_discount_percentage %}
+          <!-- Discount Tag -->
+          <div class="absolute top-2 right-2 bg-red-600 text-white text-xs sm:text-[0.65rem] xs:text-[0.55rem] font-semibold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded shadow-lg z-10">
+            -{{p.get_discount_percentage}}% off
+          </div>
+          {% endif %}
+
+          {% if p.in_stock == False %}
+          <div class="absolute top-2 left-2 bg-gray-700 text-white text-xs sm:text-[0.65rem] xs:text-[0.55rem] font-semibold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded shadow-lg z-10">
+            Sold Out
+          </div>
+          {% endif %}
+
+          <img src="{{p.image.url}}" alt="">
+
+          <div class="mt-3">
+            <div class="flex items-center justify-between">
+              <p>{{p.category}}</p>
+              <button data-pid="{{p.pid}}" class="add-to-wishlist">
+                <i class="fa-regular fa-heart text-gold text-lg transition-all duration-200"></i>
+              </button>
+            </div>
+            <a href="{% url 'core:product-detail' p.pid %}"><span class="title">{{p.title}}</span></a>
+            <p class="description">
+              {{p.description}}<br /> 
+            </p>
+            <span>by:{{p.supplier}}</span>
+            
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 mt-3">
+              <!-- السعر -->
+              <p class="price">
+                {{p.price}} EGP <br>
+                {% if p.old_price %}
+                <span class="old-price"> {{p.old_price}} EGP</span>
+                {% endif %}
+              </p>
+              
+
+              {% if p.in_stock %}
+                <!-- الزرار -->
+                <a href="{% url 'core:product-detail' p.pid %}" class="add-to-cart bg-gold text-dark">
+                  <i class="fa-solid fa-cart-shopping cart-icon"></i>
+                  <span class="text">add to cart</span>
+                </a>
+              {% else %}
+                <button disabled class="w-[140px] h-[40px] rounded-[12px] border-none bg-gray-600 flex items-center justify-center">
+                  Out of Stock
+                </button>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+        <!-- end card -->  
+        {% endfor %}     
+      </section>
+    </main>
+    
+    <!-- change image -->
+    <script>
+      function changeImage(thumbnail) {
+        const mainImage = document.getElementById("mainImage");
+        mainImage.src = thumbnail.src;
+      }
+    </script>
+
+    <!-- change quantity -->
+     <script>
             function increaseQuantity() {
               let input = document.getElementById("product-quantity");
               let currentValue = parseInt(input.value);
@@ -127,103 +208,5 @@
                 input.value = currentValue - 1;
               }
             }
-          </script>
-
-          <div class="mt-4 flex items-center md:justify-start justify-center md:mr-[10px]">
-            <input type="hidden" value="{{p.pid}}"  class="product-id">
-            {% if p.in_stock %}
-            <button
-             class="add-to-cart-btn w-[140px] h-[40px] rounded-[12px] border-none bg-[#b9a848] flex items-center justify-center
-               transition-all duration-500 overflow-hidden shadow-lg relative">
-              <i class="fa-solid fa-cart-shopping text-base text-[#28282B] pr-1
-               md:text-lg md:pr-2 lg:text-xl lg:pr-3"></i>
-              <span class="text-[#28282B] font-semibold text-base">Add to Cart</span>
-            </button>
-            {% else %}
-            <h3 class="text-red-500">This product is currently out of stock!</h3>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    </section>
-    <!--related products-->
-    <main class="">
-      <h2 class="head-title font-bold">Related Product</h2>
-        <section class="products">
-        {% for p in products %}
-        <!-- first card -->
-        <article class="card relative">
-          {% if p.get_discount_percentage %}
-          <!-- Discount Tag -->
-          <div class=" absolute top-2 right-2  
-          bg-red-600 text-white text-xs sm:text-[0.65rem]
-           xs:text-[0.55rem] font-semibold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded  shadow-lg z-10">
-            -{{p.get_discount_percentage}}% off
-          </div>
-          {% endif %}
-
-          {% if p.in_stock == False %}
-          <div class=" absolute top-2 left-2  
-          bg-gray-700 text-white text-xs sm:text-[0.65rem]
-           xs:text-[0.55rem] font-semibold px-1.5 py-0.5 sm:px-2 sm:py-1  rounded  shadow-lg z-10">
-            Sold Out
-          </div>
-          {% endif %}
-
-          <img src="{{p.image.url}}" alt="">
-
-          <div class=" mt-3 ">
-            <div class="flex items-center justify-between">
-              <p>{{p.category}}</p>
-              <button data-pid="{{p.pid}}"
-              class="add-to-wishlist">
-              <i class="fa-regular fa-heart text-[#b9a848] text-lg transition-all duration-200"></i>
-              </button>
-            </div>
-            <a href="{% url 'core:product-detail' p.pid %}"><span class="title">{{p.title}}</span></a>
-            <p class="description">
-              {{p.description}}<br /> 
-            </p>
-            <span>by:{{p.supplier}}</span>
-            
-            <div class="flex flex-col md:flex-row  items-center justify-between gap-4 mt-3">
-              <!-- السعر -->
-              <p class="price">
-                {{p.price}} EGP <br>
-                {% if p.old_price %}
-                <span class="old-price"> {{p.old_price}} EGP</span>
-                {% endif %}
-              </p>
-              
-
-              {% if p.in_stock %}
-                <!-- الزرار -->
-                <a href="{% url 'core:product-detail' p.pid %}"class="add-to-cart">
-                  <i class="fa-solid fa-cart-shopping cart-icon"></i>
-                  <span class="text">add to cart</span>
-                </a>
-                {% else %}
-                <button disabled class=" w-[140px] h-[40px] rounded-[12px]
-               border-none bg-gray-600 flex items-center justify-center">
-                  Out of Stock
-                </button>
-              {% endif %}
-            </div>
-          </div>
-        </article>
-        <!-- end card -->  
-        {% endfor %}     
-        </section>
-
-      
-    </main>
-    
-    <!-- change image -->
-    <script>
-      function changeImage(thumbnail) {
-        const mainImage = document.getElementById("mainImage");
-        mainImage.src = thumbnail.src;
-      }
-    </script>
-
+      </script>
 {% endblock %}

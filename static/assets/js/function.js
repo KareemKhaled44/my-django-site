@@ -76,6 +76,7 @@ $(document).ready(function () {
     let product_title = product_card.find(".product-title").text();
     let product_price = product_card.find(".current-product-price").text();
     let product_image = product_card.find(".product-image").attr("src");
+    let product_flavor = product_card.find(".product-flavor").val();
 
     showSpinner();
     $.ajax({
@@ -86,6 +87,7 @@ $(document).ready(function () {
         product_title: product_title,
         product_price: product_price,
         product_image: product_image,
+        product_flavor: product_flavor,
       },
       success: function (response) {
         setTimeout(function () {
@@ -126,6 +128,18 @@ $(document).ready(function () {
         setTimeout(function () {
           hideSpinner();
           console.log("Product deleted from cart successfully");
+          
+          if (response.shipping_cost === 0) {
+            $("#shipping_cost").html(
+              "<span class='text-green-500 font-semibold'>Free</span>"
+            );
+          } else {
+            $("#shipping_cost").text("EGP " + response.shipping_cost);
+          }
+
+          // Update the total amount in the cart summary
+          $("#cart_total_amount").text("EGP " + response.cart_total_amount);
+
           $("#cart-items-count").text(response.cart_total_items);
           this_val.closest("tr[id^='cart-item']").fadeOut(300, function () {
             $(this).remove();
@@ -160,6 +174,13 @@ $(document).ready(function () {
           $("#cart-items-count").text(response.cart_total_items);
           // Update the total price for the specific cart item
           $(`#subtotal-${productId}`).text(`EGP ${response.item_subtotal}`);
+
+          // Update shipping cost if applicable
+          if (response.shipping_cost === 0) {
+            $("#shipping_cost").html("<span class='text-green-500 font-semibold'>Free</span>");
+          } else {
+            $("#shipping_cost").text("EGP " + response.shipping_cost);
+          }
 
           // Update the total amount in the cart summary
           $("#cart_total_amount").text("EGP " + response.cart_total_amount);
@@ -353,7 +374,7 @@ $(document).ready(function () {
         if (response.success) {
           setTimeout(function () {
             console.log("Product added to wishlist successfully");
-            this_val.html("<i class='fa-solid fa-heart text-[#b9a848]'></i>");
+            this_val.html("<i class='fa-solid fa-heart text-gold'></i>");
 
             showMessage(response.message, "success");
             hideSpinner();

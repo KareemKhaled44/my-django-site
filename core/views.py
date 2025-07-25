@@ -94,7 +94,6 @@ def search_products(request):
     ]
     return JsonResponse(data, safe=False)
 
-#======================= cart view =========================
 
 def add_to_cart(request):
     
@@ -105,6 +104,7 @@ def add_to_cart(request):
             quantity = int(request.GET.get('quantity'))
             price = float(request.GET.get('product_price'))
             image= request.GET.get('product_image')
+            flavor = request.GET.get('product_flavor')
 
 
             if 'cart_data_obj' not in request.session:
@@ -121,6 +121,7 @@ def add_to_cart(request):
                     'qty': quantity,
                     'price': price,
                     'image': image,
+                    'flavor': flavor,  
                 }
 
             request.session['cart_data_obj'] = cart_data
@@ -148,11 +149,18 @@ def cart_view(request):
         for pid, item in cart_data.items():
             cart_total_amount += int(item['qty']) * float(item['price'])
 
-
+        if cart_total_amount < 500:
+            shipping_cost = 20
+        elif cart_total_amount < 1000:
+            shipping_cost = 10
+        else:  # >= 1000
+            shipping_cost = 0
+        cart_total_amount += shipping_cost
         return render(request, 'core/cart.html', {
             'cart_data': cart_data,
             'cart_total_amount': cart_total_amount,
             'cart_total_items': len(cart_data),
+            'shipping_cost': shipping_cost,
             'categories': categories,
         })
     else:
@@ -161,25 +169,35 @@ def cart_view(request):
 
 def delete_cart_item(request):
     product_id = request.GET.get('pid')
-
     cart = request.session.get('cart_data_obj', {})
 
+    # Delete product
     if product_id in cart:
         del cart[product_id]
         request.session['cart_data_obj'] = cart
 
     cart_total_amount = 0
-    if 'cart_data_obj' in request.session:
-        for pid, item in request.session['cart_data_obj'].items():
+    shipping_cost = 0
+
+    if cart:
+        for item in cart.values():
             cart_total_amount += int(item['qty']) * float(item['price'])
 
-    context = render_to_string('core/cart.html', {
-        'cart_data': request.session['cart_data_obj'],
-        'cart_total_amount': cart_total_amount,
-        'cart_total_items': len(request.session['cart_data_obj']),
-    })
+        # Shipping logic
+        if cart_total_amount < 500:
+            shipping_cost = 20
+        elif cart_total_amount < 1000:
+            shipping_cost = 10
+        else:
+            shipping_cost = 0
 
-    return JsonResponse({'data': context, 'cart_total_items': len(request.session['cart_data_obj'])})
+        cart_total_amount += shipping_cost
+
+    return JsonResponse({
+        'cart_total_items': len(cart),
+        'cart_total_amount': cart_total_amount,
+        'shipping_cost': shipping_cost,
+    })
    
 def update_cart_item(request):
     product_id = request.GET.get('pid')
@@ -199,10 +217,18 @@ def update_cart_item(request):
             if pid == product_id:
                 item_subtotal = item_total
 
+        if cart_total_amount < 500:
+            shipping_cost = 20
+        elif cart_total_amount < 1000:
+            shipping_cost = 10
+        else:
+            shipping_cost = 0
+        cart_total_amount += shipping_cost
     return JsonResponse({
         'cart_total_items': len(request.session['cart_data_obj']),
         'item_subtotal': item_subtotal,
-        'cart_total_amount': cart_total_amount
+        'cart_total_amount': cart_total_amount,
+        'shipping_cost': shipping_cost
     })
 
 def apply_coupon(request):
@@ -244,7 +270,16 @@ def checkout_view(request):
     for pid, item in cart_data.items():
         cart_total_amount += int(item['qty']) * Decimal(item['price'])
 
-    # حساب الخصم
+    # Calculate shipping cost based on total amount
+    if cart_total_amount < 500:
+            shipping_cost = 20
+    elif cart_total_amount < 1000:
+        shipping_cost = 10
+    else:  # >= 1000
+        shipping_cost = 0
+    cart_total_amount += shipping_cost
+
+    # claculate discount if coupon is applied
     applied_coupon_code = request.session.get('applied_coupon')
     discount = Decimal('0.00')
     coupon = None 
@@ -287,7 +322,7 @@ def checkout_view(request):
             else:
                 return redirect('core:checkout')
 
-        # إنشاء الأوردر بعد نجاح العنوان
+        # make the order
         order = CartOrder.objects.create(
             user=user,
             price=cart_total_amount,
@@ -296,12 +331,15 @@ def checkout_view(request):
             order_status='Pending',
             address=address,
             paid_status=False,
+            shipping_cost=shipping_cost,
             payment_method=payment_method,
         )
-        messages.success(request, f"Order created successfully with ID: {order.oid}")
 
-        # حفظ المنتجات داخل الأوردر
+        # create cart order items
         for pid, item in cart_data.items():
+            product = Product.objects.get(pid=pid)
+            item_profit = (Decimal(item['price']) - product.buying_price) * Decimal(item['qty'])
+            # Create order item
             CartOrderItem.objects.create(
                 order=order,
                 product_id=item['pid'],
@@ -309,7 +347,13 @@ def checkout_view(request):
                 quantity=item['qty'],
                 price=item['price'],
                 total_price=Decimal(item['qty']) * Decimal(item['price']),
+                profit=item_profit,
             )
+
+            # Update inventory 
+            product.quantity -= int(item['qty'])
+            product.quantity_sold += int(item['qty'])
+            product.save()
 
         if applied_coupon_code and coupon:
             order.coupons.add(coupon)
@@ -322,6 +366,11 @@ def checkout_view(request):
         if payment_method == "Cash on Delivery":
             messages.success(request, "Order placed successfully. Cash on Delivery.")
             return redirect('core:invoice')
+
+        elif payment_method == "Vodafone Cash":
+            messages.success(request, "Order created. Please follow Vodafone Cash payment instructions.")
+            return redirect('core:vodafone-instructions')  
+
         else:
             messages.error(request, "Please choose a payment method.")
             return redirect('core:checkout')
@@ -341,7 +390,11 @@ def checkout_view(request):
         'categories': categories,
         'address_form': address_form,
         'default_address': default_address,
+        'shipping_cost': shipping_cost,
     })
+
+def voda_payment_instructions_view(request):
+    return render(request, 'core/vodafone_instructions.html')
 
 @login_required
 def invoice_view(request):

@@ -1,83 +1,100 @@
 {% extends "useradmin/base-sidebar.html" %}
 {% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peak Health - Admin Dashboard</title>
-    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
-</head>
+
 <body class="bg-dark text-light">
       <!-- Main Content -->
       <div class="min-h-screen">
             <header>
-            <div class="flex items-center justify-center ml-3 p-4 sm:p-6 bg-dark/50 border-b-2 border-white/30">
+            <div class="flex items-center justify-center ml-3 p-4 sm:p-6 border-b-2 border-white/30">
                 <h1 class="text-xl sm:text-2xl font-bold text-gold">Dashboard</h1>
-                <div class="ml-auto">
-                <i class="fa-solid fa-house-user text-gold"></i>
-                <a href="{% url 'core:index' %}" class="text-gold hover:underline text-sm sm:text-base">Home</a>
-                </div>
             </div>
             </header>
-          <!-- Stats Cards - Improved grid for mobile -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 sm:gap-6 sm:p-6">
-              <!-- Revenue Card -->
-              <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
-                  <div class="flex justify-between items-start">
-                      <div>
-                          <p class="text-light/80 text-sm sm:text-base">Total Revenue</p>
-                          <h3 class="text-xl sm:text-2xl font-bold text-gold">EGP {{revenue|floatformat:2}}</h3>
-                      </div>
-                      <div class="bg-gold/20 p-2 rounded-full">
-                          <i class="fas fa-dollar-sign text-gold text-sm sm:text-base"></i>
-                      </div>
-                  </div>
-              </div>
-  
-              <!-- Orders Card -->
-              <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
-                  <div class="flex justify-between items-start">
-                      <div>
-                          <p class="text-light/80 text-sm sm:text-base">Total Orders</p>
-                          <h3 class="text-xl sm:text-2xl font-bold text-gold">{{total_orders_count}}</h3>
-                      </div>
-                      <div class="bg-gold/20 p-2 rounded-full">
-                          <i class="fas fa-shopping-cart text-gold text-sm sm:text-base"></i>
-                      </div>
-                  </div>
-              </div>
-  
-              <!-- Products Card -->
-              <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
-                  <div class="flex justify-between items-start">
-                      <div>
-                          <p class="text-light/80 text-sm sm:text-base">Total Products</p>
-                          <h3 class="text-xl sm:text-2xl font-bold text-gold">{{all_products.count}}</h3>
-                      </div>
-                      <div class="bg-gold/20 p-2 rounded-full">
-                          <i class="fas fa-box-open text-gold text-sm sm:text-base"></i>
-                      </div>
-                  </div>
-                  {% if low_stock_products %}
-                  <p class="text-xs sm:text-sm text-light/80 mt-2">{{ low_stock_products.count }} low in stock</p>
-                  {% endif %}
-              </div>
-  
-              <!-- Monthly Earnings Card -->
-              <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
-                  <div class="flex justify-between items-start">
-                      <div>
-                          <p class="text-light/80 text-sm sm:text-base">Monthly Earnings</p>
-                          <h3 class="text-xl sm:text-2xl font-bold text-gold">EGP {{monthly_revenue|floatformat:2}}</h3>
-                      </div>
-                      <div class="bg-gold/20 p-2 rounded-full">
-                          <i class="fas fa-chart-line text-gold text-sm sm:text-base"></i>
-                      </div>
-                  </div>
-              </div>
-          </div>
+            <!-- Stats Cards - Improved grid for mobile -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4 sm:gap-6 sm:p-6">
+
+                <!-- Revenue Card -->
+                <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-light/80 text-sm sm:text-base">Total Revenue</p>
+                            <h3 class="text-xl sm:text-2xl font-bold text-gold">EGP {{revenue|floatformat:2}}</h3>
+                        </div>
+                        <div class="bg-gold/20 p-2 rounded-full">
+                            <i class="fas fa-dollar-sign text-gold text-sm sm:text-base"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Card -->
+                <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-light/80 text-sm sm:text-base">Total Orders</p>
+                            <h3 class="text-xl sm:text-2xl font-bold text-gold">{{total_orders_count}}</h3>
+                        </div>
+                        <div class="bg-gold/20 p-2 rounded-full">
+                            <i class="fas fa-shopping-cart text-gold text-sm sm:text-base"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paid Orders Card -->
+                <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-light/80 text-sm sm:text-base">Total Paid Orders</p>
+                            <h3 class="text-xl sm:text-2xl font-bold text-gold">{{paid_orders}}</h3>
+                        </div>
+                        <div class="bg-gold/20 p-2 rounded-full">
+                            <i class="fas fa-check-circle text-gold text-sm sm:text-base"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Card -->
+                <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-light/80 text-sm sm:text-base">Total Products</p>
+                            <h3 class="text-xl sm:text-2xl font-bold text-gold">{{all_products.count}}</h3>
+                        </div>
+                        <div class="bg-gold/20 p-2 rounded-full">
+                            <i class="fas fa-box-open text-gold text-sm sm:text-base"></i>
+                        </div>
+                    </div>
+                    {% if low_stock_products %}
+                    <p class="text-xs sm:text-sm text-light/80 mt-2">{{ low_stock_products.count }} low in stock</p>
+                    {% endif %}
+                </div>
+
+                <!-- Monthly Earnings Card -->
+                <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-light/80 text-sm sm:text-base">Monthly Earnings</p>
+                            <h3 class="text-xl sm:text-2xl font-bold text-gold">EGP {{monthly_revenue|floatformat:2}}</h3>
+                        </div>
+                        <div class="bg-gold/20 p-2 rounded-full">
+                            <i class="fas fa-chart-line text-gold text-sm sm:text-base"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Profit Card -->
+                <div class="bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-light/80 text-sm sm:text-base">Total Profit</p>
+                            <h3 class="text-xl sm:text-2xl font-bold text-gold">EGP {{total_profit|floatformat:2}}</h3>
+                        </div>
+                        <div class="bg-gold/20 p-2 rounded-full">
+                            <i class="fas fa-dollar-sign text-gold text-sm sm:text-base"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Bar Chart -->
             <div class="w-full h-96">
@@ -237,6 +254,6 @@
         
     </script>
   </body>
-</html>
+
 {% endblock content %}
 

@@ -1,7 +1,8 @@
+from decimal import Decimal
 from django.shortcuts import render
 import datetime
 from django.shortcuts import redirect
-from core.models import Product, Category, CartOrder, CartOrderItem, Brand, Flavor, Address, Coupon, Supplier
+from core.models import Product, ProductImages, Category, CartOrder, CartOrderItem, Brand, Flavor, Address, Coupon, Supplier
 from django.db.models import Sum
 from userauths.models import User, Contact
 from core.services import paginate_products
@@ -14,21 +15,28 @@ import json
 from django.utils.safestring import mark_safe
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
+from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_POST
 # Create your views here.
 
 def dashboard(request):
-    revenue = CartOrder.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    revenue = CartOrder.objects.filter(paid_status=True).aggregate(Sum('total_price'))['total_price__sum'] or 0
     total_orders_count = CartOrder.objects.count()
+    paid_orders = CartOrder.objects.filter(paid_status=True).count()
     all_products = Product.objects.all()
     low_stock_products = Product.objects.filter(quantity__lte=5)
     all_categories = Category.objects.all()
     new_customers = User.objects.all().order_by('id')[:5]
     latest_orders = CartOrder.objects.all().order_by('-order_date')[:5]
 
+    total_profit = CartOrderItem.objects.filter(order__paid_status=True).aggregate(Sum('profit'))['profit__sum'] or 0
 
     this_month = datetime.datetime.now().month
-    monthly_revenue = CartOrder.objects.filter(order_date__month=this_month).aggregate(Sum('total_price'))['total_price__sum'] or 0
 
+    monthly_revenue = CartOrder.objects.filter(
+        paid_status=True,
+        order_date__month=this_month
+    ).aggregate(Sum('total_price'))['total_price__sum'] or 0
 
     orders= CartOrder.objects.annotate(month=ExtractMonth('order_date')).values('month').annotate(count=Count('oid')).values('month', 'count').order_by('month')
     month=[]
@@ -44,6 +52,7 @@ def dashboard(request):
     context = {
         'revenue': revenue,
         'total_orders_count': total_orders_count,
+        'paid_orders': paid_orders,
         'all_products': all_products,
         'low_stock_products': low_stock_products,
         'all_categories': all_categories,
@@ -54,6 +63,7 @@ def dashboard(request):
         'in_out_stock_data': json.dumps([in_stock, out_stock]),
         'in_out_stock_labels': json.dumps(["instock", "outstock"]),
         'total_orders_count': total_orders_count,
+        'total_profit': total_profit,
         'monthly_revenue': monthly_revenue,
     }
     return render(request, 'useradmin/dashboard.html', context)
@@ -68,7 +78,7 @@ def admin_products_view(request):
 
     else:
         search_mode = False
-        products = Product.objects.all().order_by('-pid')
+        products = Product.objects.all().order_by('-created_at')
 
     # Apply pagination 
     page_obj, query_string = paginate_products(request, products, per_page=8)
@@ -86,15 +96,17 @@ def add_product_view(request):
     form = AddProductForm(request.POST or None, request.FILES or None)
     
     if request.method == 'POST' and form.is_valid():
-        new_form = form.save(commit=False)
-        new_form.user = request.user
-        new_form.save()
-        form.save_m2m() 
+        product = form.save(commit=False)
+        product.user = request.user
+        product.save()
+        form.save_m2m()
+
+        # Handle multiple internal images
+        for file in request.FILES.getlist('internal_images'):
+            ProductImages.objects.create(product=product, image=file)
         return redirect('useradmin:products')
     else:
-        from django.contrib import messages
         messages.error(request, "Form is not valid. Please check the errors below.")
-        print(form.errors)
         form = AddProductForm()
     return render(request, 'useradmin/add_product.html', {'form': form})
 
@@ -103,21 +115,31 @@ def edit_product_view(request, pid):
     form = AddProductForm(request.POST or None, request.FILES or None, instance=product)
     
     if request.method == 'POST' and form.is_valid():
-        new_form = form.save(commit=False)
-        new_form.user = request.user
-        new_form.save()
+        product = form.save(commit=False)
+        product.user = request.user
+        product.save()
         form.save_m2m() 
+
+        # Handle multiple internal images
+        for file in request.FILES.getlist('internal_images'):
+            ProductImages.objects.create(product=product, image=file)
+
         return redirect('useradmin:products')
     else:
-        from django.contrib import messages
         messages.error(request, "Form is not valid. Please check the errors below.")
-        print(form.errors)
         form = AddProductForm(instance=product)
     context = {
         'form': form,
         'product': product,
     }
     return render(request, 'useradmin/edit_product.html', context )
+
+def delete_internal_image(request, img_id):
+    img = ProductImages.objects.get(id=img_id)
+    pid = img.product.pid
+    img.delete()
+    messages.success(request, "Image deleted.")
+    return redirect('useradmin:edit-product', pid=pid)
 
 def delete_product_view(request, pid):
     product = Product.objects.get(pid=pid)
@@ -171,12 +193,23 @@ def change_order_status(request, oid):
         messages.error(request, "Invalid request method.")
     return redirect('useradmin:order-detail', oid=oid)
 
+def change_order_paid_status(request, oid):
+    order = CartOrder.objects.get(oid=oid)
+    if request.method == 'POST':
+        new_status = request.POST.get('paid_status')  # "true" or "false"
+        order.paid_status = new_status == "true"  # Convert to boolean
+        order.save()
+        messages.success(request, f"Order paid status updated.")
+        return redirect('useradmin:order-detail', oid=oid)
+    else:
+        messages.error(request, "Invalid request method.")
+    return redirect('useradmin:order-detail', oid=oid)
+
 def add_order_view(request):
     form = AddCartOrderForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         order = form.save(commit=False)
         order.save()
-        form.save_m2m()  # for saving coupons
         return redirect('useradmin:add-order-items', oid=order.oid)  # Redirect to Step 2
     return render(request, 'useradmin/add_order.html', {'form': form})
 
@@ -189,8 +222,14 @@ def add_order_items_view(request, oid):
         item.order = order
         item.price = item.product.price
         item.total_price = item.price * item.quantity
+        item.profit = (item.price - item.product.buying_price) * item.quantity
         item.image = item.product.image  # optional
         item.save()
+
+        product = item.product
+        product.quantity -= item.quantity
+        product.quantity_sold += item.quantity
+        product.save()
 
         update_order_totals(order) # Update order totals after adding item
         return redirect('useradmin:add-order-items', oid=oid)
@@ -205,22 +244,30 @@ def add_order_items_view(request, oid):
     return render(request, 'useradmin/add_order_items.html', context)
 
 def update_order_totals(order):
-    items = order.cartorderitem_set.all()
+    items = CartOrderItem.objects.filter(order=order)
     subtotal = sum(item.total_price for item in items)
 
-    # Calculate total discount from all active coupons
     total_discount = 0
-    for coupon in order.coupons.filter(active=True):
-        discount = (subtotal * coupon.discount_percentage) / 100
+    if order.coupons and order.coupons.active:
+        discount = (subtotal * order.coupons.discount_percentage) / 100
         total_discount += discount
 
+    # Shipping rules
+    if subtotal < 500:
+        shipping_cost = 20
+    elif subtotal < 1000:
+        shipping_cost = 10
+    else:
+        shipping_cost = 0
+
     order.price = subtotal
-    order.saved = total_discount
-    order.total_price = subtotal - total_discount + order.shipping_price
+    order.saved = discount
+    order.shipping_cost = shipping_cost
+    order.total_price = subtotal - discount + shipping_cost
     order.save()
 
 def delete_order_item_view(request, oid, item_id):
-    item = CartOrderItem.objects.get(id=item_id, order__oid=oid)
+    item = get_object_or_404(CartOrderItem, id=item_id, order__oid=oid)
     order = item.order
     item.delete()
 
@@ -767,3 +814,46 @@ def admin_change_password(request):
     else:
         password_form = PasswordChangeForm(request.user)
     return render(request, 'useradmin/change_password.html', {'password_form': password_form})
+
+
+import openpyxl
+from django.http import HttpResponse
+from django.utils import timezone
+
+def export_sales_report(request):
+    #create excel sheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Sales Report"
+
+    # عنوان الأعمدة
+    ws.append([
+        "Order ID", "Customer", "Date", "Product", "Quantity",
+        "Selling Price", "Buying Price", "Total", "Profit"
+    ])
+
+    # البيانات - من أوردرات مدفوعة فقط
+    items = CartOrderItem.objects.filter(order__paid_status=True)
+
+    for item in items:
+        ws.append([
+            item.order.oid,
+            item.order.user.username if item.order.user else "Guest",
+            item.order.order_date.strftime("%Y-%m-%d"),
+            item.product.title,
+            item.quantity,
+            item.price,
+            item.product.buying_price,
+            item.total_price,
+            item.profit
+        ])
+
+    
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    filename = f"sales-report-{timezone.now().date()}.xlsx"
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
+    wb.save(response)
+
+    return response

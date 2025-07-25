@@ -4,17 +4,19 @@ from core.models import Product, CartOrder, CartOrderItem, Category, Supplier, B
 class AddProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['title', 'description', 'price', 'old_price', 'quantity', 'category', 'image', 'supplier', 'brand', 'flavors', 'in_stock']
+        fields = ['title', 'description', 'buying_price', 'price', 'old_price', 'quantity', 'quantity_sold', 'category', 'image', 'supplier', 'brand', 'flavors', 'in_stock']
         widgets = {      
             'title': forms.TextInput(attrs={'class': 'form', 'placeholder': 'Enter product title'}),
             'description': forms.Textarea(attrs={'class': 'form', 'placeholder': 'Enter product description'}),
+            'buying_price': forms.NumberInput(attrs={'class': 'form', 'placeholder': 'Enter buying price'}),
             'price': forms.NumberInput(attrs={'class': 'form', 'placeholder': 'Enter product price'}),
             'old_price': forms.NumberInput(attrs={'class': 'form', 'placeholder': 'Enter old price'}),
             'quantity': forms.NumberInput(attrs={'class': 'form', 'placeholder': 'Enter quantity'}),
-            'category': forms.Select(attrs={'class': 'form bg-[#414141]'}),
+            'quantity_sold': forms.NumberInput(attrs={'class': 'form', 'placeholder': 'Enter quantity sold'}),
+            'category': forms.Select(attrs={'class': 'select-form'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form'}),
-            'supplier': forms.Select(attrs={'class': 'form bg-[#414141]'}),
-            'brand': forms.Select(attrs={'class': 'form bg-[#414141]'}),
+            'supplier': forms.Select(attrs={'class': 'select-form'}),
+            'brand': forms.Select(attrs={'class': 'select-form'}),
             'flavors': forms.SelectMultiple(attrs={'class': 'form'}),
             'in_stock': forms.CheckboxInput(attrs={'class': 'form'})
         }
@@ -25,10 +27,10 @@ class AddCartOrderForm(forms.ModelForm):
         fields = ['user', 'address', 'coupons',  'payment_method', 'order_status', 'paid_status']
         widgets = {
             'user': forms.Select(attrs={'class': ' searchable'}),
-            'address': forms.Select(attrs={'class': 'form bg-[#414141]'}),
-            'coupons': forms.SelectMultiple(attrs={'class': 'form bg-[#414141]'}),
-            'payment_method': forms.Select(attrs={'class': 'form bg-[#414141]'}),
-            'order_status': forms.Select(attrs={'class': 'form bg-[#414141]'}),
+            'address': forms.Select(attrs={'class': 'select-form'}),
+            'coupons': forms.Select(attrs={'class': 'select-form'}),
+            'payment_method': forms.Select(attrs={'class': 'select-form'}),
+            'order_status': forms.Select(attrs={'class': 'select-form'}),
             'paid_status': forms.CheckboxInput(attrs={'class': 'form'}),
         }
 
@@ -37,7 +39,7 @@ class AddOrderItemForm(forms.ModelForm):
         model = CartOrderItem
         fields = ['product', 'quantity']
         widgets = {
-            'product': forms.Select(attrs={'class': 'searchable bg-[#414141]'}),
+            'product': forms.Select(attrs={'class': 'searchable bg-dark'}),
             'quantity': forms.NumberInput(attrs={'class': 'form'}),
         }
     #get only in stock products
@@ -61,7 +63,7 @@ class AddBrandForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form', 'placeholder': 'Enter brand title'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form'}),
-            'user': forms.Select(attrs={'class': 'form bg-[#414141]'})
+            'user': forms.Select(attrs={'class': 'select-form'})
         }
 
 class AddFlavorForm(forms.ModelForm):
@@ -84,7 +86,7 @@ class AddAddressForm(forms.ModelForm):
             'street_address': forms.TextInput(attrs={'class': 'form', 'placeholder': 'Enter street address'}),
             'apartment': forms.TextInput(attrs={'class': 'form', 'placeholder': 'Enter apartment number (optional)'}),
             'postal_code': forms.TextInput(attrs={'class': 'form', 'placeholder': 'Enter postal code'}),
-            'city': forms.Select(attrs={'class': 'form bg-[#414141]'}),
+            'city': forms.Select(attrs={'class': 'select-form'}),
         }
 
 class AddCouponForm(forms.ModelForm):

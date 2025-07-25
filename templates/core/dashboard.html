@@ -1,81 +1,59 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>home</title>
-    <!-- tailwind -->
-    
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
 
-    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/header.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/index.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/login.css' %}" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-  </head>
 <body>
-
-  <div class=" w-full  max-w-screen-xl mx-auto  px-4 my-20">
+  <div class="w-full max-w-screen-xl mx-auto px-4 my-20">
     <!-- Breadcrumb -->
     <div class="p-4">
-      <nav class=" text-sm flex items-center gap-2  text-dark">
+      <nav class="text-sm flex items-center gap-2 text-dark">
         <span class="text-gold"><i class="fas fa-home"></i> Home</span>
         <span class="text-light">/</span>
         <span class="font-medium text-light">My Account</span>
       </nav>
     </div>
+    
     <!-- Responsive layout -->
-    <div class="flex flex-col  lg:flex-row p-4 gap-8 items-start justify-center w-full">
+    <div class="flex flex-col lg:flex-row p-4 gap-8 items-start justify-center w-full">
       <!-- Sidebar - buttons -->
-      <div class="w-full lg:w-2/4  space-y-4 pr-0 lg:pr-4">
+      <div class="w-full lg:w-2/4 space-y-4 pr-0 lg:pr-4">
         <button onclick="showSection('dashboard')"
-         class="flex items-center gap-2 rounded-lg py-4 px-2 border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
+          class="flex items-center gap-2 rounded-lg py-4 px-2 border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
           <i class="fas fa-sliders-h"></i> Dashboard
         </button>
 
         <button onclick="showSection('orders')"
-          class="flex items-center gap-2 rounded-lg py-4 px-2 border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200 ">
+          class="flex items-center gap-2 rounded-lg py-4 px-2 border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
           <i class="fas fa-box"></i> Orders
         </button>
 
         <button onclick="showSection('wishlist')"
-          class="flex items-center gap-2 rounded-lg py-4 px-2 border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200 ">
-          <i class="fa-solid fa-heart"></i> wishlist
+          class="flex items-center gap-2 rounded-lg py-4 px-2 border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
+          <i class="fa-solid fa-heart"></i> Wishlist
         </button>
         
         <button onclick="showSection('address')"
-         class="flex items-center gap-2 rounded-lg py-4 px-2 bg-transparent border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
+          class="flex items-center gap-2 rounded-lg py-4 px-2 bg-transparent border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
           <i class="fas fa-map-marker-alt"></i> My Address
         </button>
+        
         <button onclick="showSection('account-details')"
-        class="flex items-center gap-2 rounded-lg py-4 px-2 bg-transparent border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
+          class="flex items-center gap-2 rounded-lg py-4 px-2 bg-transparent border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
           <i class="fas fa-user"></i> Account Details
         </button>
+        
         <a href="{% url 'userauths:sign-out' %}"
-        class="flex items-center gap-2 rounded-lg py-4 px-2 bg-transparent border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
+          class="flex items-center gap-2 rounded-lg py-4 px-2 bg-transparent border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
           <i class="fas fa-sign-out-alt"></i> Sign out
         </a>
       </div>
-      <!-- sections -->
+      
+      <!-- Content sections -->
       <div class="w-full lg:w-3/4 p-4 border-t lg:border-t-0 lg:border-l border-white/30">
-
         <!-- Dashboard Section -->
         <div id="dashboard" class="section">
-          <h2 class="text-xl text-gray-300 font-bold mb-2">Hello <span class="text-gold">{{request.user.username}}</span></h2>
-          <p class="mb-6 text-gray-300">
+          <h2 class="text-xl text-light font-bold mb-2">Hello <span class="text-gold">{{request.user.username}}</span></h2>
+          <p class="mb-6 text-light">
             From your account dashboard you can view your recent orders, manage your shipping and billing addresses,
             and edit your password and account details.
           </p>
@@ -83,42 +61,42 @@
           <!-- Grid Cards -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <button onclick="showSection('orders')" 
-              class="p-4 border border-white/30 rounded shadow hover:bg-gold  cursor-pointer text-center">
+              class="p-4 border border-white/30 text-gray-500 rounded shadow hover:bg-gold  cursor-pointer text-center">
                 <div class="text-3xl mb-2"><i class="fas fa-box"></i></div>
                 <div class="font-semibold">Orders</div>
               </button>
 
               <button onclick="showSection('wishlist')" 
-              class="p-4 border border-white/30 rounded shadow hover:bg-gold  cursor-pointer text-center">
+              class="p-4 border border-white/30 text-gray-500 rounded shadow hover:bg-gold  cursor-pointer text-center">
                 <div class="text-3xl mb-2"><i class="fa-solid fa-heart " ></i></div>
                 <div class="font-semibold">wishlist</div>
               </button>
 
               <button onclick="showSection('address')"
-              class="p-4 border border-white/30  rounded shadow hover:bg-gold  cursor-pointer text-center">
+              class="p-4 border border-white/30 text-gray-500  rounded shadow hover:bg-gold  cursor-pointer text-center">
                 <div class="text-3xl mb-2"><i class="fas fa-map-marker-alt"></i></div>
                 <div class="font-semibold">Addresses</div>
               </button>
 
               <button onclick="showSection('account-details')"
-              class="p-4 border border-white/30 rounded shadow hover:bg-gold  cursor-pointer text-center">
+              class="p-4 border border-white/30 text-gray-500 rounded shadow hover:bg-gold  cursor-pointer text-center">
                 <div class="text-3xl mb-2"><i class="fas fa-user"></i></div>
                 <div class="font-semibold">Account Details</div>
               </button>
 
               <a href="{% url 'userauths:sign-out' %}"
-              class="p-4 border border-white/30 rounded shadow hover:bg-gold  cursor-pointer text-center col-span-full md:col-span-1">
+              class="p-4 border border-white/30 text-gray-500 rounded shadow hover:bg-gold  cursor-pointer text-center col-span-full md:col-span-1">
                 <div class="text-3xl mb-2"><i class="fas fa-sign-out-alt"></i></div>
                 <div class="font-semibold">Logout</div>
               </a>
           </div>
         </div>
   
-        <!-- order section -->
-        <div id="orders" class="section flex-1 overflow-hidden">
+        <!-- Order Section -->
+        <div id="orders" class="section hidden flex-1 overflow-hidden">
           <h2 class="text-2xl font-semibold mb-4 text-gold">Your Orders</h2>
-          <div class="overflow-x-auto overflow-y-auto max-h-[500px]  rounded-lg border border-white/30 bg-transparent">
-            <table class="min-w-full text-sm text-dark ">
+          <div class="overflow-x-auto overflow-y-auto max-h-[500px] rounded-lg border border-white/30 bg-transparent">
+            <table class="min-w-full text-sm">
               <thead class="bg-transparent border-b border-white/30">
                 <tr class="text-left text-gold">
                   <th class="p-4 font-medium whitespace-nowrap uppercase">Order ID</th>
@@ -141,109 +119,115 @@
                 <tr class="border-b border-white/30 hover:bg-gold/10">
                   <td class="p-4 text-gold whitespace-nowrap">{{order.oid}}</td>
                   <td class="p-4 whitespace-nowrap text-light">{{order.order_date}}</td>
-                  <td class="p-4"><span class="bg-dark border border-white/20 rounded-full pl-3 pr-3 py-1 text-sm font-medium transition-colors
-                    {% if order.order_status == 'delivered' %} bg-green-900/30 text-green-400
-                    {% elif order.order_status == 'shipped' %} bg-yellow-900/30 text-yellow-400
-                    {% elif order.order_status == 'pending' %} bg-blue-900/30 text-blue-400
-                    {% elif order.order_status == 'canceled' %} bg-red-900/30 text-red-400
-                    {% else %} bg-gray-900/30 text-gray-400{% endif %}">{{order.order_status}}</span></td>
+                  <td class="p-4">
+                    <span class="bg-dark border border-white/20 rounded-full pl-3 pr-3 py-1 text-sm font-medium transition-colors
+                      {% if order.order_status == 'Delivered' %} bg-green-900/30 text-green-400
+                      {% elif order.order_status == 'Shipped' %} bg-yellow-900/30 text-yellow-400
+                      {% elif order.order_status == 'Pending' %} bg-blue-900/30 text-blue-400
+                      {% elif order.order_status == 'Canceled' %} bg-red-900/30 text-red-400
+                      {% else %} bg-gray-900/30 text-gray-400{% endif %}">
+                      {{order.order_status}}
+                    </span>
+                  </td>
                   {% if order.paid_status == True %}
                   <td class="p-4">
-                     <i class="fa-solid fa-circle-check text-green-500 pl-8"></i></td>
+                    <i class="fa-solid fa-circle-check text-green-500 pl-8"></i>
+                  </td>
                   {% else %}
                   <td class="p-4">
-                      <i class="fa-solid fa-circle-xmark text-red-500 pl-8"></i></td>
+                    <i class="fa-solid fa-circle-xmark text-red-500 pl-8"></i>
+                  </td>
                   {% endif %}
                   <td class="p-4 whitespace-nowrap text-light">EGP {{order.price}}</td>
                   <td class="p-4 whitespace-nowrap text-light">EGP -{{order.saved}}</td>
                   <td class="p-4 whitespace-nowrap text-light">EGP {{order.total_price}}</td>
                   <td class="p-4 text-gold hover:underline cursor-pointer">
-                    <a href="{% url 'core:order-detail' order.oid %}">View</a></td>
+                    <a href="{% url 'core:order-detail' order.oid %}">View</a>
+                  </td>
                 </tr>
                 {% endfor %}
-               
               </tbody>
             </table>
           </div>
         </div>
 
-
         <!-- Wishlist Section -->
         <div id="wishlist" class="section hidden">
           <h2 class="text-2xl font-semibold mb-4 text-gold">Your Wishlist</h2>
           {% if not wishlist %}
-          <p class="text-gray-400">Your wishlist is empty. Start adding products to your wishlist!</p>
+          <p class="text-light">Your wishlist is empty. Start adding products to your wishlist!</p>
           {% endif %}
           
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {% for w in wishlist %}
-            <div class="wishlist-card bg-transparent border border-white/30 rounded-lg p-4 
-            flex flex-col h-full relative">
+            <div class="wishlist-card bg-transparent border border-white/30 rounded-lg p-4 flex flex-col h-full relative">
               <!-- Trash icon positioned at top right -->
               <button data-pid="{{w.product.pid}}"
-              class="delete-from-wishlist absolute top-2 right-2 text-red-500 
-              hover:text-red-700 transition-colors">
+                class="delete-from-wishlist absolute top-2 right-2 text-red-500 hover:text-red-700 transition-colors">
                 <i class="fa-solid fa-trash"></i>
               </button>
               
               <div class="aspect-square mb-4 overflow-hidden rounded">
                 <img src="{{w.product.image.url}}" alt="{{w.product.title}}" 
-                class="w-full h-full object-cover">
+                  class="w-full h-full object-cover">
               </div>
               <h3 class="text-lg text-gold font-semibold">{{w.product.title}}</h3>
-              <p class="text-gray-400">EGP {{w.product.price}}</p>
+              <p class="text-light">EGP {{w.product.price}}</p>
               <a href="{% url 'core:product-detail' w.product.pid %}"
-              class="text-gold text-sm hover:underline mt-2 inline-block mt-auto">View Product</a>
+                class="text-gold text-sm hover:underline mt-2 inline-block mt-auto">View Product</a>
             </div>
             {% endfor %}
           </div>
         </div>
-
   
         <!-- Address Section -->
         <div id="address" class="section hidden"> 
           <div class="flex items-center justify-between">
             <h2 class="text-2xl text-gold font-bold">My Address</h2>
-            <a href="{% url 'core:add-address' %}" class="btn">+ Add Adress</a>      
+            <a href="{% url 'core:add-address' %}" 
+              class="bg-gold text-dark font-bold py-2 px-4 rounded hover:bg-dark hover:text-gold border border-gold transition-colors duration-200">
+              + Add Address
+            </a>      
           </div>
           {% if not addresses %}
-          <p class="text-gray-400 mt-4">You have no addresses saved. Please add an address.</p>
+          <p class="text-light mt-4">You have no addresses saved. Please add an address.</p>
           {% endif %}
           {% for address in addresses %}
           <div class="mt-4 relative address-card">
             <button data-address-id="{{address.id}}"
-            id="delete-address"
-            class="absolute top-6 right-4 text-red-500 hover:text-red-700 transition">
-              <i class="fa-solid fa-trash "></i>
+              id="delete-address"
+              class="absolute top-6 right-4 text-red-500 hover:text-red-700 transition">
+              <i class="fa-solid fa-trash"></i>
             </button>
             <div class="bg-transparent p-4 rounded-lg border border-white/30">
-              <p class="text-gray-200">{{address.first_name}} {{address.last_name}}</p>
-              <p class="text-gray-200">{{address.street_address}}, {{address.city}}</p>
-              <p class="text-gray-400">Apartment: {{address.apartment}}</p>
-              <p class="text-gray-400">Phone: {{address.phone}}</p>
+              <p class="text-light">{{address.first_name}} {{address.last_name}}</p>
+              <p class="text-light">{{address.street_address}}, {{address.city}}</p>
+              <p class="text-light">Apartment: {{address.apartment}}</p>
+              <p class="text-light">Phone: {{address.phone}}</p>
               
               <div class="mt-2 flex items-center justify-between">
                 <a href="{% url 'core:edit-address' address.id %}"
-                 class=" text-gold hover:underline cursor-pointer">Edit</a>
+                  class="text-gold hover:underline cursor-pointer">Edit</a>
                 {% if address.status %}
-                    <i data-id="{{address.id}}" 
-                    class="fa-solid fa-circle-check check-btn text-green-500"></i>
-                    <button data-id="{{address.id}}" style="display: none;"
-                     class="btn make-default-btn">Make As Default</button>
+                <i data-id="{{address.id}}" 
+                  class="fa-solid fa-circle-check check-btn text-green-500"></i>
+                <button data-id="{{address.id}}" style="display: none;"
+                  class="bg-gold text-dark font-bold py-1 px-3 rounded text-sm hover:bg-dark hover:text-gold border border-gold transition-colors duration-200">
+                  Make As Default
+                </button>
                 {% else %}
-                    <i data-id="{{address.id}}"
-                     class="fa-solid fa-circle-check check-btn text-green-500" 
-                     style="display:none;"></i>
-                    <button data-id="{{address.id}}"
-                     class="btn make-default-btn">Make As Default</button>
+                <i data-id="{{address.id}}"
+                  class="fa-solid fa-circle-check check-btn text-green-500" 
+                  style="display:none;"></i>
+                <button data-id="{{address.id}}"
+                  class="bg-gold text-dark font-bold py-1 px-3 rounded text-sm hover:bg-dark hover:text-gold border border-gold transition-colors duration-200">
+                  Make As Default
+                </button>
                 {% endif %}
               </div>
-              
             </div>
           </div>
           {% endfor %}
-          
-
         </div>
 
         <!-- Account Details Section -->
@@ -252,8 +236,8 @@
         
           <form method="POST" class="space-y-6 max-w-2xl">
             {% csrf_token %}
-            <div >
-              <label for="email" class="block text-sm font-medium text-[#b9a848] mx-1">Username</label>
+            <div>
+              <label for="email" class="block text-sm font-medium text-gold mx-1">Username</label>
               <div>
                 {{profile_form.username}}
               </div>
@@ -261,16 +245,15 @@
         
             <!-- Email -->
             <div>
-              <label for="email" class="block text-sm font-medium text-[#b9a848] mx-1">Email Address</label>
+              <label for="email" class="block text-sm font-medium text-gold mx-1">Email Address</label>
               <div>
                 {{profile_form.email}}
               </div>
             </div>
             
             <!-- Save Button -->
-            <button name="profile_submit"
-            type="submit"
-            class="btn">
+            <button name="profile_submit" type="submit"
+              class="bg-gold text-dark font-bold py-2 px-4 rounded hover:bg-dark hover:text-gold border border-gold transition-colors duration-200 w-full">
               Save Changes
             </button>
           </form>
@@ -288,48 +271,46 @@
             {% endfor %}
           </ul>
           {% endif %}
+          
           <!-- Change Password Section -->
           <form method="POST" class="space-y-6 max-w-2xl mt-8">
             {% csrf_token %}
             <h3 class="text-2xl text-gold font-bold mb-2">Change Password</h3>
             
             <div class="relative">
-                <label class="block text-sm font-medium text-[#b9a848] mx-1">
-                    Current Password
-                </label>
-                {{ password_form.old_password }}
-                <i class="fa-solid fa-eye toggle-password absolute right-3 top-8 cursor-pointer"
-               data-target="id_old_password"></i>
+              <label class="block text-sm font-medium text-gold mx-1">
+                Current Password
+              </label>
+              {{ password_form.old_password }}
+              <i class="fa-solid fa-eye toggle-password absolute right-3 top-8 cursor-pointer"
+                data-target="id_old_password"></i>
             </div>
             
             <div class="relative">
-                <label class="block text-sm font-medium text-[#b9a848] mx-1">
-                    New Password
-                </label>
-                {{ password_form.new_password1 }}
-                <i class="fa-solid fa-eye toggle-password absolute right-3 top-8 cursor-pointer"
-               data-target="id_new_password1"></i>
+              <label class="block text-sm font-medium text-gold mx-1">
+                New Password
+              </label>
+              {{ password_form.new_password1 }}
+              <i class="fa-solid fa-eye toggle-password absolute right-3 top-8 cursor-pointer"
+                data-target="id_new_password1"></i>
             </div>
             
             <div class="relative">
-                <label class="block text-sm font-medium text-[#b9a848] mx-1">
-                    Confirm New Password
-                </label>
-                {{ password_form.new_password2 }}
-                <i class="fa-solid fa-eye toggle-password absolute right-3 top-8 cursor-pointer"
-               data-target="id_new_password2"></i>
+              <label class="block text-sm font-medium text-gold mx-1">
+                Confirm New Password
+              </label>
+              {{ password_form.new_password2 }}
+              <i class="fa-solid fa-eye toggle-password absolute right-3 top-8 cursor-pointer"
+                data-target="id_new_password2"></i>
             </div>
             
-            <button type="submit" name="password_submit" class="btn">
-                Change Password
+            <button type="submit" name="password_submit" 
+              class="bg-gold text-dark font-bold py-2 px-4 rounded hover:bg-dark hover:text-gold border border-gold transition-colors duration-200 w-full">
+              Change Password
             </button>
           </form>
         </div>
-
       </div>
-     
-
-
     </div>
   </div>
   
@@ -353,14 +334,12 @@
         reader.readAsDataURL(file);
       }
     }
+    
     document.addEventListener("DOMContentLoaded", function () {
       const params = new URLSearchParams(window.location.search);
       const section = params.get("section") || "dashboard"; // fallback to dashboard
-
       showSection(section);
     });
   </script>
-  
 </body>
-</html>
 {% endblock content %}

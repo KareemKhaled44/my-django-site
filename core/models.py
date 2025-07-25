@@ -21,8 +21,7 @@ ORDER_STATUS_CHOICES = (
 
 PAYMENT_METHOD_CHOICES = [
     ('Cash on Delivery', 'Cash on Delivery'),
-    ('FLUTTER', 'Flutterwave'),
-    # ممكن تضيف PayPal أو غيره بعدين
+    ('Vodafone Cash', 'Vodafone Cash'),
 ]
 
 CITIES = [
@@ -119,6 +118,8 @@ class Product(models.Model):
     title=models.CharField(max_length=100, blank=False, null=False)
     image=models.ImageField(upload_to='product')
     description=models.TextField(blank=True, null=True, default='this is a product')
+
+    buying_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     price=models.DecimalField(max_digits=10, decimal_places=2)
     old_price=models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     specifications=models.TextField(blank=True, null=True)
@@ -224,7 +225,20 @@ class Address(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.street_address}, {self.city}" if self.first_name and self.last_name else "Unnamed Address"
-    
+
+
+############################# coupon model ###############################
+class Coupon(models.Model):
+    code = models.CharField(max_length=20, unique=True)
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural='coupons'
+
+    def __str__(self):
+        return self.code
 
 ############################ cartorder, cartorderitem models ###############################
 class CartOrder(models.Model):
@@ -234,7 +248,7 @@ class CartOrder(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) #to show user who created the cart order
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
 
-    coupons=models.ManyToManyField("core.Coupon", blank=True) #to show coupon of the order
+    coupons = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
 
     price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     saved = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) #to show saved amount of the order
@@ -243,7 +257,7 @@ class CartOrder(models.Model):
     order_status=models.CharField(max_length=10, choices=ORDER_STATUS_CHOICES, default='pending')
     paid_status=models.BooleanField(default=False) #to show if the order is paid or not
 
-    shipping_price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) #to show shipping price of the item
+    shipping_cost=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) #to show shipping price of the item
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES)
 
 
@@ -275,6 +289,7 @@ class CartOrderItem(models.Model):
     quantity=models.PositiveIntegerField(default=1) 
     price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     total_price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    profit = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -290,15 +305,3 @@ class CartOrderItem(models.Model):
     
 
 
-############################# coupon model ###############################
-class Coupon(models.Model):
-    code = models.CharField(max_length=20, unique=True)
-    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
-    active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        verbose_name_plural='coupons'
-
-    def __str__(self):
-        return self.code

@@ -61,9 +61,11 @@
                           <a href="{% url 'core:product-detail' pid %}">{{ item.title }}</a>
                           <p class="mt-1 text-sm text-light/80">
                             Flavor:
-                            {% for flavor in item.flavors.all %}
-                              {{ flavor }}{% if not forloop.last %}, {% endif %}
-                            {% endfor %}
+                            {% if item.flavor %}
+                            {{ item.flavor }}
+                            {% else %}
+                            No flavor selected
+                            {% endif %}
                           </p>
                         </span>
                       </div>
@@ -126,7 +128,7 @@
             </div>
           </div>
           
-          <!-- Summary section (full width on small screens, 1/4 on larger screens) -->
+          <!-- Summary section -->
           <div class="w-full lg:w-1/4">
             <div class="bg-transparent border-2 border-white/30 rounded-lg shadow-md p-6">
               <h2 class="text-lg font-semibold mb-4 text-center text-[#b9a848]">
@@ -139,15 +141,19 @@
               
               <div class="flex justify-between mb-2 text-white">
                 <span>Shipping</span>
-                <span>0.00</span>
+                <span id="shipping_cost">
+                  {% if shipping_cost %}
+                    EGP {{ shipping_cost }}
+                  {% else %}
+                    <span class="text-green-500 font-semibold">Free</span>
+                  {% endif %}
+                </span>
               </div>
               <hr class="my-4 border-white/30" />
               <div class="flex justify-between mb-2 text-white">
                 <span class="font-semibold">Total</span>
                 <span id="cart_total_amount" class="font-semibold">
                    EGP {{cart_total_amount}}</span>
-                
-
               </div>
               <!-- Checkout button -->
                {% if cart_total_amount %}

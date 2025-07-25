@@ -230,12 +230,12 @@ media queries
   }
   .logo{
     padding-left: 0; 
-
+    font-size: 20px;
   }
 
-   .sign_in-register,
-   .products-link,
-   .account{
+  .sign_in-register,
+  .products-link,
+  .account{
     display: none !important; 
   }
 
@@ -328,7 +328,6 @@ media queries
   }
 
   .search {
-    
     padding: 8px 12px 8px 12px;
     transform: translate(0px, 0px) rotate(0deg);
   }

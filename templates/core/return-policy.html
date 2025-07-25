@@ -1,42 +1,11 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Return Policy - Peak Health Supplements</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#b9a848',
-                        dark: '#28282B',
-                        light: '#F9FAFB',
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/header.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/index.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/login.css' %}" />
-    <style>
-        .policy-section h2 {
-            scroll-margin-top: 100px;
-        }
-    </style>
-</head>
 <body class=" text-light">
     <!-- Hero Section -->
     <section class="relative py-20  border-b-2 border-white/30">
         <div class="container mx-auto px-6 text-center">
-            <h1 class="text-4xl md:text-6xl font-bold text-primary mb-6">RETURN POLICY</h1>
+            <h1 class="text-4xl md:text-6xl font-bold text-gold mb-6">RETURN POLICY</h1>
             <p class="text-xl md:text-2xl max-w-3xl mx-auto">Your satisfaction is our priority at Peak Health</p>
         </div>
     </section>
@@ -44,7 +13,7 @@
     <!-- Main Content -->
     <div class="container mx-auto px-6 py-16 max-w-4xl">
         <div class="mb-12 text-center">
-            <p class="text-lg">Last Updated: <span class="text-primary">January 1, 2023</span></p>
+            <p class="text-lg">Last Updated: <span class="text-gold">January 1, 2023</span></p>
             <p class="mt-4">At Peak Health Supplements, we stand behind our products. If you're not completely satisfied, please review our return policy below.</p>
         </div>
 
@@ -52,7 +21,7 @@
         <div class="space-y-12 policy-section">
             <!-- Return Eligibility -->
             <section id="eligibility" class="border-2 border-white/30 rounded-lg p-8">
-                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                <h2 class="text-2xl font-bold text-gold mb-6 flex items-center">
                     <i class="fas fa-check-circle mr-3"></i> Return Eligibility
                 </h2>
                 <div class="space-y-4">
@@ -63,7 +32,7 @@
                         <li>Proof of purchase is required</li>
                     </ul>
                     <div class="mt-4 p-4 bg-dark/50 rounded border border-white/20">
-                        <p class="font-semibold text-primary">Note on Opened Products:</p>
+                        <p class="font-semibold text-gold">Note on Opened Products:</p>
                         <p>For quality control reasons, we cannot accept returns of opened supplement containers unless the product is defective.</p>
                     </div>
                 </div>
@@ -88,13 +57,13 @@
 
             <!-- Return Process -->
             <section id="process" class="border-2 border-white/30 rounded-lg p-8">
-                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                <h2 class="text-2xl font-bold text-gold mb-6 flex items-center">
                     <i class="fas fa-exchange-alt mr-3"></i> Return Process
                 </h2>
                 <div class="space-y-4">
                     <ol class="list-decimal pl-6 space-y-4">
                         <li>
-                            <strong>Contact our support team</strong> at <span class="text-primary">returns@peakhealth.com</span> within 30 days of delivery
+                            <strong>Contact our support team</strong> at <span class="text-gold">returns@peakhealth.com</span> within 30 days of delivery
                         </li>
                         <li>
                             <strong>Provide your order number</strong> and reason for return
@@ -110,7 +79,7 @@
                         </li>
                     </ol>
                     <div class="mt-4 p-4 bg-dark/50 rounded border border-white/20">
-                        <p class="font-semibold text-primary">Important:</p>
+                        <p class="font-semibold text-gold">Important:</p>
                         <p>We recommend using a trackable shipping service as we cannot guarantee receipt of your return.</p>
                     </div>
                 </div>
@@ -118,7 +87,7 @@
 
             <!-- Refunds -->
             <section id="refunds" class="border-2 border-white/30 rounded-lg p-8">
-                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                <h2 class="text-2xl font-bold text-gold mb-6 flex items-center">
                     <i class="fas fa-money-bill-wave mr-3"></i> Refunds
                 </h2>
                 <div class="space-y-4">
@@ -134,7 +103,7 @@
 
             <!-- Exchanges -->
             <section id="exchanges" class="border-2 border-white/30 rounded-lg p-8">
-                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                <h2 class="text-2xl font-bold text-gold mb-6 flex items-center">
                     <i class="fas fa-sync-alt mr-3"></i> Exchanges
                 </h2>
                 <div class="space-y-4">
@@ -148,13 +117,13 @@
 
             <!-- Damaged/Defective Items -->
             <section id="damaged" class="border-2 border-white/30 rounded-lg p-8">
-                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                <h2 class="text-2xl font-bold text-gold mb-6 flex items-center">
                     <i class="fas fa-exclamation-triangle mr-3"></i> Damaged or Defective Items
                 </h2>
                 <div class="space-y-4">
                     <p>If you receive a damaged or defective product:</p>
                     <ul class="list-disc pl-6 space-y-2">
-                        <li>Contact us within 7 days of delivery at <span class="text-primary">support@peakhealth.com</span></li>
+                        <li>Contact us within 7 days of delivery at <span class="text-gold">support@peakhealth.com</span></li>
                         <li>Include photos of the damaged item and packaging</li>
                         <li>We'll ship a replacement at no additional cost</li>
                     </ul>
@@ -164,13 +133,13 @@
 
             <!-- Contact -->
             <section id="contact" class="border-2 border-white/30 rounded-lg p-8">
-                <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                <h2 class="text-2xl font-bold text-gold mb-6 flex items-center">
                     <i class="fas fa-envelope mr-3"></i> Return Questions?
                 </h2>
                 <div class="space-y-4">
                     <p>Contact our customer service team for assistance with returns:</p>
-                    <p><strong>Email:</strong> <span class="text-primary">returns@peakhealth.com</span></p>
-                    <p><strong>Phone:</strong> <span class="text-primary">1-800-PEAK-HEALTH</span> (Mon-Fri, 9am-5pm EST)</p>
+                    <p><strong>Email:</strong> <span class="text-gold">returns@peakhealth.com</span></p>
+                    <p><strong>Phone:</strong> <span class="text-gold">1-800-PEAK-HEALTH</span> (Mon-Fri, 9am-5pm EST)</p>
                     <p><strong>Mail:</strong> Peak Health Returns, 123 Supplement Lane, Health City, HC 12345</p>
                 </div>
             </section>

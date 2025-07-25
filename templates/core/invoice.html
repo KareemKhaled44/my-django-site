@@ -5,46 +5,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
- 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>home</title>
-    <!-- tailwind -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/tw-elements/css/tw-elements.min.css"
-    />
-    <script src="https://cdn.tailwindcss.com/3.3.0"></script>
-    <script>
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          fontFamily: {
-            montserrat: ["Montserrat", "serif"],
-          },
-        },
-        corePlugins: {
-          preflight: false,
-        },
-      };
-    </script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <link rel="stylesheet" href="{% static '/assets/css/global.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/header.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/index.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/login.css' %}" />
-    <link rel="stylesheet" href="{% static '/assets/css/checkout.css' %}" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
     <style>
       /* Hide non-invoice elements when printing */
       @media print {
@@ -59,65 +19,82 @@
         }
        
         /* Force black text for printing */
-        .text-\[\#F9FAFB\] {
+        .text-light {
           color: black !important;
         }
       }
     </style>
   </head>
 
-<body>
-
-<div class="rounded-lg shadow-lg px-8 py-10 max-w-xl mt-8 mx-auto bg-transparent border-2 border-white/30">
+  <body>
+    <!-- Invoice Container -->
+    <div class="rounded-lg shadow-lg px-8 py-10 max-w-xl mt-8 mx-auto bg-transparent border-2 border-white/30">
+      <!-- Invoice Header -->
       <div class="flex items-center justify-between mb-8">
-          <div class="flex items-center">
-              
-              <div class="text-[#b9a848] font-semibold text-lg">PEAK HEALTH</div>
-          </div>
-          <div class="text-[#b9a848]">
-              <div class="font-bold text-xl mb-2">INVOICE</div>
-              <div class="text-sm text-[#F9FAFB]">Date: {{order.order_date}}</div>
-              <div class="text-sm text-[#F9FAFB]">Invoice.NO: {{order.invoice_number}}</div>
-          </div>
+        <div class="flex items-center">
+          <div class="text-gold font-semibold text-lg">PEAK HEALTH</div>
+        </div>
+        <div class="text-gold">
+          <div class="font-bold text-xl mb-2">INVOICE</div>
+          <div class="text-sm text-light">Date: {{order.order_date}}</div>
+          <div class="text-sm text-light">Invoice.NO: {{order.invoice_number}}</div>
+        </div>
       </div>
-      <div class="border-b-2 border-[#414141] pb-8 mb-8">
-          <h2 class="text-2xl font-bold mb-4 text-[#b9a848]">Bill To:</h2>
-          <div class="text-[#F9FAFB] mb-2">{{ request.user.username }}</div>
-          <div class="text-[#F9FAFB] mb-2">{{order.address.street_address}}, {{order.address.city}} </div>
-          <div class="text-[#F9FAFB]">{{ request.user.email }}</div>
-      </div>
-      <table class="w-full text-left mb-8">
-          <thead>
-              <tr class="border-b border-[#414141]">
-                  <th class="text-[#b9a848] font-bold uppercase py-2">Title</th>
-                  <th class="text-[#b9a848] font-bold uppercase py-2">Quantity</th>
-                  <th class="text-[#b9a848] font-bold uppercase py-2">Price</th>
-                  <th class="text-[#b9a848] font-bold uppercase py-2">Amount</th>
 
-              </tr>
-          </thead>
-          <tbody>
-            {% for item in order_items %}
-              <tr class="border-b border-[#414141]">
-                  <td class="py-4 text-[#F9FAFB]">{{item.product.title}}</td>
-                  <td class="py-4 text-[#F9FAFB]">{{item.quantity}}</td>
-                  <td class="py-4 text-[#F9FAFB]">EGP {{item.price}}</td>
-                  <td class="py-4 text-[#F9FAFB]">EGP {{item.total_price}}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
+      <!-- Billing Information -->
+      <div class="border-b-2 border-gray-600 pb-8 mb-8">
+        <h2 class="text-2xl font-bold mb-4 text-gold">Bill To:</h2>
+        <div class="text-light mb-2">{{ request.user.username }}</div>
+        <div class="text-light mb-2">{{order.address.street_address}}, {{order.address.city}}</div>
+        <div class="text-light">{{ request.user.email }}</div>
+      </div>
+
+      <!-- Order Items Table -->
+      <table class="w-full text-left mb-8">
+        <thead>
+          <tr class="border-b border-gray-600">
+            <th class="text-gold font-bold uppercase py-2">Title</th>
+            <th class="text-gold font-bold uppercase py-2">Quantity</th>
+            <th class="text-gold font-bold uppercase py-2">Price</th>
+            <th class="text-gold font-bold uppercase py-2">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in order_items %}
+          <tr class="border-b border-gray-600">
+            <td class="py-4 text-light">{{item.product.title}}</td>
+            <td class="py-4 text-light">{{item.quantity}}</td>
+            <td class="py-4 text-light">EGP {{item.price}}</td>
+            <td class="py-4 text-light">EGP {{item.total_price}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
       
+      <!-- Order Summary -->>
       <div class="flex justify-end mb-4">
-          <div class="text-[#b9a848] mr-2 font-bold">Discount:</div>
-          <div  class="text-[#F9FAFB]">-{{order.saved}}</div>
+        <span class="text-gold mr-2 font-bold">Shipping:</span>
+        <span class="text-light">
+          {% if order.shipping_cost %}
+            EGP {{ order.shipping_cost }}
+          {% else %}
+            <span class="text-green-500 font-semibold">Free</span>
+          {% endif %}
+        </span>
       </div>
-      <hr class="border-[#414141] mb-4" />
+      <hr class="border-gray-600 mb-4" />
       <div class="flex justify-end mb-4">
-          <div class="text-[#b9a848] mr-2 font-bold text-lg">Total:</div>
-          <div class="text-[#F9FAFB] font-bold">EGP {{order.total_price}}</div>
+        <div class="text-gold mr-2 font-bold">Discount:</div>
+        <div class="text-light">-{{order.saved}}</div>
       </div>
-      <div id="message" class="border-t border-gray-200 pt-6 text-center">
+      <hr class="border-gray-600 mb-4" />
+      <div class="flex justify-end mb-4">
+        <div class="text-gold mr-2 font-bold text-lg">Total:</div>
+        <div class="text-light font-bold">EGP {{order.total_price}}</div>
+      </div>
+
+      <!-- Order Confirmation Message -->
+      <div id="message" class="border-t border-gray-600 pt-6 text-center">
         <!-- Thank You Message -->
         <div class="text-green-600 mb-3">
           <i class="fas fa-check-circle text-2xl"></i>
@@ -125,26 +102,26 @@
         </div>
       
         <!-- Order Support -->
-        <div class="text-sm text-[#F9FAFB] mb-2">
-          <p>Need help? <a href="{% url 'core:contact_us' %}" class="text-[#b9a848]">Contact us</a></p>
+        <div class="text-sm text-light mb-2">
+          <p>Need help? <a href="{% url 'core:contact_us' %}" class="text-gold">Contact us</a></p>
           <p class="mt-1">Order #{{ order.oid }}</p>
         </div>
-      
       </div>
+
+      <!-- Print Button -->
       <div class="flex justify-center">
         <button 
-        id="printButton"
-        onclick="window.print()" 
-        class="bg-[#1E1E1E] text-[#b9a848] font-semibold border-2 border-[#ffffff55] 
-        shadow-[_0px_0px_10px_rgba(95,157,231,0.2)] font-bold py-2 px-4 rounded-md hover:bg-[#b9a848] hover:text-[#28282B] ease-in-out duration-150"
-      >
-        Print Invoice
-      </button>
+          id="printButton"
+          onclick="window.print()" 
+          class="bg-darker text-gold border-2 border-white/30 
+          shadow-[0px_0px_10px_rgba(95,157,231,0.2)] font-bold py-2 px-4 rounded-md 
+          hover:bg-gold hover:text-dark ease-in-out duration-150"
+        >
+          Print Invoice
+        </button>
       </div>
-</div>
-
-  
-</body>
+    </div> 
+  </body>
 </html>
 {% endblock content %}
 

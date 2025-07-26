@@ -153,19 +153,18 @@
                         </li>
 
                         <li>
+                            <a href="{% url 'useradmin:reports' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
+                                <i class="fas fa-file-alt mr-3"></i> Reports
+                            </a>
+                        </li>
+
+                        <li>
                             <a href="{% url 'useradmin:settings' %}" class="flex items-center p-2 text-light hover:text-gold rounded-lg transition">
                                 <i class="fas fa-cog mr-3"></i> Settings
                             </a>
                         </li>
                     </ul>
-                </nav>
-                
-                <div style="background-color: green;" class=" text-sm sm:text-base text-light px-4 py-2 rounded">
-                    <a href="{% url 'useradmin:export-sales-report' %}" >
-                    Download Sales Report <i class="fas fa-file-download ml-2"></i>
-                </a>
-            </div>
-                
+                </nav>               
             </div>
         </div>
         

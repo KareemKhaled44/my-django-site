@@ -52,7 +52,10 @@ urlpatterns = [
     path('delete-supplier/<sid>/', views.delete_supplier_view, name='delete-supplier'),
     path('settings/', views.admin_settings_view, name='settings'),
     path('change-password/', views.admin_change_password, name='change-password'),
-
-    path("export-sales-report/", views.export_sales_report, name="export-sales-report"),
+    path('reports/', views.admin_reports_view, name='reports'),
+    path("sales_report/", views.export_sales_report, name="sales-report"),
+    path("monthly_sales_report/", views.export_monthly_sales_report, name="monthly-sales-report"),
+    path("top_selling_products/", views.export_top_selling_products, name="top-selling-products"),
+    path('balance_sheet/', views.export_balance_sheet_excel, name='balance-sheet'),
 
 ]

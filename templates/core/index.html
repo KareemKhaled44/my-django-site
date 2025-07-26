@@ -50,15 +50,15 @@
           </div>
           {% endif %}
 
-            
-
+          <!-- Product Image -->
           <a href="{% url 'core:product-detail' p.pid %}">
             <img src="{{p.image.url}}" alt="">
           </a>
-
+          <!-- Product Details -->
           <div class=" mt-3 ">
             <div class="flex items-center justify-between">
               <p>{{p.category}}</p>
+              <!-- Add to Wishlist Button -->
               <button data-pid="{{p.pid}}"
               class="add-to-wishlist">
               <i class="fa-regular fa-heart text-gold text-lg transition-all duration-200"></i>

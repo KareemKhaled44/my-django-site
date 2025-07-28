@@ -1,4 +1,4 @@
-main {
+.list-product {
     
     margin-bottom: 20px;
     width: 100%;
@@ -9,7 +9,7 @@ main {
 }
 
 @media (min-width: 1536px) {
-    main {
+    .list-product {
         max-width: 1536px;
     }
 }
@@ -96,7 +96,7 @@ main {
         margin-top: 1.5rem;
     }
 
-    main{
+    .list-product{
         gap: 0px;
     }
 }

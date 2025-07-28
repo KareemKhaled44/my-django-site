@@ -2,6 +2,8 @@
 /*================
 classes
 ================*/
+
+
 .flex{
       display: flex;
       align-items: center;
@@ -24,14 +26,21 @@ html{
 *:after {
       box-sizing: inherit;
 }
+
+::selection {
+      background: #b9a84888; 
+      color: #fff;
+    }
+    
 /* ============
 button and link style
  ==============*/
-a,button{
-      all: unset;
+a,button{    
       cursor: pointer;
       display: inline-block;
 }
+
+
 a:active,button:active{
       scale: 0.9;
 }
@@ -41,6 +50,98 @@ li{
 
 }
 
+.btn{
+      background-color: #b9a848;
+      color: #28282B;
+      font-size: 1rem; 
+      font-weight: 600; 
+      padding-left: 0.7rem; 
+      padding-right: 0.7rem;
+      padding-top: 0.30rem; 
+      padding-bottom: 0.30rem;
+      border-radius: 0.25rem; 
+}
+
+/* ============
+    forms
+ ==============*/
+ .form {
+      padding: 0.75rem 1rem;
+      background-color: transparent;
+      width: 100%;
+      color: #F9FAFB;
+      font-size: 0.875rem; 
+      border: 1px solid #414141;
+      border-radius: 0.375rem;
+      }
+    
+.form:focus {
+      border-color: #b9a848;  
+      outline: 0;
+      }
+
+input[type="checkbox"].form {
+      width: auto;
+      height: 1.25rem;
+      width: 1.25rem;
+      accent-color: rgba(185, 168, 72, 1);
+}
+/* ============
+    select form
+ ==============*/
+.select-form{
+      padding: 0.75rem 1rem;
+      background-color: #28282B;
+      width: 100%;
+      color: #F9FAFB;
+      font-size: 0.875rem; 
+      border: 1px solid #414141;
+      border-radius: 0.375rem;
+      }
+/* ============
+    form for login and register
+ ==============*/
+ .form-input {
+  color: white;
+  background: transparent;
+  border: 1px solid #414141;
+  border-radius: 5px;
+  padding: 8px;
+  outline: none;
+}
+
+.form-input:focus {
+  border: 1px solid #b9a848;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #e0dbdb;
+  position: relative;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.form-group label {
+  position: absolute;
+  top: 0.5rem;
+  left: 0;
+  padding: 5px;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.form-group input:focus ~ label,
+.form-group input:valid ~ label {
+  top: -16px;
+  left: 0;
+  background: transparent padding-box;
+  padding: 10px 0 0 0;
+  color: #e0dbdb;
+  font-size: 12px;
+}
 /* ============
 Scrollbar  style
  ==============*/
@@ -174,4 +275,112 @@ stroke-dashoffset: 42;
 transition: all 0.2s linear;
 transition-delay: 0.15s;
 }
+    
+
+
+/* ============
+  radio buttons
+ ==============*/
+.radio-input input {
+display: none;
+}
+    
+.radio-input label {
+--border-color: #FFFFFF4D;
+border: 1px solid var(--border-color);
+border-radius: 6px;
+min-width: 5rem;
+margin: 1rem;
+padding: 1rem;
+display: flex;
+justify-content: space-between;
+position: relative;
+align-items: center;
+}
+
+.radio-input input:checked + label {
+--border-color: #b9a848;
+border-color: var(--border-color);
+border-width: 2px;
+}
+.radio-input label:hover {
+--border-color: #b9a848;
+border-color: var(--border-color);
+}
+
+.radio-input {
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-direction: column;
+}
+
+.circle {
+display: inline-block;
+width: 20px;
+height: 20px;
+border-radius: 50%;
+background-color: rgb(189, 187, 207);
+margin-right: 0.5rem;
+position: relative;
+}
+
+.radio-input input:checked + label span.circle::before {
+content: "";
+display: inline;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: #b9a848;
+width: 15px;
+height: 15px;
+border-radius: 50%;
+}
+.text {
+display: flex;
+align-items: center;
+}
+
+.small {
+font-size: 10px;
+color: rgb(136, 138, 139);
+font-weight: 100;
+}
+
+/* responsive */
+
+@media (max-width: 768px) {
+
+.radio-input label {
+      width: 100%;
+      text-align: center;
+}
+}
+
+.ts-control {
+      background-color: #28282B; /* dark background */
+      border: none;
+      }
+.ts-control, .ts-wrapper.single.input-active .ts-control {
+      background-color: #28282B;
+}
+.ts-control > input {
+      background-color: #28282B !important;
+      color: #f1f1f1; /* light text color */
+      padding: 0.75rem 1rem !important; /* consistent padding */
+      width: 100%; 
+      border: 1px solid #414141 !important;
+      border-radius: 0.375rem !important;
+      font-size: 1rem; /* consistent font size */
+      outline: none; /* remove default outline */
+}
+/* Dropdown menu */
+.ts-dropdown {
+background-color: #2c2c2c;
+border: 1px solid rgba(255, 255, 255, 0.1);
+color: #f1f1f1;
+}
+    
+    
     

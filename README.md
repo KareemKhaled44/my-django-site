@@ -115,16 +115,43 @@ All financial data computed based on actual paid orders and product-level profit
 
 ⚙️ Installation & Setup
 
-1. **Clone the repository:**
+ **Clone the repository:**
 ```bash
-git clone https://github.com/your-username/supplement-store.git
+git clone https://github.com/KareemKhaled44/my-django-site.git
 cd supplement-store
-
 pip install -r requirements.txt
+```
+## ⚙️ Usage
 
+1. Apply migrations:
 python manage.py migrate
 
+2. Create a superuser (to access the admin panel):
 python manage.py createsuperuser
 
+3. Run the development server:
 python manage.py runserver
+
+## 📁 Project Structure
+
+<pre>
+📦 ecommerce/                 # Main project folder
+├── core/                    # Homepage, contact, and static content views
+├── ecommerce/               # Project settings, URLs, WSGI
+├── media/                   # Uploaded product and user images
+├── node_modules/            # Frontend dependencies managed by npm
+├── static/                  # Tailwind, custom JS/CSS
+├── staticfiles/             # Collected static files (for production)
+├── templates/               # HTML templates (shared across apps)
+├── useradmin/               # Admin dashboard, reports, product management
+├── userauths/               # User login, register, profile, password reset
+├── db.sqlite3               # SQLite database (development)
+├── manage.py                # Django CLI entrypoint
+├── requirements.txt         # Python dependencies
+├── tailwind.config.js       # Tailwind CSS configuration
+├── postcss.config.js        # PostCSS setup for Tailwind
+├── package.json             # JS dependencies and build scripts
+├── package-lock.json        # Exact versions of JS packages
+└── Procfile                 # Deployment entrypoint for platforms like Heroku
+</pre>
 

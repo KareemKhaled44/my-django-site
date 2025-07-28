@@ -112,3 +112,19 @@ All financial data computed based on actual paid orders and product-level profit
 - The entire site is fully responsive and mobile-friendly.
 
 - Designed with TailwindCSS for a modern, clean interface.
+
+⚙️ Installation & Setup
+
+1. **Clone the repository:**
+```bash
+git clone https://github.com/your-username/supplement-store.git
+cd supplement-store
+
+pip install -r requirements.txt
+
+python manage.py migrate
+
+python manage.py createsuperuser
+
+python manage.py runserver
+

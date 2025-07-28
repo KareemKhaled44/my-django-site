@@ -155,3 +155,10 @@ python manage.py runserver
 └── Procfile                 # Deployment entrypoint for platforms like Heroku
 </pre>
 
+## 📸 Screenshots
+
+Here are some snapshots of the main pages of the Supplement Store website:
+
+### 🏠 Homepage
+![Homepage](./screenshots/homepage.png)
+

@@ -162,3 +162,31 @@ Here are some snapshots of the main pages of the Supplement Store website:
 ### 🏠 Homepage
 ![Homepage](./screenshots/homepage.png)
 
+---
+
+### 📦 Product Details
+![Product Details](./screenshots/product-details.png)
+
+### 🛍️ Product List + Filters
+![Product List](./screenshots/products.png)
+
+---
+
+### 🛒 Cart Page
+![Cart](./screenshots/cart.png)
+
+---
+
+### 💳 Checkout Page
+![Checkout](./screenshots/checkout.png)
+
+---
+
+### 👤 User Dashboard
+![User Dashboard](./screenshots/user-dashboard.png)
+
+---
+
+### 🧾 Admin Dashboard
+![Admin Dashboard](./screenshots/admin-dashboard.png)
+

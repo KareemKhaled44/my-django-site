@@ -27,9 +27,9 @@
           <i class="fas fa-box"></i> Orders
         </button>
 
-        <button onclick="showSection('wishlist')"
+        <button 
           class="flex items-center gap-2 rounded-lg py-4 px-2 border border-white/30 text-gold font-medium w-full text-left hover:bg-gold hover:text-dark transition-colors duration-200">
-          <i class="fa-solid fa-heart"></i> Wishlist
+          <i class="fa-solid fa-heart"></i> Wishlist <span class="text-gray-500 text-sm">(pro-version)</span>
         </button>
         
         <button onclick="showSection('address')"
@@ -66,10 +66,10 @@
                 <div class="font-semibold">Orders</div>
               </button>
 
-              <button onclick="showSection('wishlist')" 
+              <button 
               class="p-4 border border-white/30 text-gray-500 rounded shadow hover:bg-gold  cursor-pointer text-center">
                 <div class="text-3xl mb-2"><i class="fa-solid fa-heart " ></i></div>
-                <div class="font-semibold">wishlist</div>
+                <div class="font-semibold">wishlist <span class="text-gray-500 text-sm">(pro-version)</span></div>
               </button>
 
               <button onclick="showSection('address')"
@@ -151,41 +151,14 @@
           </div>
         </div>
 
-        <!-- Wishlist Section -->
-        <div id="wishlist" class="section hidden">
-          <h2 class="text-2xl font-semibold mb-4 text-gold">Your Wishlist</h2>
-          {% if not wishlist %}
-          <p class="text-light">Your wishlist is empty. Start adding products to your wishlist!</p>
-          {% endif %}
-          
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {% for w in wishlist %}
-            <div class="wishlist-card bg-transparent border border-white/30 rounded-lg p-4 flex flex-col h-full relative">
-              <!-- Trash icon positioned at top right -->
-              <button data-pid="{{w.product.pid}}"
-                class="delete-from-wishlist absolute top-2 right-2 text-red-500 hover:text-red-700 transition-colors">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-              
-              <div class="aspect-square mb-4 overflow-hidden rounded">
-                <img src="{{w.product.image.url}}" alt="{{w.product.title}}" 
-                  class="w-full h-full object-cover">
-              </div>
-              <h3 class="text-lg text-gold font-semibold">{{w.product.title}}</h3>
-              <p class="text-light">EGP {{w.product.price}}</p>
-              <a href="{% url 'core:product-detail' w.product.pid %}"
-                class="text-gold text-sm hover:underline mt-2 inline-block mt-auto">View Product</a>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
+
   
         <!-- Address Section -->
         <div id="address" class="section hidden"> 
           <div class="flex items-center justify-between">
             <h2 class="text-2xl text-gold font-bold">My Address</h2>
             <a href="{% url 'core:add-address' %}" 
-              class="bg-gold text-dark font-bold py-2 px-4 rounded hover:bg-dark hover:text-gold border border-gold transition-colors duration-200">
+              class="btn">
               + Add Address
             </a>      
           </div>
@@ -253,7 +226,7 @@
             
             <!-- Save Button -->
             <button name="profile_submit" type="submit"
-              class="bg-gold text-dark font-bold py-2 px-4 rounded hover:bg-dark hover:text-gold border border-gold transition-colors duration-200 w-full">
+              class="btn">
               Save Changes
             </button>
           </form>
@@ -282,7 +255,7 @@
                 Current Password
               </label>
               {{ password_form.old_password }}
-              <i class="fa-solid fa-eye toggle-password absolute right-3 top-8 cursor-pointer"
+              <i class="fa-solid fa-eye toggle-password text-white absolute right-3 top-8 cursor-pointer"
                 data-target="id_old_password"></i>
             </div>
             
@@ -291,7 +264,7 @@
                 New Password
               </label>
               {{ password_form.new_password1 }}
-              <i class="fa-solid fa-eye toggle-password absolute right-3 top-8 cursor-pointer"
+              <i class="fa-solid fa-eye toggle-password text-white absolute right-3 top-8 cursor-pointer"
                 data-target="id_new_password1"></i>
             </div>
             
@@ -300,12 +273,12 @@
                 Confirm New Password
               </label>
               {{ password_form.new_password2 }}
-              <i class="fa-solid fa-eye toggle-password absolute right-3 top-8 cursor-pointer"
+              <i class="fa-solid fa-eye toggle-password text-white absolute right-3 top-8 cursor-pointer"
                 data-target="id_new_password2"></i>
             </div>
             
             <button type="submit" name="password_submit" 
-              class="bg-gold text-dark font-bold py-2 px-4 rounded hover:bg-dark hover:text-gold border border-gold transition-colors duration-200 w-full">
+              class="btn">
               Change Password
             </button>
           </form>

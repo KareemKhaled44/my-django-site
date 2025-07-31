@@ -120,9 +120,9 @@
             <a href="{% url 'core:dashboard' %}?section=orders" 
             class="block px-4 py-2 text-white text-base hover:bg-gold ">
             Orders</a>
-            <a href="{% url 'core:dashboard' %}?section=wishlist" 
+            <a href="#" 
             class="block px-4 py-2 text-white text-base hover:bg-gold ">
-            My Wishlist</a>
+            My Wishlist <span class="text-gray-500 text-sm">(pro-version)</span></a>
             <a href="{% url 'core:dashboard' %}?section=address" 
             class="block px-4 py-2 text-white text-base hover:bg-gold ">
             Addresses</a>
@@ -212,7 +212,7 @@
               <a href="{% url 'useradmin:dashboard' %}">Admin Dashboard</a>
               {% endif %}
               <a href="{% url 'core:dashboard' %}?section=orders">My Orders</a>
-              <a href="{% url 'core:dashboard' %}?section=wishlist">Wishlist</a>
+              <a href="#">Wishlist <span class="text-gray-500 text-sm">(pro-version)</span></a>
               <a href="{% url 'userauths:sign-out' %}">Logout</a>
             </div>
             {% else %}
@@ -295,15 +295,15 @@
         <div class="flex flex-col  items-start sm:items-center">
           <h3 class="text-xl text-gold font-semibold  border-b-2 border-gray-700 mb-4">Support</h3>
           <ul class="flex flex-col space-y-2 text-sm  items-start sm:items-center">
-            <li><a href="{% url 'core:contact_us' %}" class="hover:text-gold">
+            <li><a href="#" class="hover:text-gold">
               <span class="text-gold mr-2 text-bold">›</span> 
-              Contact Us</a></li>
-            <li><a href="{% url 'core:shipping-policy' %}" class="hover:text-gold"> 
+              Contact Us <span class="text-xs text-gray-400">(pro-version)</span></a></li>
+            <li><a href="#" class="hover:text-gold"> 
             <span class="text-gold mr-2 text-bold">›</span> 
-              Shipping Policy</a></li>
-            <li><a href="{% url 'core:return-policy' %}" class="hover:text-gold"> 
+              Shipping Policy <span class="text-xs text-gray-400">(pro-version)</span></a></li>
+            <li><a href="#" class="hover:text-gold"> 
             <span class="text-gold mr-2 text-bold">›</span> 
-              Return Policy</a></li>
+              Return Policy <span class="text-xs text-gray-400">(pro-version)</span></a></li>
           </ul>
         </div>
     
@@ -314,9 +314,9 @@
             <li><a href="{% url 'core:about-us' %}" class="hover:text-gold">
             <span class="text-gold mr-2 text-bold">›</span> 
               About Us</a></li>
-            <li><a href="{% url 'core:privacy-policy' %}" class="hover:text-gold">
+            <li><a href="#" class="hover:text-gold">
             <span class="text-gold mr-2 text-bold">›</span> 
-              Privacy Policy</a></li>
+              Privacy Policy <span class="text-xs text-gray-400">(pro-version)</span></a></li>
           </ul>
         </div>
       </div>
@@ -371,7 +371,7 @@
           btn.addEventListener("click", function (e) {
             e.preventDefault();
     
-            // جيب العنصر اللي بعد الزر مباشرة (اللي هو .accountSubmenu)
+           
             const submenu = btn.parentElement.nextElementSibling;
     
             if (submenu && submenu.classList.contains("accountSubmenu")) {

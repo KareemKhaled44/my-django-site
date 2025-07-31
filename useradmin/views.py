@@ -107,6 +107,7 @@ def add_product_view(request):
         return redirect('useradmin:products')
     else:
         messages.error(request, "Form is not valid. Please check the errors below.")
+        messages.error(request, form.errors)
         form = AddProductForm()
     return render(request, 'useradmin/add_product.html', {'form': form})
 
@@ -816,125 +817,6 @@ def admin_change_password(request):
     return render(request, 'useradmin/change_password.html', {'password_form': password_form})
 
 
-import openpyxl
-from django.http import HttpResponse
-from django.utils import timezone
-from openpyxl.utils import get_column_letter
-
-# Admin Reports View
-def admin_reports_view(request):
-    today = timezone.now()
-    current_month = today.month
-    current_year = today.year
-
-    # Get all months in the current year
-    months = [calendar.month_name[i] for i in range(1, 13)]
-
-    context = {
-        'current_month': current_month,
-        'current_year': current_year,
-        'months': months,
-    }
-    return render(request, 'useradmin/reports.html', context)
-
-# Export Sales Report
-def export_sales_report(request):
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Sales Report"
-
-    # Header
-    ws.append(["Order ID", "Date", "Customer", "Product", "Shipping Cost", "Price", "Quantity", "Total Price", "Profit", "Order Status", "Paid Status"])
-
-    # Data
-    items = CartOrderItem.objects.all()
-    for item in items:
-        ws.append([
-            item.order.oid,
-            item.order.order_date.strftime("%Y-%m-%d"),
-            item.order.user.username,
-            item.product.title,
-            item.order.shipping_cost,
-            item.price,
-            item.quantity,
-            item.total_price,
-            item.profit,
-            item.order.order_status,
-            "Paid" if item.order.paid_status else "Unpaid",
-        ])
-
-    # Return as Excel download
-    response = HttpResponse(content_type="application/ms-excel")
-    response["Content-Disposition"] = 'attachment; filename="sales-report.xlsx"'
-    wb.save(response)
-    return response
-
-# Export Monthly Sales Report
-def export_monthly_sales_report(request):
-    month = request.GET.get("month")
-    year = request.GET.get("year")
-
-    if not month or not year:
-        return HttpResponse("Month and Year are required", status=400)
-
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = f"Sales_{month}_{year}"
-
-    ws.append(["Order ID", "Date", "Customer", "Product", "Shipping Cost", "Price", "Quantity", "Total Price", "Profit", "Order Status", "Paid Status"])
-
-    items = CartOrderItem.objects.filter(
-        order__order_date__month=month,
-        order__order_date__year=year,
-    )
-
-    for item in items:
-        ws.append([
-            item.order.oid,
-            item.order.order_date.strftime("%Y-%m-%d"),
-            item.order.user.username,
-            item.product.title,
-            item.order.shipping_cost,
-            item.price,
-            item.quantity,
-            item.total_price,
-            item.profit,
-            item.order.order_status,
-            "Paid" if item.order.paid_status else "Unpaid",
-        ])
-
-    response = HttpResponse(content_type="application/ms-excel")
-    response["Content-Disposition"] = f'attachment; filename="sales_report_{month}_{year}.xlsx"'
-    wb.save(response)
-    return response
-
-# Export Top Selling Products
-def export_top_selling_products(request):
-
-    items = CartOrderItem.objects.filter(order__paid_status=True)
-
-    top_products = Product.objects.filter(quantity_sold__gt=0).order_by('-quantity_sold')[:10]
-
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Top Selling Products"
-
-    headers = ['Product', 'Total Sold']
-    # Write headers to the first row
-    for col_num, column_title in enumerate(headers, 1):
-        col_letter = get_column_letter(col_num)
-        ws[f'{col_letter}1'] = column_title
-    # Write data to the worksheet
-    for row_num, product in enumerate(top_products, 2):
-        ws[f'A{row_num}'] = product.title
-        ws[f'B{row_num}'] = product.quantity_sold
-
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=top_selling_products.xlsx'
-    wb.save(response)
-    return response
-
-def export_balance_sheet_excel(request):
     # Assets
     cash = CartOrder.objects.filter(paid_status=True).aggregate(total=Sum('total_price'))['total'] or 0
     inventory = sum(

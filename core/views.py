@@ -232,32 +232,10 @@ def update_cart_item(request):
     })
 
 def apply_coupon(request):
-    if request.method == 'GET':
-        coupon_code = request.GET.get('coupon_code')
-
-        coupon = Coupon.objects.filter(code=coupon_code, active=True).first()
-        if not coupon:
-            return JsonResponse({'success': False, 'message': 'Invalid coupon code'})
-
-        cart_total_amount = 0
-        if 'cart_data_obj' in request.session:
-            for pid, item in request.session['cart_data_obj'].items():
-                cart_total_amount += int(item['qty']) * Decimal(item['price'])
-        else:
-            return JsonResponse({'success': False, 'message': 'Cart is empty'})
-
-        discount = cart_total_amount * (coupon.discount_percentage / Decimal('100'))
-        total_after_discount = cart_total_amount - discount
-
-        request.session['applied_coupon'] = coupon.code
-
-        return JsonResponse({
-            'success': True,
-            'discount': round(discount, 2),
-            'total_after_discount': round(total_after_discount, 2),
-            'cart_total_amount': round(cart_total_amount, 2),
-            'message': 'Coupon applied successfully',
-        })
+    return JsonResponse({
+        'success': False,
+        'message': 'This feature is only available in the Pro version.'
+    })
 
 @login_required
 def checkout_view(request):
@@ -278,17 +256,6 @@ def checkout_view(request):
     else:  # >= 1000
         shipping_cost = 0
     cart_total_amount += shipping_cost
-
-    # claculate discount if coupon is applied
-    applied_coupon_code = request.session.get('applied_coupon')
-    discount = Decimal('0.00')
-    coupon = None 
-    if applied_coupon_code:
-        coupon = Coupon.objects.filter(code=applied_coupon_code, active=True).first()
-        if coupon:
-            discount = cart_total_amount * (coupon.discount_percentage / Decimal('100'))
-        else:
-            del request.session['applied_coupon']
 
     default_address = Address.objects.filter(user=user, status=True).first()
     address_form = AddressForm()
@@ -321,13 +288,27 @@ def checkout_view(request):
                     address.save()
             else:
                 return redirect('core:checkout')
+        
+            if payment_method == "Cash on Delivery":
+                # cleaning cart
+                request.session.pop('cart_data_obj', None)
+                request.session.pop('applied_coupon', None)
+                messages.success(request, "Order placed successfully. Cash on Delivery.")
+                return redirect('core:invoice')
+
+            elif payment_method == "Vodafone Cash":
+                messages.warning(request, "This payment method is not available in the free version. Please upgrade to pro version.")
+                return redirect('core:checkout')  
+
+            else:
+                messages.error(request, "Please choose a payment method.")
+                return redirect('core:checkout')
 
         # make the order
         order = CartOrder.objects.create(
             user=user,
             price=cart_total_amount,
-            saved=discount,
-            total_price=cart_total_amount - discount,
+            total_price=cart_total_amount,
             order_status='Pending',
             address=address,
             paid_status=False,
@@ -355,26 +336,6 @@ def checkout_view(request):
             product.quantity_sold += int(item['qty'])
             product.save()
 
-        if applied_coupon_code and coupon:
-            order.coupons.add(coupon)
-            messages.success(request, "Coupon applied to order.")
-
-        # تفريغ السلة
-        request.session.pop('cart_data_obj', None)
-        request.session.pop('applied_coupon', None)
-
-        if payment_method == "Cash on Delivery":
-            messages.success(request, "Order placed successfully. Cash on Delivery.")
-            return redirect('core:invoice')
-
-        elif payment_method == "Vodafone Cash":
-            messages.success(request, "Order created. Please follow Vodafone Cash payment instructions.")
-            return redirect('core:vodafone-instructions')  
-
-        else:
-            messages.error(request, "Please choose a payment method.")
-            return redirect('core:checkout')
-
     else:
         if default_address:
             address_form = AddressForm(instance=default_address)
@@ -386,15 +347,12 @@ def checkout_view(request):
         'cart_data': cart_data,
         'cart_total_amount': round(cart_total_amount, 2),
         'cart_total_items': len(cart_data),
-        'discount': round(discount, 2),
         'categories': categories,
         'address_form': address_form,
         'default_address': default_address,
         'shipping_cost': shipping_cost,
     })
 
-def voda_payment_instructions_view(request):
-    return render(request, 'core/vodafone_instructions.html')
 
 @login_required
 def invoice_view(request):
@@ -418,50 +376,12 @@ def invoice_view(request):
         'categories': categories,
     }
     return render(request, 'core/invoice.html', context)
-    
-
-    return render(request, 'core/invoice.html', context)
-
-
-def contact_view(request):
-    categories = Category.objects.all()
-    context = {
-        'categories': categories,
-    }
-    return render(request, 'core/contact.html', context)
-
-def Ajax_contact_form(request):
-    if request.method == 'POST':
-        full_name = request.POST.get('full_name')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
-        subject = request.POST.get('subject')
-        message = request.POST.get('message')
-        
-        
-
-        Contact.objects.create(
-            full_name=full_name,
-            email=email,
-            phone=phone,
-            subject=subject,
-            message=message
-        )
-
-        data={
-            'success': True,
-            'message': 'Message Sent Successfully!',
-        }
-        return JsonResponse(data)
-    
-    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 #======================customer dashboard==========================
 def customer_dashboard(request):
     categories = Category.objects.all()
     orders = CartOrder.objects.filter(user=request.user).order_by('-order_date')
     addresses = Address.objects.filter(user=request.user)
-    wishlist = Wishlist.objects.filter(user=request.user).order_by('-id')
     contact = Contact.objects.filter(user=request.user).order_by('-created_at')
 
     profile_form = ProfileEditForm(instance=request.user)
@@ -493,7 +413,6 @@ def customer_dashboard(request):
         'addresses': addresses,
         'profile_form': profile_form,
         'password_form': password_form,
-        'wishlist': wishlist,
         'contact': contact,
     }
     return render(request, 'core/dashboard.html', context)
@@ -568,30 +487,9 @@ def delete_address(request):
         return JsonResponse({'success': False, 'message': 'Address not found.'})
     
 def add_to_wishlist(request):
-    pid= request.GET.get('pid')
-    product = get_object_or_404(Product, pid=pid)
-    if not request.user.is_authenticated:
-        return JsonResponse({'success': False, 'message': 'You need to be logged in to add items to your wishlist.'})
-    if Wishlist.objects.filter(user=request.user, product=product).exists():
-        return JsonResponse({'success': False, 'message': 'Product already in wishlist.'})
-    elif Wishlist.objects.filter(user=request.user).count() >= 10:
-        return JsonResponse({'success': False, 'message': 'You can only have 10 items in your wishlist.'})
-    else:
-        Wishlist.objects.create(
-            user=request.user,
-            product=product)
-    return JsonResponse({'success': True, 'message': 'Product added to wishlist successfully.'})
+    return JsonResponse({'success': True, 'message': 'Adding to wish list is a pro feature. Please upgrade to the pro version.'})
 
-def delete_from_wishlist(request):
-    pid= request.GET.get('pid')
-    product= get_object_or_404(Product, pid=pid)
-    
-    try:
-        wishlist_item = Wishlist.objects.get(user=request.user, product=product)
-        wishlist_item.delete()
-        return JsonResponse({'success': True, 'message': 'Product removed from wishlist successfully.'})
-    except Wishlist.DoesNotExist:
-        return JsonResponse({'success': False, 'message': 'Product not found in wishlist.'})
+
 
     
     

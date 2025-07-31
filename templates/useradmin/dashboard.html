@@ -112,7 +112,7 @@
               <div class="lg:col-span-2 bg-dark/50 border-2 border-white/30 rounded-lg p-4 sm:p-6">
                   <div class="flex justify-between items-center mb-4 sm:mb-6">
                       <h3 class="text-base sm:text-lg font-semibold text-gold">Latest Orders</h3>
-                        <a href="#" class="text-gold hover:underline text-xs sm:text-sm">View All</a>
+                        <a href="#" class="text-gold hover:underline text-xs sm:text-sm">View All <span class="text-xs text-gold ml-1">(pro-version)</span></a>
                   </div>
               
                   <div class="max-h-[400px] overflow-x-auto overflow-y-auto custom-scrollbar">
@@ -155,7 +155,7 @@
                                   <td class="px-2 text-xs sm:text-sm">EGP {{order.price}}</td>
                                   <td class="px-2 text-xs sm:text-sm">EGP -{{order.saved}}</td>
                                   <td class="px-2 text-xs sm:text-sm">EGP {{order.total_price}}</td>
-                                  <td class="px-2"><a href="{% url 'useradmin:order-detail' order.oid %}" class="text-gold hover:underline text-xs sm:text-sm">View</a></td>
+                                  <td class="px-2"><a href="#" class="text-gold hover:underline text-xs sm:text-sm">View <span class="text-xs text-gold ml-1">(pro-version)</span></a></td>
                               </tr>
                               {% endfor %}
                           </tbody>
@@ -168,7 +168,7 @@
                   <h3 class="text-base sm:text-lg font-semibold text-gold mb-4 sm:mb-6">Quick Actions</h3>
                   
                   <div class="space-y-3 sm:space-y-4">
-                      <a href="{% url 'useradmin:add-product' %}" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
+                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
                           <i class="fas fa-plus-circle text-gold mr-2 sm:mr-3 text-sm sm:text-base"></i>
                           <span>Add New Product</span>
                       </a>
@@ -178,19 +178,19 @@
                           <span>Change Password</span>
                       </a>
                       
-                      <a href="{% url 'useradmin:contact-us' %}" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
+                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
                           <i class="fas fa-headset text-gold mr-2 sm:mr-3 text-sm sm:text-base"></i>
-                          <span>Contact messages</span>
+                          <span>Contact messages <span class="text-xs text-gold">(pro-version)</span></span>
                       </a>
 
-                      <a href="{% url 'useradmin:suppliers' %}" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
+                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
                             <i class="fas fa-truck text-gold mr-2 sm:mr-3 text-sm sm:text-base"></i>
-                          <span>Suppliers</span>
+                          <span>Suppliers <span class="text-xs text-gold">(pro-version)</span></span>
                       </a>
                       
-                      <a href="{% url 'useradmin:settings' %}" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
+                      <a href="#" class="flex items-center p-3 bg-dark/70 border border-white/20 rounded-lg hover:border-gold transition text-sm sm:text-base">
                           <i class="fas fa-cog text-gold mr-2 sm:mr-3 text-sm sm:text-base"></i>
-                          <span> Settings</span>
+                          <span> Settings <span class="text-xs text-gold">(pro-version)</span></span>
                       </a>
                   </div>
               </div>

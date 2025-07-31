@@ -104,7 +104,8 @@
                     <div class="text">
                       <span class="circle"></span>
                       <h3 class="text-light">
-                        <i class="fas fa-wallet"></i> Vodafone Cash
+                        <i class="fas fa-wallet"></i> Vodafone Cash <br>
+                        <span class="text-xs text-gray-400">(pro-version)</span>
                       </h3>
                     </div>
                   </label>
@@ -184,13 +185,13 @@
           </div>
           
           <div class="mt-6">
-            <label class="block text-sm font-medium text-gold mb-2">Coupon Code</label>
+            <label class="block text-sm font-medium text-gold mb-2">Coupon Code <span class="text-gray-500 text-sm">(pro-version)</span></label>
             <div class="flex gap-2 w-full justify-center">
               <!-- Coupon Apply Form -->
               <div class="flex gap-2">
                 <input name="code" id="coupon-code" type="text" placeholder="Enter coupon code"
                   class="px-4 py-3 bg-transparent w-full text-light text-sm border border-gray-600 rounded-md focus:border-gold outline-0" />
-                <button type="submit" id="apply-coupon-btn" name="apply_coupon"
+                <button type="submit" disabled id="apply-coupon-btn" name="apply_coupon"
                   class="bg-white px-4 py-3 text-sm font-medium text-dark rounded-md">
                   Apply 
                 </button>

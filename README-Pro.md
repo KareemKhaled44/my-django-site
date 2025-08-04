@@ -310,7 +310,7 @@ All financial data computed based on actual paid orders and product-level profit
  **Clone the repository:**
 ```bash
 git clone https://github.com/KareemKhaled44/my-django-site.git
-cd supplement-store
+cd supplemnt-pro
 pip install -r requirements.txt
 ```
 ## ⚙️ Usage
@@ -327,7 +327,7 @@ python manage.py runserver
 ## 📁 Project Structure
 
 <pre>
-📦 ecommerce/                 # Main project folder
+📦 supplemnt-pro/                 # Main project folder
 ├── core/                    # Homepage, contact, and static content views
 ├── ecommerce/               # Project settings, URLs, WSGI
 ├── media/                   # Uploaded product and user images
@@ -346,39 +346,21 @@ python manage.py runserver
 ├── package-lock.json        # Exact versions of JS packages
 └── Procfile                 # Deployment entrypoint for platforms like Heroku
 </pre>
+---
 
 ## 📸 Screenshots
 
-Here are some snapshots of the main pages of the Supplement Store website:
+| Home Page             | Product List + Filters     |
+|-----------------------|----------------------------|
+| ![](screenshots/homepage.png) | ![](screenshots/products.png) |
 
-### 🏠 Homepage
-![Homepage](./screenshots/homepage.png)
+| Cart Page             | Checkout Page             |
+|-----------------------|---------------------------|
+| ![](screenshots/cart.png) | ![](screenshots/checkout.png) |
 
----
-
-### 📦 Product Details
-![Product Details](./screenshots/product-details.png)
-
-### 🛍️ Product List + Filters
-![Product List](./screenshots/products.png)
-
----
-
-### 🛒 Cart Page
-![Cart](./screenshots/cart.png)
+| User Dashboard        | Admin Dashboard           |
+|-----------------------|---------------------------|
+| ![](screenshots/user-dashboard.png) | ![](screenshots/admin-dashboard.png) |
 
 ---
-
-### 💳 Checkout Page
-![Checkout](./screenshots/checkout.png)
-
----
-
-### 👤 User Dashboard
-![User Dashboard](./screenshots/user-dashboard.png)
-
----
-
-### 🧾 Admin Dashboard
-![Admin Dashboard](./screenshots/admin-dashboard.png)
 
